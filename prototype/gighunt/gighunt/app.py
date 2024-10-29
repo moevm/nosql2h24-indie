@@ -1,9 +1,27 @@
 from arango import ArangoClient
 
+from gighunt.modules.clients.arangodb_client import ArangoDBClient
+from gighunt.modules.use_cases.announcement_use_cases import AnnouncementUseCases
+from gighunt.modules.use_cases.group_use_cases import GroupUseCases
+from gighunt.modules.use_cases.user_use_cases import UserUseCases
+from gighunt.routers.announcement_router import AnnouncementRouter
+from gighunt.routers.group_router import GroupRouter
+from gighunt.routers.user_router import UserRouter
+
 
 def main():
     # Подключаемся к ArangoDB
     client = ArangoClient(hosts='http://arangodb:8529')
+
+    arangodb_client = ArangoDBClient(client)
+
+    announcement_use_cases = AnnouncementUseCases(arangodb_client)
+    group_use_cases = GroupUseCases(arangodb_client)
+    user_use_cases = UserUseCases(arangodb_client)
+
+    announcement_router = AnnouncementRouter(announcement_use_cases)
+    group_router = GroupRouter(group_use_cases)
+    user_router = UserRouter(user_use_cases)
 
     # Логинимся
     sys_db = client.db('_system', username='root', password='password')
