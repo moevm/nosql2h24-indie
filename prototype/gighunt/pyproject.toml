@@ -10,7 +10,10 @@ python = "^3.10"
 python-arango = "^8.1.1"
 fastapi = "^0.115.4"
 pydantic-settings = "^2.6.0"
+uvicorn = "^0.32.0"
 
+[tool.poetry.scripts]
+start-backend = "src.gighunt.app:start_backend"
 
 [build-system]
 requires = ["poetry-core"]

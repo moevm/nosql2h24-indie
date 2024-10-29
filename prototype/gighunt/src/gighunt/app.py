@@ -1,4 +1,6 @@
 from arango import ArangoClient
+from fastapi import FastAPI
+import uvicorn
 
 from gighunt.modules.clients.arangodb_client import ArangoDBClient
 from gighunt.modules.use_cases.announcement_use_cases import AnnouncementUseCases
@@ -9,7 +11,15 @@ from gighunt.routers.group_router import GroupRouter
 from gighunt.routers.user_router import UserRouter
 
 
-def main():
+app = FastAPI()
+
+
+@app.get("/")
+async def read_root():
+    return {"message": "Hello, World!"}
+
+
+def start_backend():
     # Подключаемся к ArangoDB
     client = ArangoClient(hosts='http://arangodb:8529')
 
@@ -49,6 +59,14 @@ def main():
     for document in cursor:
         print('Document found:', document)
 
+    uvicorn.run(
+        "gighunt.app:app",
+        host="0.0.0.0",
+        port=8000,
+        log_level="info",
+        reload=True,
+    )
+
 
 if __name__ == "__main__":
-    main()
+    start_backend()

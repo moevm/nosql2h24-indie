@@ -10,8 +10,10 @@ services:
     volumes:
       - arango_data:/var/lib/arangodb3
 
-  python-app:
-    build: .
+  backend:
+    build:
+      context: ./
+      dockerfile: Dockerfile
     depends_on:
       - arangodb
     environment:
@@ -19,7 +21,6 @@ services:
       - ARANGO_PORT=8529
     volumes:
       - .:/app
-    command: poetry run python gighunt/app.py
 
 volumes:
   arango_data:
