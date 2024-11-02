@@ -2,6 +2,7 @@ from arango import ArangoClient
 from arango.collection import VertexCollection, EdgeCollection
 from arango.database import StandardDatabase
 from arango.graph import Graph
+from arango.typings import Json
 
 
 class ArangoDBClient:
@@ -14,9 +15,9 @@ class ArangoDBClient:
             "_system", username=self.__username, password=self.__password
         )
 
-    def create_database(self, database_name: str) -> None:
+    def create_database(self, database_name: str) -> bool:
         if not self.__system_database.has_database(database_name):
-            self.__system_database.create_database(database_name)
+            return self.__system_database.create_database(database_name)
 
     def connect_to_database(self, database_name: str) -> StandardDatabase:
         return self._client.db(
@@ -30,31 +31,75 @@ class ArangoDBClient:
             return database.create_graph(graph_name)
         return database.graph(graph_name)
 
-    def create_vertex_collection(self, graph: Graph, collection_name: str) -> None:
+    def create_vertex_collection(
+        self, graph: Graph, collection_name: str
+    ) -> VertexCollection:
         return graph.create_vertex_collection(collection_name)
 
     def create_edge_collection(
         self,
         graph: Graph,
-        collection_name: str,
+        edge_collection_name: str,
         first_vertex_collection_name: str,
         second_vertex_collection_name: str,
-    ) -> None:
+    ) -> EdgeCollection:
         return graph.create_edge_definition(
-            collection_name,
-            from_vertex_collections=[first_vertex_collection_name],
-            to_vertex_collections=[second_vertex_collection_name],
+            edge_collection_name,
+            from_vertex_collections=list(first_vertex_collection_name),
+            to_vertex_collections=list(second_vertex_collection_name),
+        )
+
+    def delete_database(self, database_name: str) -> bool:
+        return self.__system_database.delete_database(
+            database_name, ignore_missing=True
         )
 
     def add_vertex(
-        self, graph: Graph, vertex_collection_name: str, vertex_data: dict
-    ) -> None:
-        graph.insert_vertex(vertex_collection_name, vertex_data)
+        self, graph: Graph, vertex_collection_name: str, vertex_data: Json
+    ) -> bool:
+        return graph.insert_vertex(vertex_collection_name, vertex_data)
+
+    def get_vertex(
+        self, vertex_collection: VertexCollection, vertex: Json | str
+    ) -> bool:
+        return vertex_collection.get(vertex)
+
+    def update_vertex(
+        self, vertex_collection: VertexCollection, vertex: Json | str
+    ) -> bool:
+        return vertex_collection.update(vertex)
+
+    def delete_vertex(
+        self, vertex_collection: VertexCollection, vertex: Json | str
+    ) -> bool:
+        return vertex_collection.delete(vertex)
 
     def add_edge(
-        self, graph: Graph, edge_collection_name: str, edge_data: dict
-    ) -> None:
-        graph.insert_edge(edge_collection_name, edge_data)
+        self, graph: Graph, edge_collection_name: str, edge_data: Json
+    ) -> bool:
+        return graph.insert_edge(edge_collection_name, edge_data)
 
-    def get_graph_view(self, graph: Graph, start_vertex_name: str) -> None:
-        return graph.traverse(start_vertex_name)
+    def get_edge(self, edge_collection: EdgeCollection, edge: Json | str) -> bool:
+        return edge_collection.get(edge)
+
+    def update_edge(self, edge_collection: EdgeCollection, edge: Json | str) -> bool:
+        return edge_collection.update(edge)
+
+    def delete_edge(self, edge_collection: EdgeCollection, edge: Json | str) -> bool:
+        return edge_collection.delete(edge)
+
+    def get_graph_view(
+        self,
+        database: StandardDatabase,
+        graph_name: Graph,
+        vertex_collection_name: str,
+        start_vertex_key: str,
+    ) -> any:
+        query = (
+            f"FOR v, e, p IN 1..3 OUTBOUND '{vertex_collection_name}/{start_vertex_key}' GRAPH '{graph_name}'"
+            "OPTIONS { bfs: true, uniqueVertices: 'global' }"
+            "RETURN {vertex: v, edge: e, path: p}"
+        )
+
+        cursor = database.aql.execute(query)
+        return list(cursor)

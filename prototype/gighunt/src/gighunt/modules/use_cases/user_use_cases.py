@@ -1,3 +1,6 @@
+# For work with graph use this documentation:
+# https://docs.python-arango.com/en/main/graph.html
+
 from gighunt.modules.clients.arangodb_client import ArangoDBClient
 
 
@@ -6,7 +9,7 @@ class UserUseCases:
         self._db_client = db_client
 
     def test_operation(self) -> None:
-        # clear db !
+        self._db_client.delete_database("test-db")
 
         self._db_client.create_database("test-db")
         database = self._db_client.connect_to_database("test-db")
@@ -30,8 +33,9 @@ class UserUseCases:
 
         self._db_client.add_edge(
             graph,
-            edge_collection,
+            "mix",
             {"_key": "1-edge-2", "_from": "bananas/1", "_to": "apples/1"},
         )
 
-        print(self._db_client.get_graph_view(graph, "Bob"))
+        graph_view = self._db_client.get_graph_view(database, "test-graph", "bananas", "1")
+        print(graph_view)
