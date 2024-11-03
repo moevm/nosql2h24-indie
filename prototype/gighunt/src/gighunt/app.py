@@ -23,10 +23,15 @@ def start_backend():
     client = ArangoClient(hosts='http://arangodb:8529')
 
     arangodb_client = ArangoDBClient(client)
+    arangodb_client.delete_database("test-db")
+
+    arangodb_client.create_database("test-db")
+    database = arangodb_client.connect_to_database("test-db")
+    graph = arangodb_client.create_graph_in_database(database, "test-graph")
 
     announcement_use_cases = AnnouncementUseCases(arangodb_client)
     group_use_cases = GroupUseCases(arangodb_client)
-    user_use_cases = UserUseCases(arangodb_client)
+    user_use_cases = UserUseCases(arangodb_client, graph)
 
     announcement_router = AnnouncementRouter(announcement_use_cases)
     group_router = GroupRouter(group_use_cases)

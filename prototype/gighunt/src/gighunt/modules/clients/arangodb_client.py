@@ -112,19 +112,3 @@ class ArangoDBClient:
         self, edge_collection: EdgeCollection, edge: Json | str
     ) -> bool | Json:
         return edge_collection.delete(edge)
-
-    def get_graph_view(
-        self,
-        database: StandardDatabase,
-        graph_name: Graph,
-        vertex_collection_name: str,
-        start_vertex_key: str,
-    ) -> any:
-        query = (
-            f"FOR v, e, p IN 1..3 OUTBOUND '{vertex_collection_name}/{start_vertex_key}' GRAPH '{graph_name}'"
-            "OPTIONS { bfs: true, uniqueVertices: 'global' }"
-            "RETURN {vertex: v, edge: e, path: p}"
-        )
-
-        cursor = database.aql.execute(query)
-        return list(cursor)

@@ -1,38 +1,37 @@
+from arango.graph import Graph
+
 from gighunt.modules.clients.arangodb_client import ArangoDBClient
 
 
 class UserUseCases:
-    def __init__(self, db_client: ArangoDBClient) -> None:
+    def __init__(self, db_client: ArangoDBClient, graph: Graph) -> None:
         self._db_client = db_client
+        self._graph = graph
 
     def test_operation(self) -> None:
-        self._db_client.delete_database("test-db")
-
-        self._db_client.create_database("test-db")
-        database = self._db_client.connect_to_database("test-db")
-        graph = self._db_client.create_graph_in_database(database, "test-graph")
-        first_vertex_collection = self._db_client.create_vertex_collection(
-            graph, "bananas"
+        self._db_client.create_vertex_collection(
+            self._graph, "bananas"
         )
-        second_vertex_collection = self._db_client.create_vertex_collection(
-            graph, "apples"
+        self._db_client.create_vertex_collection(
+            self._graph, "apples"
         )
-        edge_collection = self._db_client.create_edge_collection(
-            graph, "mix", "bananas", "apples"
+        self._db_client.create_edge_collection(
+            self._graph, "mix", "bananas", "apples"
         )
 
         self._db_client.add_vertex(
-            graph, "bananas", {"_key": "1", "name": "Bob"}
+            self._graph, "bananas", {"_key": "1", "name": "Bob"}
         )
         self._db_client.add_vertex(
-            graph, "apples", {"_key": "1", "name": "Alice"}
+            self._graph, "apples", {"_key": "1", "name": "Alice"}
         )
 
         self._db_client.add_edge(
-            graph,
+            self._graph,
             "mix",
             {"_key": "1-edge-2", "_from": "bananas/1", "_to": "apples/1"},
         )
 
-        graph_view = self._db_client.get_graph_view(database, "test-graph", "bananas", "1")
-        print(graph_view)
+        print(list(self._db_client.get_vertex_collection(self._graph, "bananas").all()))
+        print(list(self._db_client.get_vertex_collection(self._graph, "apples").all()))
+        print(list(self._db_client.get_edge_collection(self._graph, "mix").all()))
