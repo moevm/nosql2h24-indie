@@ -1,6 +1,3 @@
-# For work with graph use this documentation:
-# https://docs.python-arango.com/en/main/graph.html
-
 from gighunt.modules.clients.arangodb_client import ArangoDBClient
 
 
