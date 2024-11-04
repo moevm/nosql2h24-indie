@@ -63,7 +63,7 @@ class ArangoDBClient:
 
     def get_edge_collection(
         self, graph: Graph, collection_name: str
-    ) -> VertexCollection:
+    ) -> EdgeCollection:
         if graph.has_edge_collection(collection_name):
             return graph.edge_collection(collection_name)
         return None

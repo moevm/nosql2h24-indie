@@ -29,8 +29,8 @@ def start_backend():
     database = arangodb_client.connect_to_database("test-db")
     graph = arangodb_client.create_graph_in_database(database, "test-graph")
 
-    announcement_use_cases = AnnouncementUseCases(arangodb_client)
-    group_use_cases = GroupUseCases(arangodb_client)
+    announcement_use_cases = AnnouncementUseCases(arangodb_client, graph)
+    group_use_cases = GroupUseCases(arangodb_client, graph)
     user_use_cases = UserUseCases(arangodb_client, graph)
 
     announcement_router = AnnouncementRouter(announcement_use_cases)
@@ -38,7 +38,10 @@ def start_backend():
     user_router = UserRouter(user_use_cases)
 
     user_use_cases.test_operation()
-
+    print(user_use_cases.create_new_user({"id":1, "name":"Dude"}))
+    users = user_use_cases.get_all_users()
+    for user in users:
+        print(user)
     # uvicorn.run(
     #     "gighunt.app:app",
     #     host="0.0.0.0",
