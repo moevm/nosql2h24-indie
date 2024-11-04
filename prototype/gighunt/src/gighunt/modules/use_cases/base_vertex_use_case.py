@@ -11,8 +11,24 @@ class BaseVertexUseCase:
         self._graph = graph
         self._name = name
         self._db_client.create_vertex_collection(self._graph, name)
+
     def get_all_entities(self)-> VertexCollection | None:
         return self._db_client.get_vertex_collection(self._graph, self._name)
 
     def create_new_entity(self, vertex_data:Json)->bool|Json:
         return self._db_client.add_vertex(self._graph, self._name, vertex_data)
+
+    def get_entity(
+        self, vertex_collection: VertexCollection, vertex: Json | str
+    ) -> Json | None:
+        return vertex_collection.get(vertex)
+
+    def update_entity(
+        self, vertex_collection: VertexCollection, vertex: Json | str
+    ) -> bool | Json:
+        return vertex_collection.update(vertex)
+
+    def delete_entity(
+        self, vertex_collection: VertexCollection, vertex: Json | str
+    ) -> bool | Json:
+        return vertex_collection.delete(vertex)

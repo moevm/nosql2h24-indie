@@ -7,7 +7,6 @@ from arango.typings import Json
 
 class UserUseCases (BaseVertexUseCase):
     # def __init__(self, db_client: ArangoDBClient, graph: Graph, name:str) -> None:
-    #     super.__init__(self, db_client, graph,name)
     #     # self._db_client = db_client
     #     # self._graph = graph
     #     # self._db_client.create_vertex_collection(self._graph, "User")
