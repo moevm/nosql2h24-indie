@@ -31,15 +31,15 @@ def start_backend():
 
     announcement_use_cases = AnnouncementUseCases(arangodb_client, graph)
     group_use_cases = GroupUseCases(arangodb_client, graph)
-    user_use_cases = UserUseCases(arangodb_client, graph)
+    user_use_cases = UserUseCases(arangodb_client, graph, "User")
 
     announcement_router = AnnouncementRouter(announcement_use_cases)
     group_router = GroupRouter(group_use_cases)
     user_router = UserRouter(user_use_cases)
 
     user_use_cases.test_operation()
-    print(user_use_cases.create_new_user({"id":1, "name":"Dude"}))
-    users = user_use_cases.get_all_users()
+    print(user_use_cases.create_new_entity({"id":1, "name":"Dude"}))
+    users = user_use_cases.get_all_entities()
     for user in users:
         print(user)
     # uvicorn.run(

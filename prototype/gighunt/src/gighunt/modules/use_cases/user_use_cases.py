@@ -1,14 +1,16 @@
 from arango.graph import Graph
 
 from gighunt.modules.clients.arangodb_client import ArangoDBClient
+from gighunt.modules.use_cases.base_vertex_use_case import BaseVertexUseCase
 from arango.collection import VertexCollection, EdgeCollection
 from arango.typings import Json
 
-class UserUseCases:
-    def __init__(self, db_client: ArangoDBClient, graph: Graph) -> None:
-        self._db_client = db_client
-        self._graph = graph
-        self._db_client.create_vertex_collection(self._graph, "User")
+class UserUseCases (BaseVertexUseCase):
+    # def __init__(self, db_client: ArangoDBClient, graph: Graph, name:str) -> None:
+    #     super.__init__(self, db_client, graph,name)
+    #     # self._db_client = db_client
+    #     # self._graph = graph
+    #     # self._db_client.create_vertex_collection(self._graph, "User")
     def test_operation(self) -> None:
         self._db_client.create_vertex_collection(
             self._graph, "bananas"
@@ -37,9 +39,9 @@ class UserUseCases:
         print(list(self._db_client.get_vertex_collection(self._graph, "apples").all()))
         print(list(self._db_client.get_edge_collection(self._graph, "mix").all()))
 
-    def get_all_users(self)-> VertexCollection | None:
-        return self._db_client.get_vertex_collection(self._graph, "User")
-
-    def create_new_user(self, vertex_data:Json)->bool|Json:
-        return self._db_client.add_vertex(self._graph, "User", vertex_data)
+    # def get_all_users(self)-> VertexCollection | None:
+    #     return self._db_client.get_vertex_collection(self._graph, "User")
+    #
+    # def create_new_user(self, vertex_data:Json)->bool|Json:
+    #     return self._db_client.add_vertex(self._graph, "User", vertex_data)
 
