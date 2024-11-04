@@ -13,22 +13,15 @@ class BaseVertexUseCase:
         self._db_client.create_vertex_collection(self._graph, name)
 
     def get_all_entities(self)-> VertexCollection | None:
-        return self._db_client.get_vertex_collection(self._graph, self._name)
+        if self._graph.has_vertex_collection(self._name):
+            return self._graph.vertex_collection(self._name)
+        return None
 
     def create_new_entity(self, vertex_data:Json)->bool|Json:
         return self._db_client.add_vertex(self._graph, self._name, vertex_data)
 
-    def get_entity(
-        self, vertex_collection: VertexCollection, vertex: Json | str
-    ) -> Json | None:
-        return vertex_collection.get(vertex)
-
-    def update_entity(
-        self, vertex_collection: VertexCollection, vertex: Json | str
-    ) -> bool | Json:
-        return vertex_collection.update(vertex)
-
-    def delete_entity(
-        self, vertex_collection: VertexCollection, vertex: Json | str
-    ) -> bool | Json:
-        return vertex_collection.delete(vertex)
+    def get_entity(self, entity_id: str) -> Json | None:
+        aql = "FOR e IN "+ self._name+ " FILTER e.id == '"+ entity_id + "' RETURN e"
+        print(aql)
+        cursor = self._db_client.execute_query(aql)
+        return cursor
