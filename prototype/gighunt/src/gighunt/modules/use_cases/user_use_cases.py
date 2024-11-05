@@ -1,13 +1,11 @@
 from arango.graph import Graph
 
 from gighunt.modules.clients.arangodb_client import ArangoDBClient
+from gighunt.modules.use_cases.base_vertex_use_case import BaseVertexUseCase
+from arango.collection import VertexCollection, EdgeCollection
+from arango.typings import Json
 
-
-class UserUseCases:
-    def __init__(self, db_client: ArangoDBClient, graph: Graph) -> None:
-        self._db_client = db_client
-        self._graph = graph
-
+class UserUseCases (BaseVertexUseCase):
     def test_operation(self) -> None:
         self._db_client.create_vertex_collection(
             self._graph, "bananas"
@@ -35,3 +33,4 @@ class UserUseCases:
         print(list(self._db_client.get_vertex_collection(self._graph, "bananas").all()))
         print(list(self._db_client.get_vertex_collection(self._graph, "apples").all()))
         print(list(self._db_client.get_edge_collection(self._graph, "mix").all()))
+
