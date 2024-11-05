@@ -15,8 +15,9 @@ export default function Footer(props) {
 
     return <>
         <Outlet></Outlet>
+        <div className='backdrop'></div>
         <div className='layout flex-row flex-center'>
-            <div className='backdrop flex-row flex-center'>
+            <div className='navbar flex-row flex-center'>
                 <div className='flex-row align-center' style={{gap: '40px'}}>
                     <NavLink to='/announcements' className={checkActive} style={{textDecoration: 'none'}}>
                         <div className='flex-column align-center'>

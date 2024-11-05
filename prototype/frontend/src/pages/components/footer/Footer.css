@@ -1,3 +1,13 @@
+.backdrop {
+    position: absolute;
+
+    bottom: 0;
+    width: 100%;
+    height: 300px;
+
+    background: linear-gradient(rgba(from var(--base-color) R G B / 0), rgba(from var(--base-color) R G B / 0.4));
+}
+
 .layout {
     position: absolute;
 
@@ -8,7 +18,7 @@
     width: 100%;
 }
 
-.backdrop {
+.navbar {
     box-sizing: border-box;
     background-color: var(--base-color);
 
