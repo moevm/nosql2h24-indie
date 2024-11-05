@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Request, Response
 
+from gighunt.modules.models import Place
 from gighunt.modules.use_cases.place_use_cases import PlaceUseCases
 
 
@@ -21,7 +22,7 @@ class PlaceRouter:
         ]
         """
 
-    def _add_place(self, request: Request) -> Response:
+    def _add_place(self, place: Place) -> Response:
         """
         POST /api/place
 
