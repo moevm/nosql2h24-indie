@@ -1,4 +1,7 @@
-from fastapi import APIRouter
+# API Router documentation: https://fastapi.tiangolo.com/reference/apirouter/
+
+from typing import Any
+from fastapi import APIRouter, Response
 
 from gighunt.modules.application import Application
 from gighunt.routers.announcement_router import AnnouncementRouter
@@ -15,9 +18,29 @@ class Controller:
         self._announcement_router = AnnouncementRouter(self._router, self._application.announcement_use_cases)
         self._group_router = GroupRouter(self._router, self._application.group_use_cases)
         self._place_router = PlaceRouter(self._router, self._application.place_use_cases)
+        self._router.add_api_route("/", self.root, methods=["GET"])
+        self._router.add_api_route("/api/import_data", self._import_data, methods=["POST"])
+        self._router.add_api_route("/api/export_data", self._export_data, methods=["GET"])
 
-    def _import_data(self) -> None:
-        pass
+    @property
+    def router(self) -> APIRouter:
+        return self._router
 
-    def _export_data(self) -> None:
-        pass
+    async def root(self) -> Response:
+        return {"message": "Hello, World! It's Gighunt!"}
+
+    async def _import_data(self, file: Any) -> Response:
+        """
+        POST /api/import_data
+
+        Request:
+        File
+        """
+
+    async def _export_data(self) -> Response:
+        """
+        GET /api/export_data
+
+        Response:
+        File
+        """

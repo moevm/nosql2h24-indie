@@ -11,19 +11,17 @@ from gighunt.modules.use_cases.user_use_cases import UserUseCases
 class Application:
     def __init__(self, app: FastAPI) -> None:
         self._app = app
-        client = ArangoClient(hosts='http://arangodb:8529')
+        self._arangodb_client = ArangoDBClient(ArangoClient(hosts='http://arangodb:8529'))
 
-        arangodb_client = ArangoDBClient(client)
-        arangodb_client.delete_database("test-db")
+        self._arangodb_client.delete_database("test-db")
+        self._arangodb_client.create_database("test-db")
+        self._database = self._arangodb_client.connect_to_database("test-db")
+        self._graph = self._arangodb_client.create_graph_in_database(self._database, "test-graph")
 
-        arangodb_client.create_database("test-db")
-        database = arangodb_client.connect_to_database("test-db")
-        graph = arangodb_client.create_graph_in_database(database, "test-graph")
-
-        self._announcement_use_cases = AnnouncementUseCases(arangodb_client, graph)
-        self._group_use_cases = GroupUseCases(arangodb_client, graph)
-        self._user_use_cases = UserUseCases(arangodb_client, graph)
-        self._place_use_cases = PlaceUseCases(arangodb_client, graph)
+        self._announcement_use_cases = AnnouncementUseCases(self._arangodb_client, self._graph, "Announcement")
+        self._group_use_cases = GroupUseCases(self._arangodb_client, self._graph, "Group")
+        self._user_use_cases = UserUseCases(self._arangodb_client, self._graph, "User")
+        self._place_use_cases = PlaceUseCases(self._arangodb_client, self._graph, "Place")
 
     @property
     def app(self) -> FastAPI:
@@ -44,3 +42,15 @@ class Application:
     @property
     def place_use_cases(self) -> PlaceUseCases:
         return self._place_use_cases
+
+    @property
+    def arangodb_client(self) -> ArangoDBClient:
+        return self._arangodb_client
+
+    @property
+    def database(self) -> ArangoDBClient:
+        return self._database
+
+    @property
+    def graph(self) -> ArangoDBClient:
+        return self._graph
