@@ -5,7 +5,4 @@ from gighunt.modules.use_cases.base_vertex_use_cases import BaseVertexUseCase
 
 class AnnouncementUseCases(BaseVertexUseCase):
     pass
-    # def __init__(self, db_client: ArangoDBClient, graph: Graph) -> None:
-    #     self._db_client = db_client
-    #     self._graph = graph
 
