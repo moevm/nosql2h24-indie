@@ -1,11 +1,11 @@
 from arango.graph import Graph
 
 from gighunt.modules.clients.arangodb_client import ArangoDBClient
-from gighunt.modules.use_cases.base_vertex_use_cases import BaseVertexUseCase
+from gighunt.modules.use_cases.base_vertex_use_cases import BaseVertexUseCases
 from arango.collection import VertexCollection, EdgeCollection
 from arango.typings import Json
 
-class UserUseCases (BaseVertexUseCase):
+class UserUseCases (BaseVertexUseCases):
     def test_operation(self) -> None:
         self._db_client.create_vertex_collection(
             self._graph, "bananas"

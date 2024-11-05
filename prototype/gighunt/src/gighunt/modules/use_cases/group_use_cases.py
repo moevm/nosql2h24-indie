@@ -1,8 +1,8 @@
 from arango.graph import Graph
 
 from gighunt.modules.clients.arangodb_client import ArangoDBClient
-from gighunt.modules.use_cases.base_vertex_use_cases import BaseVertexUseCase
+from gighunt.modules.use_cases.base_vertex_use_cases import BaseVertexUseCases
 
-class GroupUseCases(BaseVertexUseCase):
+class GroupUseCases(BaseVertexUseCases):
     pass
 

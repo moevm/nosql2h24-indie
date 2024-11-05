@@ -5,7 +5,7 @@ from arango.collection import EdgeCollection
 from arango.typings import Json
 
 
-class BaseEdgeUseCase:
+class BaseEdgeUseCases:
     def __init__(self, db_client: ArangoDBClient, graph: Graph, name:str) -> None:
         self._db_client = db_client
         self._graph = graph
