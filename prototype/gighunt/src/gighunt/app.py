@@ -38,11 +38,39 @@ def start_backend():
     user_router = UserRouter(user_use_cases)
 
     user_use_cases.test_operation()
-    print(user_use_cases.create_new_entity({"id":1, "name":"Dude"}))
+    print(user_use_cases.create_new_entity({
+    "_key": "4769",
+    "_id": "User/4769",
+    "_rev": "_ioED4LW---",
+    "first_name": "Andrey",
+    "last_name": "Babenko",
+    "creation_date": "2021-01-01",
+    "last_edit_date": "2022-01-01",
+    "avatar_uri": "assets/avatars/andrey.png",
+    "talents": [
+      "electric-guitar"
+    ]
+  }))
+    print(user_use_cases.create_new_entity({
+    "_key": "863",
+    "_id": "User/863",
+    "_rev": "_ioDTZXm---",
+    "first_name": "Egor",
+    "last_name": "Letov",
+    "creation_date": "2021-01-01",
+    "last_edit_date": "2022-01-01",
+    "avatar_uri": "assets/avatars/egor.png",
+    "talents": [
+      "vocal",
+      "acoustic-guitar",
+      "electric-guitar",
+      "drums"
+    ]
+  }))
     users = user_use_cases.get_all_entities()
     for user in users:
-        print(user)
-    print(user_use_cases.get_entity("1"))
+        print("get all users: "+ str(user))
+    print("get 4769 user: "+str(user_use_cases.get_entity("4769")))
     #TODO some tests
 
     # uvicorn.run(

@@ -18,7 +18,6 @@ class ArangoDBClient:
         self.__system_database = self._client.db(
             "_system", username=self.__username, password=self.__password
         )
-    #TODO not foumd collections (mb not found db)
     def execute_query(self, query:str):
         return self.__system_database.aql.execute(query)
 

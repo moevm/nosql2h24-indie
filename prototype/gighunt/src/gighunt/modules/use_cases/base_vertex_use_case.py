@@ -10,7 +10,8 @@ class BaseVertexUseCase:
         self._db_client = db_client
         self._graph = graph
         self._name = name
-        self._db_client.create_vertex_collection(self._graph, name)
+        if(not self._graph.has_vertex_collection(self._name)):
+            self._db_client.create_vertex_collection(self._graph, name)
 
     def get_all_entities(self)-> VertexCollection | None:
         if self._graph.has_vertex_collection(self._name):
@@ -21,7 +22,4 @@ class BaseVertexUseCase:
         return self._db_client.add_vertex(self._graph, self._name, vertex_data)
 
     def get_entity(self, entity_id: str) -> Json | None:
-        aql = "FOR e IN "+ self._name+ " FILTER e.id == '"+ entity_id + "' RETURN e"
-        print(aql)
-        cursor = self._db_client.execute_query(aql)
-        return cursor
+        return self._graph.vertex_collection(self._name).get(entity_id)
