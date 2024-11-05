@@ -1,0 +1,36 @@
+.layout {
+    position: absolute;
+
+    bottom: 30px;
+    align-self: center;
+
+    height: 100px;
+    width: 100%;
+}
+
+.backdrop {
+    box-sizing: border-box;
+    background-color: var(--base-color);
+
+    height: 100%;
+    width: 60%;
+
+    border-style: solid;
+    border-radius: 20px;
+    border-width: 3px;
+    border-color: var(--tertiary-color);
+}
+
+.icon-caption {
+    color: var(--tertiary-text-color);
+    font-size: 12px;
+    font-weight: normal;
+}
+
+.active [part=icon] {
+    fill: var(--primary-color);
+}
+
+.unactive [part=icon] {
+    fill: var(--tertiary-color);
+}
