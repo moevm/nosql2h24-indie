@@ -45,3 +45,10 @@
     font-size: 40px;
     font-weight: bold;
 }
+
+.talent-name {
+    color: var(--text-color);
+    font-size: 24px;
+    font-weight: normal;
+
+}

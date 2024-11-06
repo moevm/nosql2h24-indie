@@ -1,5 +1,8 @@
 import './UserProfilePage.css';
 import { ReactComponent as BigStarIcon } from './big-star.svg';
+import { ReactComponent as VocalIcon } from './vocal.svg';
+import { ReactComponent as ElectricGuitarIcon } from './electric-guitar.svg';
+import { ReactComponent as AcousticGuitarIcon } from './acoustic-guitar.svg';
 import React, { useState } from 'react';
 
 export default function UserProfile(props) {
@@ -56,18 +59,18 @@ export default function UserProfile(props) {
                                 <div className='caption'>Таланты</div>
                             </div>
                             <div className='scroll-column' style={{gap: '10px', paddingRight: '10px'}}>
-                                <div style={{width: '100%', minHeight: '12px', backgroundColor: 'var(--primary-color)'}}></div>
-                                <div style={{width: '100%', minHeight: '12px', backgroundColor: 'var(--primary-color)'}}></div>
-                                <div style={{width: '100%', minHeight: '12px', backgroundColor: 'var(--primary-color)'}}></div>
-                                <div style={{width: '100%', minHeight: '12px', backgroundColor: 'var(--primary-color)'}}></div>
-                                <div style={{width: '100%', minHeight: '12px', backgroundColor: 'var(--primary-color)'}}></div>
-                                <div style={{width: '100%', minHeight: '12px', backgroundColor: 'var(--primary-color)'}}></div>
-                                <div style={{width: '100%', minHeight: '12px', backgroundColor: 'var(--primary-color)'}}></div>
-                                <div style={{width: '100%', minHeight: '12px', backgroundColor: 'var(--primary-color)'}}></div>
-                                <div style={{width: '100%', minHeight: '12px', backgroundColor: 'var(--primary-color)'}}></div>
-                                <div style={{width: '100%', minHeight: '12px', backgroundColor: 'var(--primary-color)'}}></div>
-                                <div style={{width: '100%', minHeight: '12px', backgroundColor: 'var(--primary-color)'}}></div>
-
+                                <div className='flex-row align-center' style={{gap: '5px'}}>
+                                    <VocalIcon style={{width: '30px', height: '30px', fill: 'var(--primary-color)'}} />
+                                    <div className='talent-name'>Вокал</div>
+                                </div>
+                                <div className='flex-row align-center' style={{gap: '5px'}}>
+                                    <ElectricGuitarIcon style={{width: '30px', height: '30px', fill: 'var(--primary-color)', stroke: 'var(--primary-color)'}} />
+                                    <div className='talent-name'>Электрогитара</div>
+                                </div>
+                                <div className='flex-row align-center' style={{gap: '5px'}}>
+                                    <AcousticGuitarIcon style={{width: '30px', height: '30px', fill: 'var(--primary-color)'}} />
+                                    <div className='talent-name'>Акустическая гитара</div>
+                                </div>
                             </div>
                         </div>
                     </div>
