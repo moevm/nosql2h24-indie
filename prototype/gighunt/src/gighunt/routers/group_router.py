@@ -26,13 +26,13 @@ class GroupRouter:
         GET /api/groups?page=<pageNumber>&page_size=<pageSize>
 
         Response:
-        [
+        {[
             {
                 group: Group,
                 start: stars
             },
             ...
-        ]
+        ]}
         """
 
     def _get_group(self, group_id: int) -> Response:

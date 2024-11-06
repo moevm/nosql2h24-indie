@@ -3,9 +3,11 @@ import uvicorn
 
 from gighunt.modules.application import Application
 from gighunt.modules.controller import Controller
+from gighunt.modules.settings import ApplicationSettings
 
 app = FastAPI()
-application = Application(app)
+application_settings = ApplicationSettings().get_settings()
+application = Application(app, application_settings)
 controller = Controller(application)
 app.include_router(controller.router)
 

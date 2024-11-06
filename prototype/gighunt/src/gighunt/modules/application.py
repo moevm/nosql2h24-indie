@@ -2,6 +2,7 @@ from arango import ArangoClient
 from fastapi import FastAPI
 
 from gighunt.modules.clients.arangodb_client import ArangoDBClient
+from gighunt.modules.settings import ApplicationSettings
 from gighunt.modules.use_cases.announcement_use_cases import AnnouncementUseCases
 from gighunt.modules.use_cases.group_use_cases import GroupUseCases
 from gighunt.modules.use_cases.place_use_cases import PlaceUseCases
@@ -9,19 +10,32 @@ from gighunt.modules.use_cases.user_use_cases import UserUseCases
 
 
 class Application:
-    def __init__(self, app: FastAPI) -> None:
+    def __init__(self, app: FastAPI, settings: ApplicationSettings) -> None:
         self._app = app
-        self._arangodb_client = ArangoDBClient(ArangoClient(hosts='http://arangodb:8529'))
 
-        self._arangodb_client.delete_database("test-db")
-        self._arangodb_client.create_database("test-db")
-        self._database = self._arangodb_client.connect_to_database("test-db")
-        self._graph = self._arangodb_client.create_graph_in_database(self._database, "test-graph")
+        arango_host = f"{settings.arangodb_settings.protocol}://{settings.arangodb_settings.hostname}:{settings.arangodb_settings.port}"
+        arango_client = ArangoClient(hosts=arango_host)
+        self._arangodb_client = ArangoDBClient(arango_client)
+        database_name = settings.arangodb_settings.database_name
+        graph_name = settings.arangodb_settings.graph_name
 
-        self._announcement_use_cases = AnnouncementUseCases(self._arangodb_client, self._graph, "Announcement")
-        self._group_use_cases = GroupUseCases(self._arangodb_client, self._graph, "Group")
+        self._arangodb_client.delete_database(database_name)
+        self._arangodb_client.create_database(database_name)
+        self._database = self._arangodb_client.connect_to_database(database_name)
+        self._graph = self._arangodb_client.create_graph_in_database(
+            self._database, graph_name
+        )
+
+        self._announcement_use_cases = AnnouncementUseCases(
+            self._arangodb_client, self._graph, "Announcement"
+        )
+        self._group_use_cases = GroupUseCases(
+            self._arangodb_client, self._graph, "Group"
+        )
         self._user_use_cases = UserUseCases(self._arangodb_client, self._graph, "User")
-        self._place_use_cases = PlaceUseCases(self._arangodb_client, self._graph, "Place")
+        self._place_use_cases = PlaceUseCases(
+            self._arangodb_client, self._graph, "Place"
+        )
 
     @property
     def app(self) -> FastAPI:
