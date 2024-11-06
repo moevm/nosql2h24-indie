@@ -1,3 +1,5 @@
+import time
+
 from fastapi import APIRouter, Response
 
 from gighunt.modules.models import UserAuthorization, UserRegistration
@@ -25,10 +27,20 @@ class UserRouter:
         )
 
     def _authorization(self, user_authorization: UserAuthorization) -> Response:
-        pass
+        return self._use_cases.try_authorization(user_authorization)
 
     def _registration(self, user_registration: UserRegistration) -> Response:
-        pass
+        db_node = {
+            "email": user_registration.email,
+            "password": user_registration.password,
+            "first_name": user_registration.name,
+            "last_name": user_registration.surname,
+            "creation_date": str(time.time()),
+            "last_edit_date": str(time.time()),
+            "avatar_uri": "",
+            "talents": []
+        }
+        return self._use_cases.create_new_entity(db_node)
 
     def _get_users(self, page: int, page_size: int) -> Response:
         """
@@ -43,6 +55,7 @@ class UserRouter:
             ...
         ]
         """
+        return self._use_cases.get_all_entities()
 
     def _get_user(self, user_id: int) -> Response:
         """
@@ -68,3 +81,4 @@ class UserRouter:
             ]
         }
         """
+        return self._use_cases.get_entity(str(user_id))
