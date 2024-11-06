@@ -34,6 +34,13 @@ class GroupRouter:
             ...
         ]}
         """
+        cursor = self._use_cases.get_all_entities().all(skip=(page - 1) * page_size, limit=page_size)
+        deque = cursor.batch()
+        groups_list = []
+        while len(deque):
+            group = deque.pop()
+            groups_list.append({"group": group, "stars": "i ain't the sharpest tool in the shed"})
+        return groups_list
 
     def _get_group(self, group_id: int) -> Response:
         """

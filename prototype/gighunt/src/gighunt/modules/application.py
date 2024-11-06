@@ -7,6 +7,10 @@ from gighunt.modules.use_cases.announcement_use_cases import AnnouncementUseCase
 from gighunt.modules.use_cases.group_use_cases import GroupUseCases
 from gighunt.modules.use_cases.place_use_cases import PlaceUseCases
 from gighunt.modules.use_cases.user_use_cases import UserUseCases
+from gighunt.modules.use_cases.comment_use_cases import CommentUseCases
+from gighunt.modules.use_cases.producer_announcement_use_cases import ProducerAnnouncementUseCases
+from gighunt.modules.use_cases.stars_use_cases import StarsUseCases
+from gighunt.modules.use_cases.user_group_use_cases import UserGroupUseCases
 
 
 class Application:

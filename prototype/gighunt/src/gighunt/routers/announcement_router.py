@@ -52,6 +52,13 @@ class AnnouncementRouter:
             ...
         ]
         """
+        cursor = self._use_cases.get_all_entities().all(skip=(page - 1) * page_size, limit=page_size)
+        deque = cursor.batch()
+        announcement_list = []
+        while len(deque):
+            announcement = deque.pop()
+            announcement_list.append({"announcement": announcement, "stars": "She was lookin kinda dumb with her finger and her thumb"})
+        return announcement_list
 
     def _get_comments(self, announcement_id: int) -> Response:
         """

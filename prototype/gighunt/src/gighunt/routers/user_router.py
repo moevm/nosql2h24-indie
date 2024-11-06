@@ -1,3 +1,4 @@
+import datetime
 import time
 
 from fastapi import APIRouter, Response
@@ -35,8 +36,8 @@ class UserRouter:
             "password": user_registration.password,
             "first_name": user_registration.name,
             "last_name": user_registration.surname,
-            "creation_date": str(time.time()),
-            "last_edit_date": str(time.time()),
+            "creation_date": str(datetime.datetime.now()),
+            "last_edit_date": str(datetime.datetime.now()),
             "avatar_uri": "",
             "talents": []
         }
@@ -55,7 +56,14 @@ class UserRouter:
             ...
         ]
         """
-        return self._use_cases.get_all_entities()
+        cursor =  self._use_cases.get_all_entities().all(skip=(page-1)*page_size, limit=page_size)
+        deque = cursor.batch()
+        users_list = []
+        while len(deque):
+            user = deque.pop()
+            users_list.append({"user":user, "stars":"somebody once told me the world is gonna roll me"})
+
+        return users_list
 
     def _get_user(self, user_id: int) -> Response:
         """

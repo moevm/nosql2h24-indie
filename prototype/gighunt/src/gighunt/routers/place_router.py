@@ -1,3 +1,5 @@
+import time
+
 from fastapi import APIRouter, Response
 
 from gighunt.modules.models import Place
@@ -28,6 +30,13 @@ class PlaceRouter:
             ...
         ]
         """
+        cursor =  self._use_cases.get_all_entities().all(skip=(page-1)*page_size, limit=page_size)
+        deque = cursor.batch()
+        places_list = []
+        while len(deque):
+            place = deque.pop()
+            places_list.append(place)
+        return places_list
 
     def _add_place(self, place: Place) -> Response:
         """
@@ -41,3 +50,16 @@ class PlaceRouter:
             phone_number: String
         }
         """
+        place = {
+                "user_id": "",
+                "name": place.name,
+                "creation_date": time.time(),
+                "last_edit_date": time.time(),
+                "avatar_uri":"",
+                "type": place.type,
+                "address": place.address,
+                "phone_number": place.phone_number,
+                "area": "",
+                "equipment": {"":""}
+        }
+        return self._use_cases.create_new_entity(place)
