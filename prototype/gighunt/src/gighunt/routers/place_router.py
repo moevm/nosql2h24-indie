@@ -50,11 +50,10 @@ class PlaceRouter:
             phone_number: String
         }
         """
-        place = {
-                "user_id": "",
+        db_place = {
                 "name": place.name,
-                "creation_date": time.time(),
-                "last_edit_date": time.time(),
+                "creation_date": str(datetime.datetime.now().date()),
+                "last_edit_date": str(datetime.datetime.now().date()),
                 "avatar_uri":"",
                 "type": place.type,
                 "address": place.address,
@@ -62,4 +61,4 @@ class PlaceRouter:
                 "area": "",
                 "equipment": {"":""}
         }
-        return self._use_cases.create_new_entity(place)
+        return self._use_cases.create_new_entity(db_place)

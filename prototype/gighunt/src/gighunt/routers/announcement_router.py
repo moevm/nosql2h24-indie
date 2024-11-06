@@ -83,6 +83,13 @@ class AnnouncementRouter:
             announcement: Announcement
         }
         """
+        #TODO
+        db_announcement = {
+            "creation_date": str(datetime.datetime.now().date()),
+            "content": user_announcement.announcement,
+            "tag": ""
+        }
+        return self._use_cases.create_new_entity(db_announcement)
 
     def _add_comment(self, comment: Comment) -> Response:
         """
@@ -118,3 +125,10 @@ class AnnouncementRouter:
             announcement: Announcement
         }
         """
+        #TODO
+        db_announcement = {
+            "creation_date": str(datetime.datetime.now().date()),
+            "content": user_announcement.announcement,
+            "tag": ""
+        }
+        return self._use_cases.create_new_entity(db_announcement)

@@ -31,17 +31,17 @@ class UserRouter:
         return self._use_cases.try_authorization(user_authorization)
 
     def _registration(self, user_registration: UserRegistration) -> Response:
-        db_node = {
+        db_user = {
             "email": user_registration.email,
             "password": user_registration.password,
             "first_name": user_registration.name,
             "last_name": user_registration.surname,
-            "creation_date": str(datetime.datetime.now()),
-            "last_edit_date": str(datetime.datetime.now()),
+            "creation_date": str(datetime.datetime.now().date()),
+            "last_edit_date": str(datetime.datetime.now().date()),
             "avatar_uri": "",
             "talents": []
         }
-        return self._use_cases.create_new_entity(db_node)
+        return self._use_cases.create_new_entity(db_user)
 
     def _get_users(self, page: int, page_size: int) -> Response:
         """
@@ -89,4 +89,5 @@ class UserRouter:
             ]
         }
         """
+        #TODO
         return self._use_cases.get_entity(str(user_id))

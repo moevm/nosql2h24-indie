@@ -34,6 +34,7 @@ class GroupRouter:
             ...
         ]}
         """
+        #TODO add star
         cursor = self._use_cases.get_all_entities().all(skip=(page - 1) * page_size, limit=page_size)
         deque = cursor.batch()
         groups_list = []
@@ -76,3 +77,12 @@ class GroupRouter:
             name: String
         }
         """
+        #TODO add UserGroup
+        db_group = {
+            "name":group.name,
+            "creation_date": str(datetime.datetime.now().date()),
+            "last_edit_date":str(datetime.datetime.now().date()),
+            "avatar_uri":"",
+            "genres": []
+        }
+        return self._use_cases.create_new_entity(db_group)
