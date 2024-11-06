@@ -2,6 +2,18 @@ from pydantic import BaseModel, Field
 from arango.typings import Json
 
 
+class UserAuthorization(BaseModel):
+    email: str
+    password: str
+
+
+class UserRegistration(BaseModel):
+    name: str
+    surname: str
+    email: str
+    password: str
+
+
 class Place(BaseModel):
     name: str
     type: str
