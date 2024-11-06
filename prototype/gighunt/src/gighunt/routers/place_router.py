@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Request, Response
+from fastapi import APIRouter, Response
 
 from gighunt.modules.models import Place
 from gighunt.modules.use_cases.place_use_cases import PlaceUseCases
@@ -8,8 +8,15 @@ class PlaceRouter:
     def __init__(self, router: APIRouter, use_cases: PlaceUseCases) -> None:
         self._router = router
         self._use_cases = use_cases
-        self._router.add_api_route("/api/places/{page}{page_size}", self._get_places, methods=["GET"], tags=["Place"])
-        self._router.add_api_route("/api/place", self._add_place, methods=["POST"], tags=["Place"])
+        self._router.add_api_route(
+            "/api/places/{page}{page_size}",
+            self._get_places,
+            methods=["GET"],
+            tags=["Place"],
+        )
+        self._router.add_api_route(
+            "/api/place", self._add_place, methods=["POST"], tags=["Place"]
+        )
 
     def _get_places(self, page: int, page_size: int) -> Response:
         """

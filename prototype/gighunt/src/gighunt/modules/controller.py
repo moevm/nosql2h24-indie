@@ -4,6 +4,7 @@ from typing import Any
 from fastapi import APIRouter, Response
 
 from gighunt.modules.application import Application
+from gighunt.modules.models import File
 from gighunt.routers.announcement_router import AnnouncementRouter
 from gighunt.routers.group_router import GroupRouter
 from gighunt.routers.place_router import PlaceRouter
@@ -29,7 +30,7 @@ class Controller:
     async def root(self) -> Response:
         return {"message": "Hello, World! It's Gighunt!"}
 
-    async def _import_data(self, file: Any) -> Response:
+    async def _import_data(self, file: File) -> Response:
         """
         POST /api/import_data
 

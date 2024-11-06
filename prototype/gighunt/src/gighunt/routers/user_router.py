@@ -7,8 +7,15 @@ class UserRouter:
     def __init__(self, router: APIRouter, use_cases: UserUseCases) -> None:
         self._router = router
         self._use_cases = use_cases
-        self._router.add_api_route("/api/user/{user_id}", self._get_user, methods=["GET"], tags=["User"])
-        self._router.add_api_route("/api/users/{page}{page_size}", self._get_users, methods=["GET"], tags=["User"])
+        self._router.add_api_route(
+            "/api/user/{user_id}", self._get_user, methods=["GET"], tags=["User"]
+        )
+        self._router.add_api_route(
+            "/api/users/{page}{page_size}",
+            self._get_users,
+            methods=["GET"],
+            tags=["User"],
+        )
 
     def _get_users(self, page: int, page_size: int) -> Response:
         """

@@ -1,5 +1,6 @@
-from fastapi import APIRouter, Request, Response
+from fastapi import APIRouter, Response
 
+from gighunt.modules.models import Group
 from gighunt.modules.use_cases.group_use_cases import GroupUseCases
 
 
@@ -7,9 +8,18 @@ class GroupRouter:
     def __init__(self, router: APIRouter, use_cases: GroupUseCases) -> None:
         self._router = router
         self._use_cases = use_cases
-        self._router.add_api_route("/api/groups/{page}{page_size}", self._get_groups, methods=["GET"], tags=["Group"])
-        self._router.add_api_route("/api/group/{group_id}", self._get_group, methods=["GET"], tags=["Group"])
-        self._router.add_api_route("/api/group", self._add_group, methods=["POST"], tags=["Group"])
+        self._router.add_api_route(
+            "/api/groups/{page}{page_size}",
+            self._get_groups,
+            methods=["GET"],
+            tags=["Group"],
+        )
+        self._router.add_api_route(
+            "/api/group/{group_id}", self._get_group, methods=["GET"], tags=["Group"]
+        )
+        self._router.add_api_route(
+            "/api/group", self._add_group, methods=["POST"], tags=["Group"]
+        )
 
     def _get_groups(self, page: int, page_size: int) -> Response:
         """
@@ -50,8 +60,7 @@ class GroupRouter:
         }
         """
 
-
-    def _add_group(self, request: Request) -> Response:
+    def _add_group(self, group: Group) -> Response:
         """
         POST /api/group
 
