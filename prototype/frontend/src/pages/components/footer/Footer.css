@@ -9,21 +9,25 @@
 }
 
 .layout {
+    box-sizing: border-box;
     position: absolute;
 
-    bottom: 30px;
-    align-self: center;
+    padding: 0 20% 0 20%;
 
-    height: 100px;
+    height: 100%;
     width: 100%;
 }
 
 .navbar {
     box-sizing: border-box;
-    background-color: var(--base-color);
+    position: absolute;
 
-    height: 100%;
-    width: 60%;
+    bottom: 30px;
+
+    height: 100px;
+    width: 100%;
+
+    background-color: var(--base-color);
 
     border-style: solid;
     border-radius: 20px;
