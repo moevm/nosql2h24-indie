@@ -34,14 +34,18 @@ class GroupRouter:
             ...
         ]}
         """
-        #TODO add star
         cursor = self._use_cases.get_all_entities().all(skip=(page - 1) * page_size, limit=page_size)
         deque = cursor.batch()
-        groups_list = []
+        group_list = []
+        star_use_cases = self._use_cases.edge_use_cases.stars_use_cases
         while len(deque):
             group = deque.pop()
-            groups_list.append({"group": group, "stars": "i ain't the sharpest tool in the shed"})
-        return groups_list
+            print(user["_id"])
+            star_cursor = star_use_cases.get_all_entities(star_use_cases.edge_collection_names.STARSTOGROUP.value).find(
+                {"_to": str(group["_id"])})
+            stars = list(star_cursor.batch())
+            group_list.append({"group": group, "stars": stars})
+        return group_list
 
     def _get_group(self, group_id: int) -> Response:
         """

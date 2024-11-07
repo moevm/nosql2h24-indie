@@ -55,9 +55,15 @@ class AnnouncementRouter:
         cursor = self._use_cases.get_all_entities().all(skip=(page - 1) * page_size, limit=page_size)
         deque = cursor.batch()
         announcement_list = []
+        star_use_cases = self._use_cases.edge_use_cases.stars_use_cases
         while len(deque):
             announcement = deque.pop()
-            announcement_list.append({"announcement": announcement, "stars": "She was lookin kinda dumb with her finger and her thumb"})
+            print(announcement["_id"])
+            star_cursor = star_use_cases.get_all_entities(star_use_cases.edge_collection_names.STARSTOANNOUNCEMENT.value).find(
+                {"_to": str(announcement["_id"])})
+            user_stars = {}
+            stars = list(star_cursor.batch())
+            announcement_list.append({"user": announcement, "stars": stars})
         return announcement_list
 
     def _get_comments(self, announcement_id: int) -> Response:
@@ -72,6 +78,18 @@ class AnnouncementRouter:
             }
         ]
         """
+        # cursor = self._use_cases.get_all_entities().all(skip=(page - 1) * page_size, limit=page_size)
+        # deque = cursor.batch()
+        # group_list = []
+        # star_use_cases = self._use_cases.edge_use_cases.stars_use_cases
+        # while len(deque):
+        #     group = deque.pop()
+        #     print(user["_id"])
+        #     star_cursor = star_use_cases.get_all_entities(star_use_cases.edge_collection_names.STARSTOGROUP.value).find(
+        #         {"_to": str(group["_id"])})
+        #     stars = list(star_cursor.batch())
+        #     group_list.append({"group": group, "stars": stars})
+        # return group_list
 
     def _add_user_announcement(self, user_announcement: UserAnnouncement) -> Response:
         """
@@ -102,7 +120,16 @@ class AnnouncementRouter:
             comment: Comment
         }
         """
+        comment_use_case = self._use_cases.edge_use_cases.comment_use_cases
+        db_comment = {
+            "_from": comment.user_id,
+            "_to": comment.announcement_id,
+            "creation_date": str(datetime.datetime.now().date()),
+            "content": comment.comment
+        }
+        return comment_use_case.create_new_entity(db_comment,comment_use_case.edge_collection_names.COMMENTTOANNOUNCEMENT.value)
 
+    #TODO copy this route in user router and group router (with changing star_use_case.edge_collection_names)
     def _add_star(self, star: Star) -> Response:
         """
         POST /api/star
@@ -112,6 +139,12 @@ class AnnouncementRouter:
             to: String
         }
         """
+        star_use_case = self._use_cases.edge_use_cases.stars_use_cases
+        db_star = {
+            "_from": star.From,
+            "_to": star.to
+        }
+        return star_use_case.create_new_entity(db_star,star_use_case.edge_collection_names.STARSTOUSER.value)
 
     def _add_group_announcement(
         self, group_announcement: GroupAnnouncement

@@ -4,12 +4,15 @@ from gighunt.modules.clients.arangodb_client import ArangoDBClient
 from arango.collection import VertexCollection
 from arango.typings import Json
 
+from gighunt.modules.use_cases.all_edge_use_cases import EdgeCollectionUseCases
+
 
 class BaseVertexUseCases:
-    def __init__(self, db_client: ArangoDBClient, graph: Graph, name:str) -> None:
+    def __init__(self, db_client: ArangoDBClient, graph: Graph, name:str, edge_use_cases: EdgeCollectionUseCases) -> None:
         self._db_client = db_client
         self._graph = graph
         self._name = name
+        self.edge_use_cases = edge_use_cases
         if(not self._graph.has_vertex_collection(self._name)):
             self._db_client.create_vertex_collection(self._graph, name)
 

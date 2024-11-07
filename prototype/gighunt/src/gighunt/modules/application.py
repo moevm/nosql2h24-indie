@@ -11,7 +11,7 @@ from gighunt.modules.use_cases.comment_use_cases import CommentUseCases
 from gighunt.modules.use_cases.producer_announcement_use_cases import ProducerAnnouncementUseCases
 from gighunt.modules.use_cases.stars_use_cases import StarsUseCases
 from gighunt.modules.use_cases.user_group_use_cases import UserGroupUseCases
-
+from gighunt.modules.use_cases.all_edge_use_cases import EdgeCollectionUseCases
 
 class Application:
     def __init__(self, app: FastAPI, settings: ApplicationSettings) -> None:
@@ -30,25 +30,16 @@ class Application:
             self._database, graph_name
         )
 
-        self._comment_use_cases = CommentUseCases(self._arangodb_client, self._graph,
-                                                  {'CommentToAnnouncement': {"from": "User", "to": "Announcement"}})
-        self._producer_announcement_use_cases = ProducerAnnouncementUseCases(self._arangodb_client, self._graph,
-                                                                            {'CommentFromUser': {"from": "User",
-                                                                                                 "to": "Announcement"},
-                                                                             'CommentFromGroup': {"from": "Group",
-                                                                                                  "to": "Announcement"}})
-        self._user_group_use_cases = UserGroupUseCases(self._arangodb_client, self._graph,
-                                                       {'UserGroup': {"from": "User", "to": "Group"}})
-        self._stars_use_cases = StarsUseCases(self._arangodb_client,self._graph, {"StarsToUser": {"from": "User", "to":"User"}, "StarsToGroup": {"from": "User", "to":"Group"},"StarsToAnnouncement": {"from": "User", "to":"Announcement"}})
+        self._edge_use_cases = EdgeCollectionUseCases(self._arangodb_client, self._graph)
         self._announcement_use_cases = AnnouncementUseCases(
-            self._arangodb_client, self._graph, "Announcement"
+            self._arangodb_client, self._graph, "Announcement",self._edge_use_cases
         )
         self._group_use_cases = GroupUseCases(
-            self._arangodb_client, self._graph, "Group"
+            self._arangodb_client, self._graph, "Group",self._edge_use_cases
         )
-        self._user_use_cases = UserUseCases(self._arangodb_client, self._graph, "User")
+        self._user_use_cases = UserUseCases(self._arangodb_client, self._graph, "User",self._edge_use_cases)
         self._place_use_cases = PlaceUseCases(
-            self._arangodb_client, self._graph, "Place"
+            self._arangodb_client, self._graph, "Place",None
         )
 
     @property

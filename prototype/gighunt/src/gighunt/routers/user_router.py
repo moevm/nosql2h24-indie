@@ -59,9 +59,13 @@ class UserRouter:
         cursor =  self._use_cases.get_all_entities().all(skip=(page-1)*page_size, limit=page_size)
         deque = cursor.batch()
         users_list = []
+        star_use_cases = self._use_cases.edge_use_cases.stars_use_cases
         while len(deque):
             user = deque.pop()
-            users_list.append({"user":user, "stars":"somebody once told me the world is gonna roll me"})
+            print(user["_id"])
+            star_cursor = star_use_cases.get_all_entities(star_use_cases.edge_collection_names.STARSTOUSER.value).find({"_to": str(user["_id"])})
+            stars = list(star_cursor.batch())
+            users_list.append({"user":user, "stars":stars})
 
         return users_list
 
@@ -90,4 +94,18 @@ class UserRouter:
         }
         """
         #TODO
-        return self._use_cases.get_entity(str(user_id))
+        user = self._use_cases.get_entity(str(user_id))
+        star_use_cases = self._use_cases.edge_use_cases.stars_use_cases
+        stars = star_use_cases.get_all_entities(star_use_cases.edge_collection_names.STARSTOUSER.value).find({"_to": str("User/"+str(user_id))})
+        # if (stars):
+        #     stars = list(stars)
+
+            #stars = stars.find({"_to": str("User/"+str(user_id))})
+        stars_count = len(stars)
+        user = {
+            "user": user,
+            "stars": stars_count,
+            "groups": [],
+            "announcements": []
+        }
+        return user

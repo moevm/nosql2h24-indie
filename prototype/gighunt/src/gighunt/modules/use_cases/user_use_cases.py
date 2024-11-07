@@ -7,11 +7,13 @@ from arango.collection import VertexCollection, EdgeCollection
 from arango.typings import Json
 from gighunt.modules.models import UserAuthorization
 
+from gighunt.modules.use_cases.all_edge_use_cases import EdgeCollectionUseCases
+
 class UserUseCases (BaseVertexUseCases):
 
-    def __init__(self, db_client: ArangoDBClient, graph: Graph, name:str):
-        super().__init__(db_client, graph, name)
-        print(super().create_new_entity({
+    def __init__(self, db_client: ArangoDBClient, graph: Graph, name:str, edge_use_cases:EdgeCollectionUseCases):
+        super().__init__(db_client, graph, name, edge_use_cases)
+        test_user = super().create_new_entity({
             "email": "test@gmail.com",
             "password": "qwerty",
             "first_name": "test",
@@ -22,7 +24,7 @@ class UserUseCases (BaseVertexUseCases):
             "talents": [
                 "electric-guitar"
             ]
-        }))
+        })
 
 
 
