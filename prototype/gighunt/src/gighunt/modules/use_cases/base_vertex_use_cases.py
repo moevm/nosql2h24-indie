@@ -26,3 +26,6 @@ class BaseVertexUseCases:
 
     def get_entity(self, entity_id: str) -> Json | None:
         return self._graph.vertex_collection(self._name).get(entity_id)
+
+    def get_another_entity(self, entity_id: str, collection_name:str):
+        return self._graph.vertex_collection(collection_name).get(entity_id)

@@ -97,10 +97,6 @@ class UserRouter:
         user = self._use_cases.get_entity(str(user_id))
         star_use_cases = self._use_cases.edge_use_cases.stars_use_cases
         stars = star_use_cases.get_all_entities(star_use_cases.edge_collection_names.STARSTOUSER.value).find({"_to": str("User/"+str(user_id))})
-        # if (stars):
-        #     stars = list(stars)
-
-            #stars = stars.find({"_to": str("User/"+str(user_id))})
         stars_count = len(stars)
         user = {
             "user": user,

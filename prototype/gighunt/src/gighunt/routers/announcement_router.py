@@ -1,3 +1,6 @@
+import datetime
+import time
+
 from fastapi import APIRouter, Response
 
 from gighunt.modules.models import GroupAnnouncement, Star, UserAnnouncement, Comment
@@ -78,18 +81,16 @@ class AnnouncementRouter:
             }
         ]
         """
-        # cursor = self._use_cases.get_all_entities().all(skip=(page - 1) * page_size, limit=page_size)
-        # deque = cursor.batch()
-        # group_list = []
-        # star_use_cases = self._use_cases.edge_use_cases.stars_use_cases
-        # while len(deque):
-        #     group = deque.pop()
-        #     print(user["_id"])
-        #     star_cursor = star_use_cases.get_all_entities(star_use_cases.edge_collection_names.STARSTOGROUP.value).find(
-        #         {"_to": str(group["_id"])})
-        #     stars = list(star_cursor.batch())
-        #     group_list.append({"group": group, "stars": stars})
-        # return group_list
+
+        cursor = self._use_cases.get_all_entities().find({"_to":str("Announcement/"+str(announcement_id))})
+        deque = cursor.batch()
+        comment_list = []
+        comment_use_case = self._use_cases.edge_use_cases.comment_use_cases
+        while len(deque):
+            comment = deque.pop()
+            user = self._use_cases.get_another_entity(comment["_from"], "User")
+            group_list.append({"comment": comment, "sender": user})
+        return comment_list
 
     def _add_user_announcement(self, user_announcement: UserAnnouncement) -> Response:
         """
@@ -101,7 +102,7 @@ class AnnouncementRouter:
             announcement: Announcement
         }
         """
-        #TODO
+        #TODO add producer announcement edge
         db_announcement = {
             "creation_date": str(datetime.datetime.now().date()),
             "content": user_announcement.announcement,
@@ -158,7 +159,7 @@ class AnnouncementRouter:
             announcement: Announcement
         }
         """
-        #TODO
+        #TODO add producer announcement edge
         db_announcement = {
             "creation_date": str(datetime.datetime.now().date()),
             "content": user_announcement.announcement,

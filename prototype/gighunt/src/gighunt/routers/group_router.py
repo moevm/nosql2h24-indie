@@ -71,6 +71,18 @@ class GroupRouter:
             ]
         }
         """
+        group = self._use_cases.get_entity(str(group_id))
+        star_use_cases = self._use_cases.edge_use_cases.stars_use_cases
+        stars = star_use_cases.get_all_entities(star_use_cases.edge_collection_names.STARSTOUSER.value).find(
+            {"_to": str("User/" + str(user_id))})
+        stars_count = len(stars)
+        group = {
+            "group": group,
+            "stars": stars_count,
+            "participants": [],
+            "announcements": []
+        }
+        return group
 
     def _add_group(self, group: Group) -> Response:
         """
