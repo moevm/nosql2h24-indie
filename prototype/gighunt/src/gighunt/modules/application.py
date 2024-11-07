@@ -30,6 +30,16 @@ class Application:
             self._database, graph_name
         )
 
+        self._comment_use_cases = CommentUseCases(self._arangodb_client, self._graph,
+                                                  {'CommentToAnnouncement': {"from": "User", "to": "Announcement"}})
+        self._producer_announcement_use_cases = ProducerAnnouncementUseCases(self._arangodb_client, self._graph,
+                                                                            {'CommentFromUser': {"from": "User",
+                                                                                                 "to": "Announcement"},
+                                                                             'CommentFromGroup': {"from": "Group",
+                                                                                                  "to": "Announcement"}})
+        self._user_group_use_cases = UserGroupUseCases(self._arangodb_client, self._graph,
+                                                       {'UserGroup': {"from": "User", "to": "Group"}})
+        self._stars_use_cases = StarsUseCases(self._arangodb_client,self._graph, {"StarsToUser": {"from": "User", "to":"User"}, "StarsToGroup": {"from": "User", "to":"Group"},"StarsToAnnouncement": {"from": "User", "to":"Announcement"}})
         self._announcement_use_cases = AnnouncementUseCases(
             self._arangodb_client, self._graph, "Announcement"
         )
