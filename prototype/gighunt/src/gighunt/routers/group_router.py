@@ -1,3 +1,6 @@
+import datetime
+import time
+
 from fastapi import APIRouter, Response
 
 from gighunt.modules.models import Group
@@ -40,7 +43,6 @@ class GroupRouter:
         star_use_cases = self._use_cases.edge_use_cases.stars_use_cases
         while len(deque):
             group = deque.pop()
-            print(user["_id"])
             star_cursor = star_use_cases.get_all_entities(star_use_cases.edge_collection_names.STARSTOGROUP.value).find(
                 {"_to": str(group["_id"])})
             stars = list(star_cursor.batch())

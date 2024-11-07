@@ -66,7 +66,7 @@ class AnnouncementRouter:
                 {"_to": str(announcement["_id"])})
             user_stars = {}
             stars = list(star_cursor.batch())
-            announcement_list.append({"user": announcement, "stars": stars})
+            announcement_list.append({"announcement": announcement, "stars": stars})
         return announcement_list
 
     def _get_comments(self, announcement_id: int) -> Response:
@@ -162,7 +162,7 @@ class AnnouncementRouter:
         #TODO add producer announcement edge
         db_announcement = {
             "creation_date": str(datetime.datetime.now().date()),
-            "content": user_announcement.announcement,
+            "content": group_announcement.announcement,
             "tag": ""
         }
         return self._use_cases.create_new_entity(db_announcement)
