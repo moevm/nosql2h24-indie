@@ -16,7 +16,7 @@ export default function Footer(props) {
     return <>
         <div className='backdrop'></div>
         <div className='layout'>
-            <div className='width-full height-full' style={{position: 'relative'}}>
+            <div className='width-full height-full' style={{position: 'relative', minWidth: '970px'}}>
                 <Outlet></Outlet>
                 <div className='navbar flex-row flex-center'>
                     <div className='flex-row align-center' style={{gap: '40px'}}>

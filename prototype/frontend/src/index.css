@@ -1,5 +1,6 @@
 ::-webkit-scrollbar {
     width: 5px;
+    height: 5px;
 }
 
 ::-webkit-scrollbar-track {
@@ -29,6 +30,7 @@ body {
     --base-color: #28282E;
     --primary-color: #79CE7C;
     --text-color: #E4E4E4;
+    --contrast-text-color: #333333;
     --tertiary-text-color: #AEAEAE;
 }
 

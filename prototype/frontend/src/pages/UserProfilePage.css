@@ -1,4 +1,4 @@
-.user-info-layout {
+.visible-layout {
     background-color: var(--base-color);
     border-radius: 20px;
 }
@@ -6,6 +6,14 @@
 .avatar-container {
     width: 170px;
     height: 170px;
+
+    border-radius: 9999px;
+    overflow: clip;
+}
+
+.group-avatar-container {
+    width: 60px;
+    height: 60px;
 
     border-radius: 9999px;
     overflow: clip;
@@ -35,11 +43,6 @@
     font-weight: normal;
 }
 
-.talents-layout {
-    background-color: var(--base-color);
-    border-radius: 20px;
-}
-
 .caption {
     color: var(--text-color);
     font-size: 40px;
@@ -50,5 +53,39 @@
     color: var(--text-color);
     font-size: 24px;
     font-weight: normal;
+}
+
+.actions-button {
+    display: flex;
+
+    width: 120px;
+    height: 40px;
+
+    background-color: var(--primary-color);
+    border-radius: 10px;
+
+    justify-content: center;
+    align-items: center;
+
+    color: var(--contrast-text-color);
+    font-size: 10px;
+    font-weight: normal;
+}
+
+.group-name-text {
+    color: var(--text-color);
+    font-size: 24px;
+    font-weight: normal;
+}
+
+.group-info-text {
+    color: var(--tertiary-text-color);
+    font-size: 12px;
+    font-weight: normal;
+}
+
+.gradient {
+    width: 30px; 
+    background: linear-gradient(0.25turn rgba(from var(--base-color) R G B / 0), rgba(from var(--base-color) R G B / 0.4));
 
 }
