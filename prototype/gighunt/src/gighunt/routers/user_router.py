@@ -146,8 +146,8 @@ class UserRouter:
         """
         star_use_case = self._use_cases.edge_use_cases.stars_use_cases
         db_star = {
-            "_from": star.From,
-            "_to": star.to
+            "_from": "User/" + str(star.From),
+            "_to": "User/" + str(star.to)
         }
         return star_use_case.create_new_entity(db_star,star_use_case.edge_collection_names.STARSTOUSER.value)
 

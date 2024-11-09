@@ -85,7 +85,7 @@ class GroupRouter:
         group = self._use_cases.get_entity(str(group_id))
         star_use_cases = self._use_cases.edge_use_cases.stars_use_cases
         stars = star_use_cases.get_all_entities(star_use_cases.edge_collection_names.STARSTOUSER.value).find(
-            {"_to": str("User/" + str(user_id))})
+            {"_to": str("Group/" + str(group_id))})
         stars_count = len(stars)
         group = {
             "group": group,
@@ -125,8 +125,8 @@ class GroupRouter:
         """
         star_use_case = self._use_cases.edge_use_cases.stars_use_cases
         db_star = {
-            "_from": star.From,
-            "_to": star.to
+            "_from": "User/" + str(star.From),
+            "_to": "Group/" + str(star.to)
         }
         return star_use_case.create_new_entity(db_star,star_use_case.edge_collection_names.STARSTOGROUP.value)
 
@@ -142,7 +142,7 @@ class GroupRouter:
         }
         """
         star_use_cases = self._use_cases.edge_use_cases.stars_use_cases
-        cursor = star_use_cases.get_all_entities(star_use_cases.edge_collection_names.STARSTOGROUP.value).find({"_from": str("User/"+str(source_user_id)), "_to":str("User/" + str(dest_group_id))})
+        cursor = star_use_cases.get_all_entities(star_use_cases.edge_collection_names.STARSTOGROUP.value).find({"_from": str("User/"+str(source_user_id)), "_to":str("Group/" + str(dest_group_id))})
         star = cursor.batch()
         return len(star)!=0
 
