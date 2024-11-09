@@ -5,7 +5,7 @@ from fastapi import APIRouter, Response
 
 from gighunt.modules.models import UserAuthorization, UserRegistration
 from gighunt.modules.use_cases.user_use_cases import UserUseCases
-
+from gighunt.modules.models import GroupAnnouncement, Star, UserAnnouncement, Comment
 
 class UserRouter:
     def __init__(self, router: APIRouter, use_cases: UserUseCases) -> None:
@@ -25,6 +25,18 @@ class UserRouter:
             self._get_users,
             methods=["GET"],
             tags=["User"],
+        )
+        self._router.add_api_route(
+            "/api/get_user_star",
+            self._get_is_user_star,
+            methods=["GET"],
+            tags=["User"]
+        )
+        self._router.add_api_route(
+            "/api/user_star", self._add_star, methods=["POST"], tags=["User"]
+        )
+        self._router.add_api_route(
+            "/api/all_talents", self._get_all_talents, methods=["GET"], tags=["Static"]
         )
 
     def _authorization(self, user_authorization: UserAuthorization) -> Response:
@@ -105,3 +117,48 @@ class UserRouter:
             "announcements": []
         }
         return user
+
+    def _get_is_user_star(self, source_user_id: int, dest_user_id: int) ->Response:
+        """
+        GET /api/get_user_star?user_id=<UserId>
+        :param source_user_id: int
+        :param dest_user_id: int
+        :return:
+        Response:
+        {
+            value: bool
+        }
+        """
+        star_use_cases = self._use_cases.edge_use_cases.stars_use_cases
+        cursor = star_use_cases.get_all_entities(star_use_cases.edge_collection_names.STARSTOUSER.value).find({"_from": str("User/"+str(source_user_id)), "_to":str("User/"+str(dest_user_id))})
+        star = cursor.batch()
+        return len(star)!=0
+
+
+    def _add_star(self, star: Star) -> Response:
+        """
+        POST /api/user_star
+
+        {
+            from: String,
+            to: String
+        }
+        """
+        star_use_case = self._use_cases.edge_use_cases.stars_use_cases
+        db_star = {
+            "_from": star.From,
+            "_to": star.to
+        }
+        return star_use_case.create_new_entity(db_star,star_use_case.edge_collection_names.STARSTOUSER.value)
+
+    def _get_all_talents(self)->Response:
+        """
+        Get /api/all_talents
+        :return:
+        {
+            talents: []
+        }
+        """
+        static = dict(self._use_cases.get_static_collection())
+        key = list(static.keys())[0]
+        return static[key]["talents"]

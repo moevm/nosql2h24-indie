@@ -25,6 +25,7 @@ class UserUseCases (BaseVertexUseCases):
                 "electric-guitar"
             ]
         })
+        self.create_static_collection()
 
 
 
@@ -65,5 +66,20 @@ class UserUseCases (BaseVertexUseCases):
         elif user_list[0]["password"]!= user_authorization.password:
             return {"code":401, "message":"wrong password"}
         else: return {"code":200, "message": "success authorization", "body": user_list[0]}
+
+    def create_static_collection(self)->VertexCollection:
+        self.static_collection_name = "Static"
+        self.static_collection = self._db_client.create_vertex_collection(self._graph, self.static_collection_name)
+        static_data = {
+            "equipment": [],
+            "tags": [],
+            "talents": ["vocal", "guitar", "viola", "bass", "percussion"],
+            "genres": []
+        }
+        self.static_data_vertex = self._db_client.add_vertex(self._graph, self.static_collection_name,static_data)
+
+    def get_static_collection(self)->VertexCollection:
+        return self._db_client.get_vertex_collection(self._graph, self.static_collection_name)
+
 
 
