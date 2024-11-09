@@ -18,6 +18,8 @@ class ArangoDBClient:
         self.__system_database = self._client.db(
             "_system", username=self.__username, password=self.__password
         )
+    def execute_query(self, query:str):
+        return self.__system_database.aql.execute(query)
 
     def create_database(self, database_name: str) -> bool:
         if not self.__system_database.has_database(database_name):
@@ -63,7 +65,7 @@ class ArangoDBClient:
 
     def get_edge_collection(
         self, graph: Graph, collection_name: str
-    ) -> VertexCollection:
+    ) -> EdgeCollection:
         if graph.has_edge_collection(collection_name):
             return graph.edge_collection(collection_name)
         return None

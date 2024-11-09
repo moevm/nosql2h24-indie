@@ -13,7 +13,7 @@ pydantic-settings = "^2.6.0"
 uvicorn = "^0.32.0"
 
 [tool.poetry.scripts]
-start-backend = "src.gighunt.app:start_backend"
+start-backend = "src.gighunt.main:start_backend"
 
 [build-system]
 requires = ["poetry-core"]
