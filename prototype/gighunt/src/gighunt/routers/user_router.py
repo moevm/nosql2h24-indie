@@ -118,7 +118,12 @@ class UserRouter:
             prod_announcements = list(all_prod_ann.find({"_from": str("User/" + str(user_id))}).batch())
             for edge in prod_announcements:
                 ann = self._use_cases.get_another_entity(edge["_to"], "Announcement")
-                announcements.append(ann)
+                ann_stars = list(star_use_cases.get_all_entities(star_use_cases.edge_collection_names.STARSTOANNOUNCEMENT.value).find({"_to":ann.get("_id")}))
+                ann_struct = {
+                    "announcement": ann,
+                    "stars": len(ann_stars)
+                }
+                announcements.append(ann_struct)
 
         user = {
             "user": user,

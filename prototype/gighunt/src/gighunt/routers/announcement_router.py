@@ -121,7 +121,8 @@ class AnnouncementRouter:
             "_to": ann_id
         }
         prod_ann_use_cases = self._use_cases.edge_use_cases.producer_announcement_use_cases
-        return prod_ann_use_cases.create_new_entity(prod_ann_data, prod_ann_use_cases.edge_collection_names.ANNOUNCEMENTFROMUSER.value)
+        prod_ann_use_cases.create_new_entity(prod_ann_data, prod_ann_use_cases.edge_collection_names.ANNOUNCEMENTFROMUSER.value)
+        return announcement
 
     def _add_comment(self, comment: Comment) -> Response:
         """
@@ -183,8 +184,9 @@ class AnnouncementRouter:
             "_to": ann_id
         }
         prod_ann_use_cases = self._use_cases.edge_use_cases.producer_announcement_use_cases
-        return prod_ann_use_cases.create_new_entity(prod_ann_data,
+        prod_ann_use_cases.create_new_entity(prod_ann_data,
                                                     prod_ann_use_cases.edge_collection_names.ANNOUNCEMENTFROMGROUP.value)
+        return announcement
 
     def _get_is_announcement_star(self, source_user_id: int, dest_announcement_id: int) ->Response:
         """
