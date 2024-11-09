@@ -36,7 +36,7 @@ class UserRouter:
             "/api/user_star", self._add_star, methods=["POST"], tags=["User"]
         )
         self._router.add_api_route(
-            "/api/all_talents", self._get_all_talents, methods=["GET"], tags=["Static"]
+            "/api/static_all", self._get_static_field, methods=["GET"], tags=["Static"]
         )
 
     def _authorization(self, user_authorization: UserAuthorization) -> Response:
@@ -110,11 +110,21 @@ class UserRouter:
         star_use_cases = self._use_cases.edge_use_cases.stars_use_cases
         stars = star_use_cases.get_all_entities(star_use_cases.edge_collection_names.STARSTOUSER.value).find({"_to": str("User/"+str(user_id))})
         stars_count = len(stars)
+
+        prod_ann_use_case = self._use_cases.edge_use_cases.producer_announcement_use_cases
+        announcements = []
+        all_prod_ann = prod_ann_use_case.get_all_entities(prod_ann_use_case.edge_collection_names.ANNOUNCEMENTFROMUSER.value)
+        if(all_prod_ann):
+            prod_announcements = list(all_prod_ann.find({"_from": str("User/" + str(user_id))}).batch())
+            for edge in prod_announcements:
+                ann = self._use_cases.get_another_entity(edge["_to"], "Announcement")
+                announcements.append(ann)
+
         user = {
             "user": user,
             "stars": stars_count,
             "groups": [],
-            "announcements": []
+            "announcements": announcements
         }
         return user
 
@@ -151,14 +161,14 @@ class UserRouter:
         }
         return star_use_case.create_new_entity(db_star,star_use_case.edge_collection_names.STARSTOUSER.value)
 
-    def _get_all_talents(self)->Response:
+    def _get_static_field(self, static_field:str)->Response:
         """
-        Get /api/all_talents
+        Get /api/static_all?static_field=<staticField>
         :return:
         {
-            talents: []
+            data: []
         }
         """
         static = dict(self._use_cases.get_static_collection())
         key = list(static.keys())[0]
-        return static[key]["talents"]
+        return static[key][static_field]
