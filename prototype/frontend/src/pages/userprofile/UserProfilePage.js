@@ -1,6 +1,6 @@
 import './UserProfilePage.css';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 
@@ -8,6 +8,8 @@ import TalentDisplay from '../components/talentdisplay/TalentDisplay.js';
 import UserGroupInfo from '../components/usergroupinfo/UserGroupInfo.js';
 import PostAnnouncement from '../components/postannouncement/PostAnnouncement.js';
 import Announcement from '../components/announcement/Announcement.js';
+
+import { getUser } from '../../requests/Requests.js';
 
 import { ReactComponent as BigStarIcon } from './big-star.svg';
 
@@ -27,6 +29,19 @@ const CustomButton = styled(Button)(() => ({
 export default function UserProfile(props) {
 
     const [profileStarred, setProfileStarred] = useState(false);
+    const [starsAmount, setStarsAmount] = useState(0);
+    const [user, setUser] = useState(undefined);
+    const [announcements, setAnnouncements] = useState([]);
+    const [groups, setGroups] = useState([]);
+
+    useEffect(() => {
+        getUser('2027').then((response) => {
+            setUser(response.user);
+            setStarsAmount(response.stars);
+            setGroups(response.groups);
+            setAnnouncements(response.announcements);
+        });
+    }, []);
 
     return <>
         <div className='border-box flex-column width-full height-full' style={{boxSizing: 'border-box', paddingTop: '70px', gap: '40px'}}>
@@ -36,14 +51,14 @@ export default function UserProfile(props) {
                         <div className='flex-row flex-space border-box width-full height-full' style={{padding: '0 100px 0 60px', gap: '30px'}}>
                             <div className='fit-width'>
                                 <div className='avatar-container'>
-                                    <img className='width-full height-full' style={{objectFit: 'cover'}} alt='' src='https://preview.redd.it/young-thom-yorke-v0-1d3qmko89jsc1.jpg?width=738&format=pjpg&auto=webp&s=cae24d549db41a16d23da2f40343fc77035be5cd'></img>
+                                    <img className='width-full height-full' style={{objectFit: 'cover'}} alt='' src={user?.avatar_uri}></img>
                                 </div>
                             </div>
                             <div className='flex-column flex-center height-full width-full' style={{gap: '5px'}}>
                                 <div className='flex-row flex-space width-full'>
                                     <div className='flex-column'>
-                                        <div className='first-name-text'>Томас</div>
-                                        <div className='last-name-text'>Йорк</div>
+                                        <div className='first-name-text'>{user?.first_name}</div>
+                                        <div className='last-name-text'>{user?.last_name}</div>
                                     </div> 
                                     <div className='flex-column align-center flex-center' style={{gap: '5px'}}>
                                         <BigStarIcon
@@ -55,16 +70,16 @@ export default function UserProfile(props) {
                                                 setProfileStarred(!profileStarred);
                                             }}
                                         />
-                                        <div className='stars-count'>1k+</div>
+                                        <div className='stars-count'>{starsAmount}</div>
                                     </div> 
                                 </div>
                                 <div className='flex-row flex-space width-full'>
                                     <div className='tertiary-info'>Впервые присоединился</div>
-                                    <div className='tertiary-info'>01.01.2020</div>
+                                    <div className='tertiary-info'>{user?.creation_date}</div>
                                 </div>
                                 <div className='flex-row flex-space width-full'>
                                     <div className='tertiary-info'>Последнее изменение</div>
-                                    <div className='tertiary-info'>01.01.2020</div>
+                                    <div className='tertiary-info'>{user?.last_edit_date}</div>
                                 </div>
                             </div>
                         </div>
@@ -77,21 +92,14 @@ export default function UserProfile(props) {
                                 <div className='caption'>Таланты</div>
                             </div>
                             <div className='scroll-column' style={{gap: '10px', paddingRight: '10px'}}>
-                                <TalentDisplay
-                                    talent='vocal'
-                                />
-                                <TalentDisplay
-                                    talent='electric-guitar'
-                                />
-                                <TalentDisplay
-                                    talent='acoustic-guitar'
-                                />
-                                <TalentDisplay
-                                    talent='drums'
-                                />
-                                <TalentDisplay
-                                    talent='bass'
-                                />
+                                {
+                                    user?.talents.map((talent) => {
+                                        return <TalentDisplay
+                                            key={talent}
+                                            talent={talent}
+                                        />
+                                    })
+                                }
                             </div>
                         </div>
                     </div>
@@ -114,15 +122,27 @@ export default function UserProfile(props) {
                     />
                     <div className='width-full height-full' style={{position: 'relative'}}>
                         <div className='scroll-column' style={{gap: '20px'}}>
-                            <Announcement 
-                                authorName='Томас'
-                                tag='Концерт'
-                                date='1 час назад'
-                                content='Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed eget libero eget odio 
-                                        elementum efficitur ac ac ligula. In sed dui vitae mauris elementum euismod eu a augue. 
-                                        Aenean ullamcorper.'
-                                starsAmount='1k+'
-                            />
+                            {
+                                announcements.map((announcement) => {
+                                    return <Announcement 
+                                        key={announcement.id}
+                                        authorName={announcement.author_name}
+                                        tag={announcement.tag}
+                                        date={announcement.date}
+                                        content={announcement.content}
+                                        starsAmount={announcement.stars_amount}
+                                    />
+                                })
+                            }
+                            {/* <Announcement  */}
+                            {/*     authorName='Томас' */}
+                            {/*     tag='Концерт' */}
+                            {/*     date='1 час назад' */}
+                            {/*     content='Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed eget libero eget odio  */}
+                            {/*             elementum efficitur ac ac ligula. In sed dui vitae mauris elementum euismod eu a augue.  */}
+                            {/*             Aenean ullamcorper.' */}
+                            {/*     starsAmount='1k+' */}
+                            {/* /> */}
                         </div>
                     </div>
                 </div>
@@ -131,14 +151,23 @@ export default function UserProfile(props) {
                         <div className='border-box flex-column width-full height-full' style={{padding: '25px 0 40px 0', gap: '10px'}}>
                             <div className='caption'>Группы</div>
                             <div className='scroll-column' style={{gap: '15px', paddingRight: '15px'}}>
-                                <UserGroupInfo
-                                    group={{name: 'Радиолюбители', avatar_uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTVfBzJ3q1OdwAUnScbjEdYUh8psz24q0meDw&s'}}
-                                    joinDate={'01.01.2020'}
-                                />
-                                <UserGroupInfo
-                                    group={{name: 'Улыбка', avatar_uri: 'https://yt3.googleusercontent.com/aCf8WKRR9eqx0GhLLLoaDCJKRv-udsfJtX0K4xnrBBJeKPIf5jIGbzKE4kZ5lZSRVzvmjZjyCQ=s900-c-k-c0x00ffffff-no-rj'}}
-                                    joinDate={'01.01.2020'}
-                                />
+                                {
+                                    groups.map((group) => {
+                                        return <UserGroupInfo
+                                            key={group.id}
+                                            group={group}
+                                            joinDate={group.join_date}
+                                        />
+                                    })
+                                }
+                                {/* <UserGroupInfo */}
+                                {/*     group={{name: 'Радиолюбители', avatar_uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTVfBzJ3q1OdwAUnScbjEdYUh8psz24q0meDw&s'}} */}
+                                {/*     joinDate={'01.01.2020'} */}
+                                {/* /> */}
+                                {/* <UserGroupInfo */}
+                                {/*     group={{name: 'Улыбка', avatar_uri: 'https://yt3.googleusercontent.com/aCf8WKRR9eqx0GhLLLoaDCJKRv-udsfJtX0K4xnrBBJeKPIf5jIGbzKE4kZ5lZSRVzvmjZjyCQ=s900-c-k-c0x00ffffff-no-rj'}} */}
+                                {/*     joinDate={'01.01.2020'} */}
+                                {/* /> */}
                             </div>
                         </div>
                     </div>

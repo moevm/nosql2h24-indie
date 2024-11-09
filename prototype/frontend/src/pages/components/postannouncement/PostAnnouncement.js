@@ -7,6 +7,8 @@ import TextField from '@mui/material/TextField';
 
 import SelectTag from '../selecttag/SelectTag.js';
 
+import { postUserAnnouncement } from '../../../requests/Requests.js';
+
 const CustomTextField = styled(TextField)(() => ({
     color: 'var(--text-color)',
 }));
@@ -60,7 +62,11 @@ export default function PostAnnouncement(props) {
                     variant='contained'
                     onClick={(event) => {
 
-                        // TODO: send POST request to server
+                        postUserAnnouncement('2027', {
+                            tag: selectedTag,
+                            content: announcementContent,
+                            creation_date: Date.now()
+                        });
 
                         setSelectedTag('');
                         setAnnouncementContent('');
