@@ -3,13 +3,15 @@ import './UserProfilePage.css';
 import React, { useState, useEffect } from 'react';
 import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import TalentDisplay from '../components/talentdisplay/TalentDisplay.js';
 import UserGroupInfo from '../components/usergroupinfo/UserGroupInfo.js';
 import PostAnnouncement from '../components/postannouncement/PostAnnouncement.js';
 import Announcement from '../components/announcement/Announcement.js';
 
-import { getUser } from '../../requests/Requests.js';
+import { getUser, getUserStarred, addStarToUser } from '../../requests/Requests.js';
 
 import { ReactComponent as BigStarIcon } from './big-star.svg';
 
@@ -34,16 +36,35 @@ export default function UserProfile(props) {
     const [announcements, setAnnouncements] = useState([]);
     const [groups, setGroups] = useState([]);
 
+    const handleStarClick = (event) => {
+        if (profileStarred) {
+            toast("Ты уже поставил звездочку");
+            // addStarToUser('523502', '523502').then((response) => {
+            //     setProfileStarred(false);
+            //     setStarsAmount(starsAmount - 1);
+            // });
+        } else {
+            addStarToUser('523502', '523502').then((response) => {
+                setProfileStarred(true);
+                setStarsAmount(Number(starsAmount) + 1);
+            });
+        }
+    }
+
     useEffect(() => {
-        getUser('2027').then((response) => {
+        getUser('523502').then((response) => {
             setUser(response.user);
             setStarsAmount(response.stars);
             setGroups(response.groups);
             setAnnouncements(response.announcements);
         });
+        getUserStarred('523502', '523502').then((response) => {
+            setProfileStarred(response);
+        })
     }, []);
 
     return <>
+        <ToastContainer />
         <div className='border-box flex-column width-full height-full' style={{boxSizing: 'border-box', paddingTop: '70px', gap: '40px'}}>
             <div className='flex-row flex-space width-full' style={{height: '230px', gap: '30px'}}>
                 <div className='visible-layout height-full width-full' style={{minWidth: '0px'}}>
@@ -66,9 +87,7 @@ export default function UserProfile(props) {
                                                 stroke: 'var(--primary-color)', 
                                                 fill: profileStarred ? 'var(--primary-color)' : 'none'
                                             }}
-                                            onClick={(event) => {
-                                                setProfileStarred(!profileStarred);
-                                            }}
+                                            onClick={handleStarClick}
                                         />
                                         <div className='stars-count'>{starsAmount}</div>
                                     </div> 

@@ -62,7 +62,7 @@ export default function PostAnnouncement(props) {
                     variant='contained'
                     onClick={(event) => {
 
-                        postUserAnnouncement('2027', {
+                        postUserAnnouncement('523502', {
                             tag: selectedTag,
                             content: announcementContent,
                             creation_date: Date.now()
