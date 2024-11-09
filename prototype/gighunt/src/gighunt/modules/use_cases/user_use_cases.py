@@ -72,7 +72,7 @@ class UserUseCases (BaseVertexUseCases):
         self.static_collection = self._db_client.create_vertex_collection(self._graph, self.static_collection_name)
         static_data = {
             "equipment": [],
-            "tags": [],
+            "tags": ["Релиз", "Концерт", "Поиск участников", "Поиск группы", "Поиск места", "Предложение места", "Поболтать", "Поиск тульпы", "Поиск Волынского"],
             "talents": ["vocal", "guitar", "viola", "bass", "percussion"],
             "genres": []
         }
