@@ -1,9 +1,12 @@
 import './Footer.css';
 
-import React, { useState } from 'react';
-import { NavLink, Outlet } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { NavLink, Outlet, useNavigate, useLocation } from 'react-router-dom';
 
 import { TagsContext } from '../../../contexts/TagsContext.js';
+import { UserContext } from '../../../contexts/UserContext.js';
+
+import { authorization } from '../../../requests/Requests.js';
 
 import { ReactComponent as AnnouncementsIcon } from './assets/announcements.svg';
 import { ReactComponent as GroupsIcon } from './assets/groups.svg';
@@ -18,15 +21,29 @@ export default function Footer(props) {
         return isActive ? 'active' : 'unactive';
     }
 
+    const navigate = useNavigate();
+    const location = useLocation();
+
     const [tags] = useState(['Концерт', 'Релиз']);
+    const [userId, setUserId] = useState(localStorage.getItem('userId'));
+
+    useEffect(() => {
+        if (localStorage.getItem('userId') == undefined && location.pathname != '/') {
+            navigate('/');
+        } else if (localStorage.getItem('userId') != undefined && location.pathname == '/') {
+            navigate('/announcements');
+        }
+    }, [location]);
 
     return <>
         <div className='backdrop'></div>
         <div className='layout'>
             <div className='border-box width-full height-full' style={{position: 'relative', minWidth: '970px', paddingBottom: '160px'}}>
-                <TagsContext.Provider value={tags}>
-                    <Outlet></Outlet>
-                </TagsContext.Provider>
+                <UserContext.Provider value={userId}>
+                    <TagsContext.Provider value={tags}>
+                        <Outlet></Outlet>
+                    </TagsContext.Provider>
+                </UserContext.Provider>
                 <div className='navbar flex-row flex-center'>
                     <div className='flex-row align-center' style={{gap: '40px'}}>
                         <NavLink to='/announcements' className={checkActive} style={{textDecoration: 'none'}}>
@@ -53,7 +70,7 @@ export default function Footer(props) {
                                 <div className='icon-caption'>Места</div>
                             </div>
                         </NavLink>
-                        <NavLink to='/users/1' className={checkActive} style={{textDecoration: 'none'}}>
+                        <NavLink to={`/users/${userId}`} className={checkActive} style={{textDecoration: 'none'}}>
                             <div className='flex-column align-center'>
                                 <ProfileIcon style={{width: '48px', height: '46px'}} part='icon'/>
                                 <div className='icon-caption'>Профиль</div>

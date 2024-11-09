@@ -1,9 +1,19 @@
-
 const protocol = 'http';
 const host = 'localhost';
 const port = '8000';
 
 const baseUrl = `${protocol}://${host}:${port}/api`;
+
+export function authorization(email, password) {
+    return fetch(`${baseUrl}/authorization`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email: email, password: password })
+        })
+        .then(response => response.json());
+}
 
 export function getUser(userId) {
     return fetch(`${baseUrl}/user/${userId}`, {

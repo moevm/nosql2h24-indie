@@ -62,14 +62,12 @@ export default function PostAnnouncement(props) {
                     variant='contained'
                     onClick={(event) => {
 
-                        postUserAnnouncement('523502', {
+                        postUserAnnouncement('526874', {
                             tag: selectedTag,
                             content: announcementContent,
                             creation_date: Date.now()
                         });
-
-                        setSelectedTag('');
-                        setAnnouncementContent('');
+                        window.location.reload();
                     }}
                 >
                     Опубликовать

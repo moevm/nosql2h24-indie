@@ -1,10 +1,13 @@
 import './UserProfilePage.css';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import { useParams } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+
+import { UserContext } from '../../contexts/UserContext.js';
 
 import TalentDisplay from '../components/talentdisplay/TalentDisplay.js';
 import UserGroupInfo from '../components/usergroupinfo/UserGroupInfo.js';
@@ -30,6 +33,9 @@ const CustomButton = styled(Button)(() => ({
 
 export default function UserProfile(props) {
 
+    const { userId } = useParams();
+    const authentifiedUserId = useContext(UserContext);
+
     const [profileStarred, setProfileStarred] = useState(false);
     const [starsAmount, setStarsAmount] = useState(0);
     const [user, setUser] = useState(undefined);
@@ -38,27 +44,31 @@ export default function UserProfile(props) {
 
     const handleStarClick = (event) => {
         if (profileStarred) {
-            toast("Ты уже поставил звездочку");
-            // addStarToUser('523502', '523502').then((response) => {
-            //     setProfileStarred(false);
-            //     setStarsAmount(starsAmount - 1);
-            // });
+            toast("Ты уже поставил звездочку!");
         } else {
-            addStarToUser('523502', '523502').then((response) => {
+            addStarToUser(authentifiedUserId, userId).then((response) => {
                 setProfileStarred(true);
                 setStarsAmount(Number(starsAmount) + 1);
             });
         }
     }
 
+    const handleInviteClick = (event) => {
+        toast("Приглашение в группу запрещено!");
+    }
+
+    const handleEditClick = (event) => {
+        toast("Редактирование профиля запрещено!");
+    }
+
     useEffect(() => {
-        getUser('523502').then((response) => {
+        getUser(userId).then((response) => {
             setUser(response.user);
             setStarsAmount(response.stars);
             setGroups(response.groups);
-            setAnnouncements(response.announcements);
+            setAnnouncements(response.announcements.reverse());
         });
-        getUserStarred('523502', '523502').then((response) => {
+        getUserStarred(authentifiedUserId, userId).then((response) => {
             setProfileStarred(response);
         })
     }, []);
@@ -131,37 +141,44 @@ export default function UserProfile(props) {
                             <div className='caption'>
                                 Действия
                             </div>
-                            <CustomButton className='actions-button' variant='contained'>
-                                Пригласить в группу
-                            </CustomButton>
+                            <div className='flex-row' style={{gap: '10px'}}>
+                                { userId === authentifiedUserId ?
+                                    <CustomButton className='actions-button' variant='contained'
+                                        onClick={handleEditClick}
+                                    >
+                                        Редактировать профиль
+                                    </CustomButton>
+                                    :
+                                    <CustomButton className='actions-button' variant='contained'
+                                        onClick={handleInviteClick}
+                                    >
+                                        Пригласить в группу
+                                    </CustomButton>
+                                }
+                            </div>
                         </div>
                     </div>
-                    <PostAnnouncement 
+                    { userId === authentifiedUserId ?
+                        <PostAnnouncement 
 
-                    />
+                        />
+                        :
+                        <></>
+                    }
                     <div className='width-full height-full' style={{position: 'relative'}}>
                         <div className='scroll-column' style={{gap: '20px'}}>
                             {
-                                announcements.map((announcement) => {
+                                announcements.reverse().map((announcement) => {
                                     return <Announcement 
-                                        key={announcement.id}
-                                        authorName={announcement.author_name}
+                                        key={announcement._key}
+                                        authorName={user?.first_name}
                                         tag={announcement.tag}
-                                        date={announcement.date}
+                                        date={announcement.creation_date}
                                         content={announcement.content}
-                                        starsAmount={announcement.stars_amount}
+                                        starsAmount={announcement.stars}
                                     />
                                 })
                             }
-                            {/* <Announcement  */}
-                            {/*     authorName='Томас' */}
-                            {/*     tag='Концерт' */}
-                            {/*     date='1 час назад' */}
-                            {/*     content='Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed eget libero eget odio  */}
-                            {/*             elementum efficitur ac ac ligula. In sed dui vitae mauris elementum euismod eu a augue.  */}
-                            {/*             Aenean ullamcorper.' */}
-                            {/*     starsAmount='1k+' */}
-                            {/* /> */}
                         </div>
                     </div>
                 </div>
@@ -173,7 +190,7 @@ export default function UserProfile(props) {
                                 {
                                     groups.map((group) => {
                                         return <UserGroupInfo
-                                            key={group.id}
+                                            key={group._key}
                                             group={group}
                                             joinDate={group.join_date}
                                         />
