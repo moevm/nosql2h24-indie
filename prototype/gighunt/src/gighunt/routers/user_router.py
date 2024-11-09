@@ -35,6 +35,9 @@ class UserRouter:
         self._router.add_api_route(
             "/api/user_star", self._add_star, methods=["POST"], tags=["User"]
         )
+        self._router.add_api_route(
+            "/api/all_talents", self._get_all_talents, methods=["GET"], tags=["Static"]
+        )
 
     def _authorization(self, user_authorization: UserAuthorization) -> Response:
         return self._use_cases.try_authorization(user_authorization)
@@ -148,3 +151,14 @@ class UserRouter:
         }
         return star_use_case.create_new_entity(db_star,star_use_case.edge_collection_names.STARSTOUSER.value)
 
+    def _get_all_talents(self)->Response:
+        """
+        Get /api/all_talents
+        :return:
+        {
+            talents: []
+        }
+        """
+        static = dict(self._use_cases.get_static_collection())
+        key = list(static.keys())[0]
+        return static[key]["talents"]
