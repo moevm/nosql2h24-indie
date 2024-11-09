@@ -41,6 +41,12 @@ class AnnouncementRouter:
             methods=["POST"],
             tags=["Announcement"],
         )
+        self._router.add_api_route(
+            "/api/get_announcement_star",
+            self._get_is_announcement_star,
+            methods=["GET"],
+            tags=["Announcement"]
+        )
 
     def _get_announcements(self, page: int, page_size: int) -> Response:
         """
@@ -145,7 +151,7 @@ class AnnouncementRouter:
             "_from": star.From,
             "_to": star.to
         }
-        return star_use_case.create_new_entity(db_star,star_use_case.edge_collection_names.STARSTOUSER.value)
+        return star_use_case.create_new_entity(db_star,star_use_case.edge_collection_names.STARSTOANNOUNCEMENT.value)
 
     def _add_group_announcement(
         self, group_announcement: GroupAnnouncement
@@ -166,3 +172,20 @@ class AnnouncementRouter:
             "tag": ""
         }
         return self._use_cases.create_new_entity(db_announcement)
+
+    def _get_is_announcement_star(self, source_user_id: int, dest_announcement_id: int) ->Response:
+        """
+        GET /api/get_user_star?user_id=<UserId>
+        :param source_user_id: int
+        :param dest_announcement_id: int
+        :return:
+        Response:
+        {
+            value: bool
+        }
+        """
+        star_use_cases = self._use_cases.edge_use_cases.stars_use_cases
+        cursor = star_use_cases.get_all_entities(star_use_cases.edge_collection_names.STARSTOANNOUNCEMENT.value).find({"_from": str("User/"+str(source_user_id)), "_to":str("User/" + str(dest_announcement_id))})
+        star = cursor.batch()
+        return len(star)!=0
+
