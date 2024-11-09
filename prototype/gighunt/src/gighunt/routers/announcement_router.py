@@ -117,11 +117,11 @@ class AnnouncementRouter:
         announcement = self._use_cases.create_new_entity(db_announcement)
         ann_id =  announcement.get("_id")
         prod_ann_data = {
-            "_from": user_announcement.user_id,
+            "_from": "User/" + str(user_announcement.user_id),
             "_to": ann_id
         }
         prod_ann_use_cases = self._use_cases.edge_use_cases.producer_announcement_use_cases
-        return prod_ann_use_cases.create_new_entity(prod_ann_data, prod_ann_use_cases.edge_collection_names.ANNOUNCEMENTFROMUSER)
+        return prod_ann_use_cases.create_new_entity(prod_ann_data, prod_ann_use_cases.edge_collection_names.ANNOUNCEMENTFROMUSER.value)
 
     def _add_comment(self, comment: Comment) -> Response:
         """
