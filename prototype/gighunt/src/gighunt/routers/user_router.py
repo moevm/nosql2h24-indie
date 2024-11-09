@@ -110,11 +110,21 @@ class UserRouter:
         star_use_cases = self._use_cases.edge_use_cases.stars_use_cases
         stars = star_use_cases.get_all_entities(star_use_cases.edge_collection_names.STARSTOUSER.value).find({"_to": str("User/"+str(user_id))})
         stars_count = len(stars)
+
+        prod_ann_use_case = self._use_cases.edge_use_cases.producer_announcement_use_cases
+        announcements = []
+        all_prod_ann = prod_ann_use_case.get_all_entities(prod_ann_use_case.edge_collection_names.ANNOUNCEMENTFROMUSER.value)
+        if(all_prod_ann):
+            prod_announcements = list(all_prod_ann.find({"_from": str("User/" + str(user_id))}).batch())
+            for edge in prod_announcements:
+                ann = self._use_cases.get_another_entity(edge["_to"], "Announcement")
+                announcements.append(ann)
+
         user = {
             "user": user,
             "stars": stars_count,
             "groups": [],
-            "announcements": []
+            "announcements": announcements
         }
         return user
 
