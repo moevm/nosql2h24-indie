@@ -108,7 +108,7 @@ class AnnouncementRouter:
             announcement: Announcement
         }
         """
-        #TODO add producer announcement edge
+
         db_announcement = {
             "creation_date": str(datetime.datetime.now().date()),
             "content": user_announcement.announcement.get("content"),
@@ -136,14 +136,13 @@ class AnnouncementRouter:
         """
         comment_use_case = self._use_cases.edge_use_cases.comment_use_cases
         db_comment = {
-            "_from": comment.user_id,
-            "_to": comment.announcement_id,
+            "_from": "User/" + str(comment.user_id),
+            "_to": "Announcement/" + str(comment.announcement_id),
             "creation_date": str(datetime.datetime.now().date()),
             "content": comment.comment
         }
         return comment_use_case.create_new_entity(db_comment,comment_use_case.edge_collection_names.COMMENTTOANNOUNCEMENT.value)
 
-    #TODO copy this route in user router and group router (with changing star_use_case.edge_collection_names)
     def _add_star(self, star: Star) -> Response:
         """
         POST /api/star
@@ -155,8 +154,8 @@ class AnnouncementRouter:
         """
         star_use_case = self._use_cases.edge_use_cases.stars_use_cases
         db_star = {
-            "_from": star.From,
-            "_to": star.to
+            "_from": "User/" + str(star.From),
+            "_to": "Announcement/" +str(star.to)
         }
         return star_use_case.create_new_entity(db_star,star_use_case.edge_collection_names.STARSTOANNOUNCEMENT.value)
 
@@ -172,13 +171,20 @@ class AnnouncementRouter:
             announcement: Announcement
         }
         """
-        #TODO add producer announcement edge
         db_announcement = {
             "creation_date": str(datetime.datetime.now().date()),
-            "content": group_announcement.announcement,
-            "tag": ""
+            "content": group_announcement.announcement.get("content"),
+            "tag": group_announcement.announcement.get("tag")
         }
-        return self._use_cases.create_new_entity(db_announcement)
+        announcement = self._use_cases.create_new_entity(db_announcement)
+        ann_id = announcement.get("_id")
+        prod_ann_data = {
+            "_from": "Group/" + str(group_announcement),
+            "_to": ann_id
+        }
+        prod_ann_use_cases = self._use_cases.edge_use_cases.producer_announcement_use_cases
+        return prod_ann_use_cases.create_new_entity(prod_ann_data,
+                                                    prod_ann_use_cases.edge_collection_names.ANNOUNCEMENTFROMGROUP.value)
 
     def _get_is_announcement_star(self, source_user_id: int, dest_announcement_id: int) ->Response:
         """
@@ -192,7 +198,7 @@ class AnnouncementRouter:
         }
         """
         star_use_cases = self._use_cases.edge_use_cases.stars_use_cases
-        cursor = star_use_cases.get_all_entities(star_use_cases.edge_collection_names.STARSTOANNOUNCEMENT.value).find({"_from": str("User/"+str(source_user_id)), "_to":str("User/" + str(dest_announcement_id))})
+        cursor = star_use_cases.get_all_entities(star_use_cases.edge_collection_names.STARSTOANNOUNCEMENT.value).find({"_from": str("User/"+str(source_user_id)), "_to":str("Announcement/" + str(dest_announcement_id))})
         star = cursor.batch()
         return len(star)!=0
 
