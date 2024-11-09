@@ -1,11 +1,16 @@
 import './Footer.css';
+
+import React, { useState } from 'react';
+import { NavLink, Outlet } from 'react-router-dom';
+
+import { TagsContext } from '../../../contexts/TagsContext.js';
+
 import { ReactComponent as AnnouncementsIcon } from './assets/announcements.svg';
 import { ReactComponent as GroupsIcon } from './assets/groups.svg';
 import { ReactComponent as UsersIcon } from './assets/users.svg';
 import { ReactComponent as PlacesIcon } from './assets/places.svg';
 import { ReactComponent as ProfileIcon } from './assets/profile.svg';
 import { ReactComponent as StatisticIcon } from './assets/statistic.svg';
-import { NavLink, Outlet } from 'react-router-dom';
 
 export default function Footer(props) {
 
@@ -13,11 +18,15 @@ export default function Footer(props) {
         return isActive ? 'active' : 'unactive';
     }
 
+    const [tags] = useState(['Концерт', 'Релиз']);
+
     return <>
         <div className='backdrop'></div>
         <div className='layout'>
-            <div className='width-full height-full' style={{position: 'relative', minWidth: '970px'}}>
-                <Outlet></Outlet>
+            <div className='border-box width-full height-full' style={{position: 'relative', minWidth: '970px', paddingBottom: '160px'}}>
+                <TagsContext.Provider value={tags}>
+                    <Outlet></Outlet>
+                </TagsContext.Provider>
                 <div className='navbar flex-row flex-center'>
                     <div className='flex-row align-center' style={{gap: '40px'}}>
                         <NavLink to='/announcements' className={checkActive} style={{textDecoration: 'none'}}>

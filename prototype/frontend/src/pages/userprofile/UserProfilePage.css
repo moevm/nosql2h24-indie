@@ -11,14 +11,6 @@
     overflow: clip;
 }
 
-.group-avatar-container {
-    width: 60px;
-    height: 60px;
-
-    border-radius: 9999px;
-    overflow: clip;
-}
-
 .tertiary-info {
     color: var(--tertiary-text-color);
     font-size: 12px;
@@ -72,20 +64,26 @@
     font-weight: normal;
 }
 
-.group-name-text {
+.author-name {
     color: var(--text-color);
-    font-size: 24px;
+    font-size: 16px;
     font-weight: normal;
 }
 
-.group-info-text {
+.announcement-date {
     color: var(--tertiary-text-color);
     font-size: 12px;
     font-weight: normal;
 }
 
-.gradient {
-    width: 30px; 
-    background: linear-gradient(0.25turn rgba(from var(--base-color) R G B / 0), rgba(from var(--base-color) R G B / 0.4));
+.announcement-stars-count {
+    color: var(--primary-color);
+    font-size: 12px;
+    font-weight: normal;
+}
 
+.annoncement-content {
+    color: var(--text-color);
+    font-size: 12px;
+    font-weight: normal;
 }

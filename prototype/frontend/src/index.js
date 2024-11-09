@@ -4,8 +4,8 @@ import './index.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 import Footer from './pages/components/footer/Footer.js';
-import UserProfile from './pages/UserProfilePage.js';
-import GroupProfile from './pages/GroupProfilePage.js';
+import UserProfile from './pages/userprofile/UserProfilePage.js';
+import GroupProfile from './pages/groupprofile/GroupProfilePage.js';
 
 const router = createBrowserRouter([
     {
