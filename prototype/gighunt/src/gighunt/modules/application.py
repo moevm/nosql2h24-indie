@@ -1,5 +1,6 @@
 from arango import ArangoClient
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from gighunt.modules.clients.arangodb_client import ArangoDBClient
 from gighunt.modules.settings import ApplicationSettings
@@ -16,6 +17,14 @@ from gighunt.modules.use_cases.all_edge_use_cases import EdgeCollectionUseCases
 class Application:
     def __init__(self, app: FastAPI, settings: ApplicationSettings) -> None:
         self._app = app
+
+        self._app.add_middleware(
+            CORSMiddleware,
+            allow_origins=["*"],
+            allow_credentials=True,
+            allow_methods=["*"],
+            allow_headers=["*"],
+        )
 
         arango_host = f"{settings.arangodb_settings.protocol}://{settings.arangodb_settings.hostname}:{settings.arangodb_settings.port}"
         arango_client = ArangoClient(hosts=arango_host)
