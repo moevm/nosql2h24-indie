@@ -29,4 +29,3 @@ services:
 
 volumes:
   arango_data:
-
