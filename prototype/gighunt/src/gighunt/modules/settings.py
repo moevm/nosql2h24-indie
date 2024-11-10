@@ -4,7 +4,7 @@ from pydantic_settings import BaseSettings
 
 class ArangoDBSettings(BaseModel):
     protocol: str = "http"
-    hostname: str = "arangodb"
+    hostname: str = "db"
     port: str = "8529"
     database_name: str = "prototype-db"
     graph_name: str = "prototype-graph"
