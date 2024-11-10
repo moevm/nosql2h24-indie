@@ -56,7 +56,8 @@ class AnnouncementRouter:
         [
             {
                 announcement: Announcement,
-                start: stars
+                start: stars,
+                sender: User
             },
             ...
         ]
@@ -67,12 +68,25 @@ class AnnouncementRouter:
         star_use_cases = self._use_cases.edge_use_cases.stars_use_cases
         while len(deque):
             announcement = deque.pop()
-            print(announcement["_id"])
+            #print(announcement["_id"])
+            producer_announcements_use_case = self._use_cases.edge_use_cases.producer_announcement_use_cases
+            user_ann = list(producer_announcements_use_case.get_all_entities(producer_announcements_use_case.edge_collection_names.ANNOUNCEMENTFROMUSER.value).find({"_to":announcement["_id"]}).batch())
+            group_ann = list(producer_announcements_use_case.get_all_entities(producer_announcements_use_case.edge_collection_names.ANNOUNCEMENTFROMGROUP.value).find({"_to":announcement["_id"]}).batch())
+            prod_ann = None
+            sender = {}
+            if len(user_ann):
+                prod_ann = user_ann[0]
+                sender = self._use_cases.get_another_entity(prod_ann.get("_from"), "User")
+            elif len(group_ann):
+                prod_ann = group_ann[0]
+                sender = self._use_cases.get_another_entity(prod_ann.get("_from"), "Group")
+            else:
+                print("no sender?")
             star_cursor = star_use_cases.get_all_entities(star_use_cases.edge_collection_names.STARSTOANNOUNCEMENT.value).find(
                 {"_to": str(announcement["_id"])})
             user_stars = {}
             stars = list(star_cursor.batch())
-            announcement_list.append({"announcement": announcement, "stars": stars})
+            announcement_list.append({"announcement": announcement, "stars": stars, "sender": sender})
         return announcement_list
 
     def _get_comments(self, announcement_id: int) -> Response:
@@ -95,7 +109,7 @@ class AnnouncementRouter:
         while len(deque):
             comment = deque.pop()
             user = self._use_cases.get_another_entity(comment["_from"], "User")
-            group_list.append({"comment": comment, "sender": user})
+            comment_list.append({"comment": comment, "sender": user})
         return comment_list
 
     def _add_user_announcement(self, user_announcement: UserAnnouncement) -> Response:
@@ -180,7 +194,7 @@ class AnnouncementRouter:
         announcement = self._use_cases.create_new_entity(db_announcement)
         ann_id = announcement.get("_id")
         prod_ann_data = {
-            "_from": "Group/" + str(group_announcement),
+            "_from": "Group/" + str(group_announcement.group_id),
             "_to": ann_id
         }
         prod_ann_use_cases = self._use_cases.edge_use_cases.producer_announcement_use_cases
