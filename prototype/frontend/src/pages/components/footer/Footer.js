@@ -6,7 +6,7 @@ import { NavLink, Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { TagsContext } from '../../../contexts/TagsContext.js';
 import { UserContext } from '../../../contexts/UserContext.js';
 
-import { authorization } from '../../../requests/Requests.js';
+import { getTags } from '../../../requests/Requests.js';
 
 import { ReactComponent as AnnouncementsIcon } from './assets/announcements.svg';
 import { ReactComponent as GroupsIcon } from './assets/groups.svg';
@@ -24,8 +24,14 @@ export default function Footer(props) {
     const navigate = useNavigate();
     const location = useLocation();
 
-    const [tags] = useState(['Концерт', 'Релиз']);
+    const [tags, setTags] = useState([]);
     const [userId, setUserId] = useState(localStorage.getItem('userId'));
+
+    useEffect(() => {
+        getTags().then(response => {
+            setTags(response);
+        });
+    }, [])
 
     useEffect(() => {
         if (localStorage.getItem('userId') == undefined && location.pathname != '/') {
@@ -39,7 +45,7 @@ export default function Footer(props) {
         <div className='backdrop'></div>
         <div className='layout'>
             <div className='border-box width-full height-full' style={{position: 'relative', minWidth: '970px', paddingBottom: '160px'}}>
-                <UserContext.Provider value={userId}>
+                <UserContext.Provider value={[userId, setUserId]}>
                     <TagsContext.Provider value={tags}>
                         <Outlet></Outlet>
                     </TagsContext.Provider>

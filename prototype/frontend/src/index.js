@@ -6,6 +6,11 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Footer from './pages/components/footer/Footer.js';
 import UserProfile from './pages/userprofile/UserProfilePage.js';
 import GroupProfile from './pages/groupprofile/GroupProfilePage.js';
+import Autorization from './pages/authorization/Authorization.js';
+import AnnouncementsList from './pages/announcementslist/AnnouncementsList.js';
+import UsersList from './pages/userslist/UsersList.js';
+import GroupsList from './pages/groupslist/GroupsList.js';
+import PlacesList from './pages/placeslist/PlacesList.js';
 
 const router = createBrowserRouter([
     {
@@ -14,11 +19,11 @@ const router = createBrowserRouter([
         children: [
             {
                 path: '/',
-                element: <div>Authentification/Login</div>,
+                element: <Autorization></Autorization>,
             },
             {
                 path: '/users',
-                element: <div>Users list</div> 
+                element: <UsersList></UsersList> 
             },
             {
                 path: '/users/:userId',
@@ -26,7 +31,7 @@ const router = createBrowserRouter([
             },
             {
                 path: '/groups',
-                element: <div>Groups list</div> 
+                element: <GroupsList></GroupsList> 
             },
             {
                 path: '/groups/:groupId',
@@ -34,11 +39,11 @@ const router = createBrowserRouter([
             },
             {
                 path: '/places',
-                element: <div>Places list</div> 
+                element: <PlacesList></PlacesList> 
             },
             {
                 path: '/announcements',
-                element: <div>Announcements list</div> 
+                element: <AnnouncementsList></AnnouncementsList> 
             },
             {
                 path: '/statistic',

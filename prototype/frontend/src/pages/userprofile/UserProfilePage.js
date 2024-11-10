@@ -16,7 +16,7 @@ import Announcement from '../components/announcement/Announcement.js';
 
 import { getUser, getUserStarred, addStarToUser } from '../../requests/Requests.js';
 
-import { ReactComponent as BigStarIcon } from './big-star.svg';
+import { ReactComponent as BigStarIcon } from './assets/big-star.svg';
 
 const CustomButton = styled(Button)(() => ({
     width: '120px',
@@ -34,7 +34,7 @@ const CustomButton = styled(Button)(() => ({
 export default function UserProfile(props) {
 
     const { userId } = useParams();
-    const authentifiedUserId = useContext(UserContext);
+    const [authentifiedUserId, setAuthentifiedUserId] = useContext(UserContext);
 
     const [profileStarred, setProfileStarred] = useState(false);
     const [starsAmount, setStarsAmount] = useState(0);
@@ -170,11 +170,12 @@ export default function UserProfile(props) {
                             {
                                 announcements.reverse().map((announcement) => {
                                     return <Announcement 
-                                        key={announcement._key}
+                                        key={announcement.announcement._key}
+                                        announcementId={announcement.announcement._key}
                                         authorName={user?.first_name}
-                                        tag={announcement.tag}
-                                        date={announcement.creation_date}
-                                        content={announcement.content}
+                                        tag={announcement.announcement.tag}
+                                        date={announcement.announcement.creation_date}
+                                        content={announcement.announcement.content}
                                         starsAmount={announcement.stars}
                                     />
                                 })

@@ -1,10 +1,15 @@
 import './Announcement.css';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import SelectTag from '../selecttag/SelectTag.js';
+import { UserContext } from '../../../contexts/UserContext.js';
+
+import { getAnnouncementStarred, addStarToAnnouncement } from '../../../requests/Requests.js';
 
 import { ReactComponent as StarIcon } from './assets/star.svg';
 
@@ -23,9 +28,29 @@ const CustomSmallButton = styled(Button)(() => ({
 
 export default function Announcement(props) {
 
+    const [authentifiedUserId, setAuthentifiedUserId] = useContext(UserContext);
     const [announcementStarred, setAnnouncementStarred] = useState(false);
+    const [starsAmount, setStarsAmount] = useState(props.starsAmount);
+
+    useEffect(() => {
+        getAnnouncementStarred(authentifiedUserId, props.announcementId).then((response) => {
+            setAnnouncementStarred(response);
+        });
+    }, []);
+
+    const handleStarClick = (event) => {
+        if (announcementStarred) {
+            toast("Ты уже поставил звездочку!");
+        } else {
+            addStarToAnnouncement(authentifiedUserId, props.announcementId).then((response) => {
+                setAnnouncementStarred(true);
+                setStarsAmount(Number(starsAmount) + 1);
+            })
+        }
+    }
 
     return <>
+        <ToastContainer></ToastContainer>
         <div className='visible-layout flex-column width-full' style={{height: 'fit-content', padding: '10px 0 10px 0', gap: '10px'}}>
             <div className='border-box flex-row width-full flex-space' style={{padding: '0 20px 0 20px'}}>
                 <div className='flex-row' style={{gap: '20px'}}>
@@ -46,15 +71,13 @@ export default function Announcement(props) {
                     {props.content}
                 </div>
                 <div className='flex-row align-center flex-center' style={{gap: '5px'}}>
-                    <div className='announcement-stars-count'>{props.starsAmount}</div>
+                    <div className='announcement-stars-count'>{starsAmount}</div>
                     <StarIcon
                         style={{
                             stroke: 'var(--primary-color)', 
                             fill: announcementStarred ? 'var(--primary-color)' : 'none'
                         }}
-                        onClick={(event) => {
-                            setAnnouncementStarred(!announcementStarred);
-                        }}
+                        onClick={handleStarClick}
                     />
                 </div> 
             </div>
@@ -62,6 +85,9 @@ export default function Announcement(props) {
                 <CustomSmallButton
                     className='actions-button'
                     variant='contained'
+                    onClick={() => {
+                        toast("Комментарии запрещены!");
+                    }}
                 >
                     Комментарии
                 </CustomSmallButton>

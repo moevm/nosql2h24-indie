@@ -1,9 +1,12 @@
 import './PostAnnouncement.css';
 
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
+
+import { UserContext } from '../../../contexts/UserContext.js';
 
 import SelectTag from '../selecttag/SelectTag.js';
 
@@ -28,6 +31,8 @@ const CustomSmallButton = styled(Button)(() => ({
 
 export default function PostAnnouncement(props) {
 
+    const navigate = useNavigate();
+    const [authentifiedUserId, setAuthentifiedUserId] = useContext(UserContext);
     const [selectedTag, setSelectedTag] = useState('');
     const [announcementContent, setAnnouncementContent] = useState('');
 
@@ -62,12 +67,12 @@ export default function PostAnnouncement(props) {
                     variant='contained'
                     onClick={(event) => {
 
-                        postUserAnnouncement('526874', {
+                        postUserAnnouncement(authentifiedUserId, {
                             tag: selectedTag,
                             content: announcementContent,
                             creation_date: Date.now()
                         });
-                        window.location.reload();
+                        navigate(0);
                     }}
                 >
                     Опубликовать
