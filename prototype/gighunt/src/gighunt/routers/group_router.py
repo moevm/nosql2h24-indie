@@ -205,10 +205,29 @@ class GroupRouter:
         :return:
         Response:
         {
-            group: Group
+            status: int,
+            message: string
+            group: Group|None
         }
         """
-        #TODO
+        try:
+            star_use_cases = self._use_cases.edge_use_cases.stars_use_cases
+            stars = star_use_cases.get_all_entities(
+                star_use_cases.edge_collection_names.STARSTOGROUP.value).all().batch()
+            group_id = [star["_to"] for star in stars]
+            counter = Counter(group_id)
+            popular_group_id = counter.most_common(1)[0][0]
+            return {
+                "status": 200,
+                "message": "success",
+                "group": self._use_cases.get_entity(popular_group_id)
+            }
+        except IndexError as err:
+            return {
+                "status": 400,
+                "message": "groups doesnt have stars!",
+                "group": None
+            }
         pass
 
 

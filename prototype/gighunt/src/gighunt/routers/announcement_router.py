@@ -229,9 +229,28 @@ class AnnouncementRouter:
         :return:
         Response:
         {
-            announcement: Announcement
+            status: int,
+            message: string
+            announcement: Announcement|None
         }
         """
-        # TODO
+        try:
+            star_use_cases = self._use_cases.edge_use_cases.stars_use_cases
+            stars = star_use_cases.get_all_entities(
+                star_use_cases.edge_collection_names.STARSTOANNOUNCEMENT.value).all().batch()
+            announcement_id = [star["_to"] for star in stars]
+            counter = Counter(announcement_id)
+            popular_announcement_id = counter.most_common(1)[0][0]
+            return {
+                "status": 200,
+                "message": "success",
+                "announcement": self._use_cases.get_entity(popular_announcement_id)
+            }
+        except IndexError as err:
+            return {
+                "status": 400,
+                "message": "users doesnt have stars!",
+                "announcement": None
+            }
         pass
 

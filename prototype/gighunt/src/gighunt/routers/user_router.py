@@ -1,5 +1,6 @@
 import datetime
 import time
+from collections import Counter
 
 from fastapi import APIRouter, Response
 
@@ -37,6 +38,9 @@ class UserRouter:
         )
         self._router.add_api_route(
             "/api/static_all", self._get_static_field, methods=["GET"], tags=["Static"]
+        )
+        self._router.add_api_route(
+            "/api/popular_user", self._get_popular_user, methods=["GET"], tags=["Stats"]
         )
 
     def _authorization(self, user_authorization: UserAuthorization) -> Response:
@@ -207,8 +211,26 @@ class UserRouter:
         :return:
         Response:
         {
-            user: User
+            status: int,
+            message: string
+            user: User|None
         }
         """
-        # TODO
+        try:
+            star_use_cases = self._use_cases.edge_use_cases.stars_use_cases
+            stars = star_use_cases.get_all_entities(star_use_cases.edge_collection_names.STARSTOUSER.value).all().batch()
+            users_id = [star["_to"] for star in stars]
+            counter = Counter(users_id)
+            popular_user_id = counter.most_common(1)[0][0]
+            return {
+                "status": 200,
+                "message": "success",
+                "user": self._use_cases.get_entity(popular_user_id)
+                }
+        except IndexError as err:
+            return {
+                "status": 400,
+                "message": "users doesnt have stars!",
+                "user": None
+            }
         pass
