@@ -192,3 +192,23 @@ class UserRouter:
         static = dict(self._use_cases.get_static_collection())
         key = list(static.keys())[0]
         return static[key][static_field]
+
+    def _update_user(self):
+        """
+        TODO
+        :return:
+        """
+        #TODO
+        pass
+
+    def _get_popular_user(self):
+        """
+
+        :return:
+        Response:
+        {
+            user: User
+        }
+        """
+        # TODO
+        pass

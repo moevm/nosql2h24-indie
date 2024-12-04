@@ -48,6 +48,7 @@ class AnnouncementRouter:
             tags=["Announcement"]
         )
 
+    # TODO filters
     def _get_announcements(self, page: int, page_size: int) -> Response:
         """
         GET /api/announcements?page=<pageNumber>&page_size=<pageSize>
@@ -221,4 +222,16 @@ class AnnouncementRouter:
         cursor = star_use_cases.get_all_entities(star_use_cases.edge_collection_names.STARSTOANNOUNCEMENT.value).find({"_from": str("User/"+str(source_user_id)), "_to":str("Announcement/" + str(dest_announcement_id))})
         star = cursor.batch()
         return len(star)!=0
+
+    def _get_popular_announcement(self):
+        """
+
+        :return:
+        Response:
+        {
+            announcement: Announcement
+        }
+        """
+        # TODO
+        pass
 

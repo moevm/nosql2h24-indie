@@ -39,6 +39,7 @@ class GroupRouter:
             tags=["Group"]
         )
 
+    # TODO filters
     def _get_groups(self, page: int, page_size: int) -> Response:
         """
         GET /api/groups?page=<pageNumber>&page_size=<pageSize>
@@ -189,6 +190,26 @@ class GroupRouter:
                 "message": "something wrong: "+str(err),
                 "UserGroup": {}
             }
+
+    def _update_group(self):
+        """
+        TODO
+        :return:
+        """
+        #TODO
+        pass
+
+    def _get_popular_group(self):
+        """
+
+        :return:
+        Response:
+        {
+            group: Group
+        }
+        """
+        #TODO
+        pass
 
 
 

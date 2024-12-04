@@ -21,6 +21,7 @@ class PlaceRouter:
             "/api/place", self._add_place, methods=["POST"], tags=["Place"]
         )
 
+    #TODO filters
     def _get_places(self, page: int, page_size: int) -> Response:
         """
         GET /api/places?page=<pageNumber>&page_size=<pageSize>
