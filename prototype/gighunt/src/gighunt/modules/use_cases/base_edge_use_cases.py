@@ -24,3 +24,6 @@ class BaseEdgeUseCases:
     def get_entity(self, entity_id: str, name) -> Json | None:
         return self._graph.edge_collection(name).get(entity_id)
 
+    def delete_entity(self, entity_id: str, name)->Json|None:
+        return self._graph.edge_collection(name).delete(entity_id)
+

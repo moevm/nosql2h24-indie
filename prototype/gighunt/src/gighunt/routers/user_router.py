@@ -171,11 +171,15 @@ class UserRouter:
         }
         """
         star_use_case = self._use_cases.edge_use_cases.stars_use_cases
-        db_star = {
-            "_from": "User/" + str(star.From),
-            "_to": "User/" + str(star.to)
-        }
-        return star_use_case.create_new_entity(db_star,star_use_case.edge_collection_names.STARSTOUSER.value)
+        if (self._get_is_user_star(star.From, star.to)):
+            star = star_use_case.get_all_entities(star_use_case.edge_collection_names.STARSTOUSER.value).find({"_from":"User/" + str(star.From), "_to": "User/" + str(star.to)}).batch().pop()
+            return star_use_case.delete_entity(star["_id"], star_use_case.edge_collection_names.STARSTOUSER.value)
+        else:
+            db_star = {
+                "_from": "User/" + str(star.From),
+                "_to": "User/" + str(star.to)
+            }
+            return star_use_case.create_new_entity(db_star,star_use_case.edge_collection_names.STARSTOUSER.value)
 
     def _get_static_field(self, static_field:str)->Response:
         """
