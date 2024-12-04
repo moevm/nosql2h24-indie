@@ -125,10 +125,21 @@ class UserRouter:
                 }
                 announcements.append(ann_struct)
 
+        user_group_user_cases = self._use_cases.edge_use_cases.user_group_use_cases
+        user_groups =  user_group_user_cases.get_all_entities(user_group_user_cases.edge_collection_names.USERGROUP.value).find({"_from":str("User/" + str(user_id))})
+        group_list = []
+        for edge in user_groups:
+            group = self._use_cases.get_another_entity(edge["_to"], "Group")
+            group_struct = {
+                "group": group,
+                "join_date": edge["join_date"]
+            }
+            group_list.append(group_struct)
+
         user = {
             "user": user,
             "stars": stars_count,
-            "groups": [],
+            "groups": group_list,
             "announcements": announcements
         }
         return user

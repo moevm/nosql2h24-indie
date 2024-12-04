@@ -32,6 +32,12 @@ class GroupRouter:
             methods=["GET"],
             tags=["Group"]
         )
+        self._router.add_api_route(
+            "/api/join_to_group",
+            self._join_to_group,
+            methods=["POST"],
+            tags=["Group"]
+        )
 
     def _get_groups(self, page: int, page_size: int) -> Response:
         """
@@ -104,7 +110,6 @@ class GroupRouter:
             name: String
         }
         """
-        #TODO add UserGroup
         db_group = {
             "name":group.name,
             "creation_date": str(datetime.datetime.now().date()),
@@ -145,6 +150,41 @@ class GroupRouter:
         cursor = star_use_cases.get_all_entities(star_use_cases.edge_collection_names.STARSTOGROUP.value).find({"_from": str("User/"+str(source_user_id)), "_to":str("Group/" + str(dest_group_id))})
         star = cursor.batch()
         return len(star)!=0
+
+    def _join_to_group(self, group_id: int, user_id: int):
+        """
+        GET /api/join_to_group?group_id=<GroupId>?user_id=<UserId>
+        :param group_id: int
+        :param user_id: int
+        :return:
+        Response:
+        {
+            status: int,
+            message: string
+            UserGroup: {}
+        }
+        """
+        db_user_group = {
+            "_from": "User/" + str(user_id),
+            "_to": "Group/" + str(group_id),
+            "join_date": str(datetime.datetime.now().date())
+        }
+        user_group_use_cases = self._use_cases.edge_use_cases.user_group_use_cases
+        try:
+            user_group_edge = user_group_use_cases.create_new_entity(db_user_group, user_group_use_cases.edge_collection_names.USERGROUP.value)
+            print(user_group_edge)
+            return {
+                "status": 200,
+                "message": "success join to group",
+                "UserGroup": user_group_edge
+            }
+        except Exception as err:
+            print(err)
+            return {
+                "status": 500,
+                "message": "something wrong: "+str(err),
+                "UserGroup": {}
+            }
 
 
 
