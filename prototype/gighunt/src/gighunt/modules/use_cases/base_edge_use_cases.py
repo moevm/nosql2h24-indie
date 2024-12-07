@@ -1,4 +1,6 @@
+import logging
 from arango.graph import Graph
+from arango.exceptions import DocumentInsertError
 
 from gighunt.modules.clients.arangodb_client import ArangoDBClient
 from arango.collection import EdgeCollection
@@ -6,6 +8,7 @@ from arango.typings import Json
 
 class BaseEdgeUseCases:
     def __init__(self, db_client: ArangoDBClient, graph: Graph,vertex_names:dict) -> None:
+        self._logger = logging.getLogger(__name__)
         self._db_client = db_client
         self._graph = graph
         self.vertex_names = vertex_names
@@ -24,3 +27,13 @@ class BaseEdgeUseCases:
     def get_entity(self, entity_id: str, name) -> Json | None:
         return self._graph.edge_collection(name).get(entity_id)
 
+    def insert_json_edge(self, name: str, json_edge: Json) -> None:
+        try:
+            self._graph.vertex_collection(name).insert(json_edge)
+        except DocumentInsertError as err:
+            self._logger.error(f"Error inserting edge {json_edge}: {err}")
+
+    def clear(self) -> None:
+        if self.edge_collection_names:
+            for name in self.edge_collection_names:
+                self._graph.vertex_collection(name.value).truncate()
