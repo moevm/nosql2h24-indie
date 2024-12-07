@@ -2,7 +2,7 @@
 
 import json
 from fastapi import APIRouter, HTTPException, Response, UploadFile
-from fastapi.responses import JSONResponse
+from fastapi.responses import FileResponse
 
 from gighunt.modules.application import Application
 from gighunt.routers.announcement_router import AnnouncementRouter
@@ -56,6 +56,7 @@ class Controller:
             file_content = await file.read()
             graph_data = json.loads(file_content)
 
+            static = graph_data.get("static", [])
             vertices = graph_data.get("vertices", [])
             edges = graph_data.get("edges", [])
 
@@ -77,6 +78,9 @@ class Controller:
             ]
 
             # Clear graph
+            # Static
+            self._application.user_use_cases.get_static_collection().truncate()
+
             # Vertices
             self._application.user_use_cases.clear()
             self._application.group_use_cases.clear()
@@ -90,6 +94,9 @@ class Controller:
             self._application.edges_use_cases.producer_announcement_use_cases.clear()
 
             # Fill graph with new data
+            # Static
+            self._application.user_use_cases.get_static_collection().insert(static[0])
+
             # Vertices
             for user in users:
                 self._application.user_use_cases.insert_json_vertex(user)
@@ -146,13 +153,15 @@ class Controller:
         except Exception as err:
             raise HTTPException(status_code=500, detail=f"Server error: {err}")
 
-    async def _export_data(self) -> JSONResponse:
+    async def _export_data(self) -> FileResponse:
         """
         GET /api/export_data
 
         Response:
-        JSONResponse
+        FileResponse
         """
+        # Static
+        static = list(self._application.user_use_cases.get_static_collection().all())
 
         # Vertices
         users = list(self._application.user_use_cases.get_all_entities().all())
@@ -200,6 +209,7 @@ class Controller:
         )
 
         graph_data = {
+            "static": static,
             "vertices": {
                 "users": users,
                 "groups": groups,
@@ -225,4 +235,12 @@ class Controller:
             },
         }
 
-        return graph_data
+        output_file = "src/gighunt/dump/graph.json"
+        with open(output_file, "w", encoding="utf-8") as file:
+            json.dump(graph_data, file, indent=4, ensure_ascii=False)
+
+        return FileResponse(
+            path=output_file,
+            filename="graph.json",
+            media_type="application/json"
+        )
