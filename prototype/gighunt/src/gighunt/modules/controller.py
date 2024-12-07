@@ -1,10 +1,10 @@
 # API Router documentation: https://fastapi.tiangolo.com/reference/apirouter/
 
-from fastapi import APIRouter, Response
+import json
+from fastapi import APIRouter, HTTPException, Response, UploadFile
 from fastapi.responses import JSONResponse
 
 from gighunt.modules.application import Application
-from gighunt.modules.models import File
 from gighunt.routers.announcement_router import AnnouncementRouter
 from gighunt.routers.group_router import GroupRouter
 from gighunt.routers.place_router import PlaceRouter
@@ -40,13 +40,111 @@ class Controller:
     async def root(self) -> Response:
         return {"message": "Hello, World! It's Gighunt!"}
 
-    async def _import_data(self, file: File) -> Response:
+    async def _import_data(self, file: UploadFile) -> Response:
         """
         POST /api/import_data
 
         Request:
-        File
+        UploadFile
         """
+        if not file.filename.endswith(".json"):
+            raise HTTPException(
+                status_code=400, detail="A file with the extension .json is required"
+            )
+
+        try:
+            file_content = await file.read()
+            graph_data = json.loads(file_content)
+
+            vertices = graph_data.get("vertices", [])
+            edges = graph_data.get("edges", [])
+
+            # Vertices
+            users = vertices["users"]
+            groups = vertices["groups"]
+            announcements = vertices["announcements"]
+            places = vertices["places"]
+
+            # Edges
+            user_groups = edges["users"]["groups"]
+            stars_to_users = edges["stars"]["users"]
+            stars_to_groups = edges["stars"]["groups"]
+            stars_to_announcements = edges["stars"]["announcements"]
+            comments_to_announcements = edges["comments"]["announcements"]
+            producer_announcements_from_users = edges["producer_announcements"]["users"]
+            producer_announcements_from_groups = edges["producer_announcements"][
+                "groups"
+            ]
+
+            # Clear graph
+            # Vertices
+            self._application.user_use_cases.clear()
+            self._application.group_use_cases.clear()
+            self._application.announcement_use_cases.clear()
+            self._application.place_use_cases.clear()
+
+            # Edges
+            self._application.edges_use_cases.user_group_use_cases.clear()
+            self._application.edges_use_cases.stars_use_cases.clear()
+            self._application.edges_use_cases.comment_use_cases.clear()
+            self._application.edges_use_cases.producer_announcement_use_cases.clear()
+
+            # Fill graph with new data
+            # Vertices
+            for user in users:
+                self._application.user_use_cases.insert_json_vertex(user)
+            for group in groups:
+                self._application.group_use_cases.insert_json_vertex(group)
+            for announcement in announcements:
+                self._application.announcement_use_cases.insert_json_vertex(
+                    announcement
+                )
+            for place in places:
+                self._application.place_use_cases.insert_json_vertex(place)
+
+            # Edges
+            for user_group in user_groups:
+                self._application.edges_use_cases.user_group_use_cases.insert_json_edge(
+                    self._application.edges_use_cases.user_group_use_cases.edge_collection_names.USERGROUP.value,
+                    user_group,
+                )
+            for stars_to_user in stars_to_users:
+                self._application.edges_use_cases.stars_use_cases.insert_json_edge(
+                    self._application.edges_use_cases.stars_use_cases.edge_collection_names.STARSTOUSER.value,
+                    stars_to_user,
+                )
+            for stars_to_group in stars_to_groups:
+                self._application.edges_use_cases.stars_use_cases.insert_json_edge(
+                    self._application.edges_use_cases.stars_use_cases.edge_collection_names.STARSTOGROUP.value,
+                    stars_to_group,
+                )
+            for stars_to_announcement in stars_to_announcements:
+                self._application.edges_use_cases.stars_use_cases.insert_json_edge(
+                    self._application.edges_use_cases.stars_use_cases.edge_collection_names.STARSTOANNOUNCEMENT.value,
+                    stars_to_announcement,
+                )
+            for comments_to_announcement in comments_to_announcements:
+                self._application.edges_use_cases.comment_use_cases.insert_json_edge(
+                    self._application.edges_use_cases.comment_use_cases.edge_collection_names.COMMENTTOANNOUNCEMENT.value,
+                    comments_to_announcement,
+                )
+            for producer_announcements_from_user in producer_announcements_from_users:
+                self._application.edges_use_cases.producer_announcement_use_cases.insert_json_edge(
+                    self._application.edges_use_cases.producer_announcement_use_cases.edge_collection_names.ANNOUNCEMENTFROMUSER.value,
+                    producer_announcements_from_user,
+                )
+            for producer_announcements_from_group in producer_announcements_from_groups:
+                self._application.edges_use_cases.producer_announcement_use_cases.insert_json_edge(
+                    self._application.edges_use_cases.producer_announcement_use_cases.edge_collection_names.ANNOUNCEMENTFROMGROUP.value,
+                    producer_announcements_from_group,
+                )
+
+            return {"message": "Graph imported successful!"}
+
+        except json.JSONDecodeError:
+            raise HTTPException(status_code=400, detail="Invalid JSON format")
+        except Exception as err:
+            raise HTTPException(status_code=500, detail=f"Server error: {err}")
 
     async def _export_data(self) -> JSONResponse:
         """
@@ -65,17 +163,17 @@ class Controller:
         places = list(self._application.place_use_cases.get_all_entities().all())
 
         # Edges
-        user_groups = list(
+        users_groups = list(
             self._application.edges_use_cases.user_group_use_cases.get_all_entities(
                 self._application.edges_use_cases.user_group_use_cases.edge_collection_names.USERGROUP.value
             ).all()
         )
-        stars_to_user = list(
+        stars_to_users = list(
             self._application.edges_use_cases.stars_use_cases.get_all_entities(
                 self._application.edges_use_cases.stars_use_cases.edge_collection_names.STARSTOUSER.value
             ).all()
         )
-        stars_to_group = list(
+        stars_to_groups = list(
             self._application.edges_use_cases.stars_use_cases.get_all_entities(
                 self._application.edges_use_cases.stars_use_cases.edge_collection_names.STARSTOGROUP.value
             ).all()
@@ -85,17 +183,17 @@ class Controller:
                 self._application.edges_use_cases.stars_use_cases.edge_collection_names.STARSTOANNOUNCEMENT.value
             ).all()
         )
-        comments_to_announcement = list(
+        comments_to_announcements = list(
             self._application.edges_use_cases.comment_use_cases.get_all_entities(
                 self._application.edges_use_cases.comment_use_cases.edge_collection_names.COMMENTTOANNOUNCEMENT.value
             ).all()
         )
-        producer_announcements_from_user = list(
+        producer_announcements_from_users = list(
             self._application.edges_use_cases.producer_announcement_use_cases.get_all_entities(
                 self._application.edges_use_cases.producer_announcement_use_cases.edge_collection_names.ANNOUNCEMENTFROMUSER.value
             ).all()
         )
-        producer_announcements_from_group = list(
+        producer_announcements_from_groups = list(
             self._application.edges_use_cases.producer_announcement_use_cases.get_all_entities(
                 self._application.edges_use_cases.producer_announcement_use_cases.edge_collection_names.ANNOUNCEMENTFROMGROUP.value
             ).all()
@@ -109,20 +207,20 @@ class Controller:
                 "places": places,
             },
             "edges": {
-                "user": {
-                    "groups": user_groups,
+                "users": {
+                    "groups": users_groups,
                 },
                 "stars": {
-                    "user": stars_to_user,
-                    "group": stars_to_group,
-                    "announcement": stars_to_announcement,
+                    "users": stars_to_users,
+                    "groups": stars_to_groups,
+                    "announcements": stars_to_announcement,
                 },
                 "comments": {
-                    "announcement": comments_to_announcement,
+                    "announcements": comments_to_announcements,
                 },
                 "producer_announcements": {
-                    "user": producer_announcements_from_user,
-                    "group": producer_announcements_from_group,
+                    "users": producer_announcements_from_users,
+                    "groups": producer_announcements_from_groups,
                 },
             },
         }
