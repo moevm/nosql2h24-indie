@@ -54,17 +54,6 @@ class GroupRouter:
         ]}
         """
         return self._use_cases.get_groups(page,page_size, {})
-        # cursor = self._use_cases.get_all_entities().all(skip=(page - 1) * page_size, limit=page_size)
-        # deque = cursor.batch()
-        # group_list = []
-        # star_use_cases = self._use_cases.edge_use_cases.stars_use_cases
-        # while len(deque):
-        #     group = deque.pop()
-        #     star_cursor = star_use_cases.get_all_entities(star_use_cases.edge_collection_names.STARSTOGROUP.value).find(
-        #         {"_to": str(group["_id"])})
-        #     stars = list(star_cursor.batch())
-        #     group_list.append({"group": group, "stars": stars})
-        # return group_list
 
     def _get_group(self, group_id: int) -> Response:
         """
@@ -91,19 +80,6 @@ class GroupRouter:
         }
         """
         return self._use_cases.get_group(group_id)
-        # return self._use_cases.get_group(group_id)
-        # group = self._use_cases.get_entity(str(group_id))
-        # star_use_cases = self._use_cases.edge_use_cases.stars_use_cases
-        # stars = star_use_cases.get_all_entities(star_use_cases.edge_collection_names.STARSTOUSER.value).find(
-        #     {"_to": str("Group/" + str(group_id))})
-        # stars_count = len(stars)
-        # group = {
-        #     "group": group,
-        #     "stars": stars_count,
-        #     "participants": [],
-        #     "announcements": []
-        # }
-        # return group
 
     def _add_group(self, group: Group) -> Response:
         """
@@ -115,14 +91,6 @@ class GroupRouter:
         }
         """
         return self._use_cases.add_group(group)
-        # db_group = {
-        #     "name":group.name,
-        #     "creation_date": str(datetime.datetime.now().date()),
-        #     "last_edit_date":str(datetime.datetime.now().date()),
-        #     "avatar_uri":"",
-        #     "genres": []
-        # }
-        # return self._use_cases.create_new_entity(db_group)
 
     def _add_star(self, star: Star) -> Response:
         """
@@ -134,16 +102,6 @@ class GroupRouter:
         }
         """
         return self._use_cases.add_star(star)
-        # star_use_case = self._use_cases.edge_use_cases.stars_use_cases
-        # if self._get_is_group_star(star.From, star.to):
-        #     star = star_use_case.get_all_entities(star_use_case.edge_collection_names.STARSTOGROUP.value).find({"_from":"User/" + str(star.From), "_to": "Group/" + str(star.to)}).batch().pop()
-        #     return star_use_case.delete_entity(star["_id"], star_use_case.edge_collection_names.STARSTOGROUP.value)
-        # else:
-        #     db_star = {
-        #         "_from": "User/" + str(star.From),
-        #         "_to": "Group/" + str(star.to)
-        #     }
-        #     return star_use_case.create_new_entity(db_star,star_use_case.edge_collection_names.STARSTOGROUP.value)
 
     def _get_is_group_star(self, source_user_id: int, dest_group_id: int) ->Response:
         """
@@ -157,10 +115,6 @@ class GroupRouter:
         }
         """
         return self._use_cases.get_is_group_star(source_user_id, dest_group_id)
-        # star_use_cases = self._use_cases.edge_use_cases.stars_use_cases
-        # cursor = star_use_cases.get_all_entities(star_use_cases.edge_collection_names.STARSTOGROUP.value).find({"_from": str("User/"+str(source_user_id)), "_to":str("Group/" + str(dest_group_id))})
-        # star = cursor.batch()
-        # return len(star)!=0
 
     def _join_to_group(self, group_id: int, user_id: int):
         """
@@ -176,27 +130,6 @@ class GroupRouter:
         }
         """
         return self._use_cases.join_to_group(group_id, user_id)
-        # db_user_group = {
-        #     "_from": "User/" + str(user_id),
-        #     "_to": "Group/" + str(group_id),
-        #     "join_date": str(datetime.datetime.now().date())
-        # }
-        # user_group_use_cases = self._use_cases.edge_use_cases.user_group_use_cases
-        # try:
-        #     user_group_edge = user_group_use_cases.create_new_entity(db_user_group, user_group_use_cases.edge_collection_names.USERGROUP.value)
-        #     print(user_group_edge)
-        #     return {
-        #         "status": 200,
-        #         "message": "success join to group",
-        #         "UserGroup": user_group_edge
-        #     }
-        # except Exception as err:
-        #     print(err)
-        #     return {
-        #         "status": 500,
-        #         "message": "something wrong: "+str(err),
-        #         "UserGroup": {}
-        #     }
 
     def _update_group(self):
         """
@@ -218,25 +151,6 @@ class GroupRouter:
         }
         """
         return self._use_cases.get_popular_group()
-        # try:
-        #     star_use_cases = self._use_cases.edge_use_cases.stars_use_cases
-        #     stars = star_use_cases.get_all_entities(
-        #         star_use_cases.edge_collection_names.STARSTOGROUP.value).all().batch()
-        #     group_id = [star["_to"] for star in stars]
-        #     counter = Counter(group_id)
-        #     popular_group_id = counter.most_common(1)[0][0]
-        #     return {
-        #         "status": 200,
-        #         "message": "success",
-        #         "group": self._use_cases.get_entity(popular_group_id)
-        #     }
-        # except IndexError as err:
-        #     return {
-        #         "status": 400,
-        #         "message": "groups doesnt have stars!",
-        #         "group": None
-        #     }
-        # pass
 
 
 
