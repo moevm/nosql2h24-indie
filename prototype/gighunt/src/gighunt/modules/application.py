@@ -82,3 +82,7 @@ class Application:
     @property
     def graph(self) -> ArangoDBClient:
         return self._graph
+
+    @property
+    def edges_use_cases(self) -> EdgeCollectionUseCases:
+        return self._edge_use_cases
