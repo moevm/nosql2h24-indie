@@ -163,7 +163,7 @@ class UserUseCases (BaseVertexUseCases):
 
     def add_star(self, star: Star) -> Response:
         star_use_case = self.edge_use_cases.stars_use_cases
-        if (self._get_is_user_star(star.From, star.to)):
+        if (self.get_is_user_star(star.From, star.to)):
             star = star_use_case.get_all_entities(star_use_case.edge_collection_names.STARSTOUSER.value).find(
                 {"_from": "User/" + str(star.From), "_to": "User/" + str(star.to)}).batch().pop()
             return star_use_case.delete_entity(star["_id"], star_use_case.edge_collection_names.STARSTOUSER.value)
