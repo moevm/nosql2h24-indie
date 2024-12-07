@@ -82,4 +82,3 @@ class UserUseCases (BaseVertexUseCases):
         return self._db_client.get_vertex_collection(self._graph, self.static_collection_name)
 
 
-
