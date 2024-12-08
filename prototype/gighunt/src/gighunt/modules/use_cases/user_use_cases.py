@@ -2,66 +2,22 @@ from arango.graph import Graph
 from fastapi import Response
 
 import datetime
-import time
 from collections import Counter
 
 from gighunt.modules.clients.arangodb_client import ArangoDBClient
 from gighunt.modules.use_cases.base_vertex_use_cases import BaseVertexUseCases
-from arango.collection import VertexCollection, EdgeCollection
-from arango.typings import Json
+from arango.collection import VertexCollection
 
 from gighunt.modules.use_cases.all_edge_use_cases import EdgeCollectionUseCases
 
 from gighunt.modules.models import UserAuthorization, UserRegistration
-from gighunt.modules.models import GroupAnnouncement, Star, UserAnnouncement, Comment
+from gighunt.modules.models import Star
 
 class UserUseCases (BaseVertexUseCases):
 
     def __init__(self, db_client: ArangoDBClient, graph: Graph, name:str, edge_use_cases:EdgeCollectionUseCases):
         super().__init__(db_client, graph, name, edge_use_cases)
-        test_user = super().create_new_entity({
-            "email": "test@gmail.com",
-            "password": "qwerty",
-            "first_name": "test",
-            "last_name": "user",
-            "creation_date": "2021-01-01",
-            "last_edit_date": "2022-01-01",
-            "avatar_uri": "assets/avatars/test_user.png",
-            "talents": [
-                "electric-guitar"
-            ]
-        })
         self.create_static_collection()
-
-
-
-    def test_operation(self) -> None:
-        self._db_client.create_vertex_collection(
-            self._graph, "bananas"
-        )
-        self._db_client.create_vertex_collection(
-            self._graph, "apples"
-        )
-        self._db_client.create_edge_collection(
-            self._graph, "mix", "bananas", "apples"
-        )
-
-        self._db_client.add_vertex(
-            self._graph, "bananas", {"_key": "1", "name": "Bob"}
-        )
-        self._db_client.add_vertex(
-            self._graph, "apples", {"_key": "1", "name": "Alice"}
-        )
-
-        self._db_client.add_edge(
-            self._graph,
-            "mix",
-            {"_key": "1-edge-2", "_from": "bananas/1", "_to": "apples/1"},
-        )
-
-        print(list(self._db_client.get_vertex_collection(self._graph, "bananas").all()))
-        print(list(self._db_client.get_vertex_collection(self._graph, "apples").all()))
-        print(list(self._db_client.get_edge_collection(self._graph, "mix").all()))
 
     def try_authorization(self, user_authorization: UserAuthorization)->Response:
         cursor = self._graph.vertex_collection(self._name).find({"email": user_authorization.email}, limit=1)
@@ -201,8 +157,3 @@ class UserUseCases (BaseVertexUseCases):
                 "message": "users doesnt have stars!",
                 "user": None
             }
-        pass
-
-
-
-
