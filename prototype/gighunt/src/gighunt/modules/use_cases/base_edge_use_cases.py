@@ -29,14 +29,14 @@ class BaseEdgeUseCases:
 
     def insert_json_edge(self, name: str, json_edge: Json) -> None:
         try:
-            self._graph.vertex_collection(name).insert(json_edge)
+            self._graph.edge_collection(name).insert(json_edge)
         except DocumentInsertError as err:
             self._logger.error(f"Error inserting edge {json_edge}: {err}")
 
     def clear(self) -> None:
         if self.edge_collection_names:
             for name in self.edge_collection_names:
-                self._graph.vertex_collection(name.value).truncate()
+                self._graph.edge_collection(name.value).truncate()
 
     def delete_entity(self, entity_id: str, name)->Json|None:
         return self._graph.edge_collection(name).delete(entity_id)

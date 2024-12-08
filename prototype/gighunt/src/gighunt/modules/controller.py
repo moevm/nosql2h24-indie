@@ -35,14 +35,17 @@ class Controller:
             "/api/export_data", self._export_data, methods=["GET"]
         )
 
-    def fill_data_with_start_graph(self) -> None:
+        self.__fill_data_with_start_graph()
+
+    def __fill_data_with_start_graph(self) -> None:
         start_graph_path = "src/gighunt/dump/start_graph.json"
         try:
             with open(start_graph_path, "r", encoding="utf-8") as file:
                 data = json.load(file)
                 self._set_dump(data)
+                self._logger.info(f"Filled the graph successfully upon startup!")
         except (IOError, TypeError) as err:
-            self._logger.error(f"Failed to fill with start graph: {err}")
+            self._logger.error(f"Failed to fill the graph upon startup: {err}")
 
     @property
     def router(self) -> APIRouter:

@@ -13,8 +13,6 @@ app.include_router(controller.router)
 
 
 def start_backend():
-    controller.fill_data_with_start_graph()
-
     uvicorn.run(
         "gighunt.main:app",
         host="0.0.0.0",
