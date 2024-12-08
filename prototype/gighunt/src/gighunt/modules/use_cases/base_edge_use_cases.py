@@ -37,3 +37,7 @@ class BaseEdgeUseCases:
         if self.edge_collection_names:
             for name in self.edge_collection_names:
                 self._graph.vertex_collection(name.value).truncate()
+
+    def delete_entity(self, entity_id: str, name)->Json|None:
+        return self._graph.edge_collection(name).delete(entity_id)
+

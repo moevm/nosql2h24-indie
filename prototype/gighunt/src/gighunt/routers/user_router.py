@@ -1,5 +1,6 @@
 import datetime
 import time
+from collections import Counter
 
 from fastapi import APIRouter, Response
 
@@ -38,22 +39,15 @@ class UserRouter:
         self._router.add_api_route(
             "/api/static_all", self._get_static_field, methods=["GET"], tags=["Static"]
         )
+        self._router.add_api_route(
+            "/api/popular_user", self._get_popular_user, methods=["GET"], tags=["Stats"]
+        )
 
     def _authorization(self, user_authorization: UserAuthorization) -> Response:
         return self._use_cases.try_authorization(user_authorization)
 
     def _registration(self, user_registration: UserRegistration) -> Response:
-        db_user = {
-            "email": user_registration.email,
-            "password": user_registration.password,
-            "first_name": user_registration.name,
-            "last_name": user_registration.surname,
-            "creation_date": str(datetime.datetime.now().date()),
-            "last_edit_date": str(datetime.datetime.now().date()),
-            "avatar_uri": "",
-            "talents": []
-        }
-        return self._use_cases.create_new_entity(db_user)
+        return self._use_cases.registration(user_registration)
 
     def _get_users(self, page: int, page_size: int) -> Response:
         """
@@ -68,18 +62,7 @@ class UserRouter:
             ...
         ]
         """
-        cursor =  self._use_cases.get_all_entities().all(skip=(page-1)*page_size, limit=page_size)
-        deque = cursor.batch()
-        users_list = []
-        star_use_cases = self._use_cases.edge_use_cases.stars_use_cases
-        while len(deque):
-            user = deque.pop()
-            print(user["_id"])
-            star_cursor = star_use_cases.get_all_entities(star_use_cases.edge_collection_names.STARSTOUSER.value).find({"_to": str(user["_id"])})
-            stars = list(star_cursor.batch())
-            users_list.append({"user":user, "stars":stars})
-
-        return users_list
+        return self._use_cases.get_users(page, page_size, {})
 
     def _get_user(self, user_id: int) -> Response:
         """
@@ -105,33 +88,7 @@ class UserRouter:
             ]
         }
         """
-        #TODO
-        user = self._use_cases.get_entity(str(user_id))
-        star_use_cases = self._use_cases.edge_use_cases.stars_use_cases
-        stars = star_use_cases.get_all_entities(star_use_cases.edge_collection_names.STARSTOUSER.value).find({"_to": str("User/"+str(user_id))})
-        stars_count = len(stars)
-
-        prod_ann_use_case = self._use_cases.edge_use_cases.producer_announcement_use_cases
-        announcements = []
-        all_prod_ann = prod_ann_use_case.get_all_entities(prod_ann_use_case.edge_collection_names.ANNOUNCEMENTFROMUSER.value)
-        if(all_prod_ann):
-            prod_announcements = list(all_prod_ann.find({"_from": str("User/" + str(user_id))}).batch())
-            for edge in prod_announcements:
-                ann = self._use_cases.get_another_entity(edge["_to"], "Announcement")
-                ann_stars = list(star_use_cases.get_all_entities(star_use_cases.edge_collection_names.STARSTOANNOUNCEMENT.value).find({"_to":ann.get("_id")}))
-                ann_struct = {
-                    "announcement": ann,
-                    "stars": len(ann_stars)
-                }
-                announcements.append(ann_struct)
-
-        user = {
-            "user": user,
-            "stars": stars_count,
-            "groups": [],
-            "announcements": announcements
-        }
-        return user
+        return self._use_cases.get_user(user_id)
 
     def _get_is_user_star(self, source_user_id: int, dest_user_id: int) ->Response:
         """
@@ -144,10 +101,7 @@ class UserRouter:
             value: bool
         }
         """
-        star_use_cases = self._use_cases.edge_use_cases.stars_use_cases
-        cursor = star_use_cases.get_all_entities(star_use_cases.edge_collection_names.STARSTOUSER.value).find({"_from": str("User/"+str(source_user_id)), "_to":str("User/"+str(dest_user_id))})
-        star = cursor.batch()
-        return len(star)!=0
+        return self._use_cases.get_is_user_star(source_user_id, dest_user_id)
 
 
     def _add_star(self, star: Star) -> Response:
@@ -159,12 +113,7 @@ class UserRouter:
             to: String
         }
         """
-        star_use_case = self._use_cases.edge_use_cases.stars_use_cases
-        db_star = {
-            "_from": "User/" + str(star.From),
-            "_to": "User/" + str(star.to)
-        }
-        return star_use_case.create_new_entity(db_star,star_use_case.edge_collection_names.STARSTOUSER.value)
+        return self._use_cases.add_star(star)
 
     def _get_static_field(self, static_field:str)->Response:
         """
@@ -174,6 +123,25 @@ class UserRouter:
             data: []
         }
         """
-        static = dict(self._use_cases.get_static_collection())
-        key = list(static.keys())[0]
-        return static[key][static_field]
+        return self._use_cases.get_static_field(static_field)
+
+    def _update_user(self):
+        """
+        TODO
+        :return:
+        """
+        self._use_cases.update_user()
+        pass
+
+    def _get_popular_user(self):
+        """
+
+        :return:
+        Response:
+        {
+            status: int,
+            message: string
+            user: User|None
+        }
+        """
+        return self._use_cases.get_popular_user()

@@ -32,7 +32,14 @@ class GroupRouter:
             methods=["GET"],
             tags=["Group"]
         )
+        self._router.add_api_route(
+            "/api/join_to_group",
+            self._join_to_group,
+            methods=["POST"],
+            tags=["Group"]
+        )
 
+    # TODO filters
     def _get_groups(self, page: int, page_size: int) -> Response:
         """
         GET /api/groups?page=<pageNumber>&page_size=<pageSize>
@@ -46,17 +53,7 @@ class GroupRouter:
             ...
         ]}
         """
-        cursor = self._use_cases.get_all_entities().all(skip=(page - 1) * page_size, limit=page_size)
-        deque = cursor.batch()
-        group_list = []
-        star_use_cases = self._use_cases.edge_use_cases.stars_use_cases
-        while len(deque):
-            group = deque.pop()
-            star_cursor = star_use_cases.get_all_entities(star_use_cases.edge_collection_names.STARSTOGROUP.value).find(
-                {"_to": str(group["_id"])})
-            stars = list(star_cursor.batch())
-            group_list.append({"group": group, "stars": stars})
-        return group_list
+        return self._use_cases.get_groups(page,page_size, {})
 
     def _get_group(self, group_id: int) -> Response:
         """
@@ -82,18 +79,7 @@ class GroupRouter:
             ]
         }
         """
-        group = self._use_cases.get_entity(str(group_id))
-        star_use_cases = self._use_cases.edge_use_cases.stars_use_cases
-        stars = star_use_cases.get_all_entities(star_use_cases.edge_collection_names.STARSTOUSER.value).find(
-            {"_to": str("Group/" + str(group_id))})
-        stars_count = len(stars)
-        group = {
-            "group": group,
-            "stars": stars_count,
-            "participants": [],
-            "announcements": []
-        }
-        return group
+        return self._use_cases.get_group(group_id)
 
     def _add_group(self, group: Group) -> Response:
         """
@@ -104,15 +90,7 @@ class GroupRouter:
             name: String
         }
         """
-        #TODO add UserGroup
-        db_group = {
-            "name":group.name,
-            "creation_date": str(datetime.datetime.now().date()),
-            "last_edit_date":str(datetime.datetime.now().date()),
-            "avatar_uri":"",
-            "genres": []
-        }
-        return self._use_cases.create_new_entity(db_group)
+        return self._use_cases.add_group(group)
 
     def _add_star(self, star: Star) -> Response:
         """
@@ -123,12 +101,7 @@ class GroupRouter:
             to: String
         }
         """
-        star_use_case = self._use_cases.edge_use_cases.stars_use_cases
-        db_star = {
-            "_from": "User/" + str(star.From),
-            "_to": "Group/" + str(star.to)
-        }
-        return star_use_case.create_new_entity(db_star,star_use_case.edge_collection_names.STARSTOGROUP.value)
+        return self._use_cases.add_star(star)
 
     def _get_is_group_star(self, source_user_id: int, dest_group_id: int) ->Response:
         """
@@ -141,10 +114,43 @@ class GroupRouter:
             value: bool
         }
         """
-        star_use_cases = self._use_cases.edge_use_cases.stars_use_cases
-        cursor = star_use_cases.get_all_entities(star_use_cases.edge_collection_names.STARSTOGROUP.value).find({"_from": str("User/"+str(source_user_id)), "_to":str("Group/" + str(dest_group_id))})
-        star = cursor.batch()
-        return len(star)!=0
+        return self._use_cases.get_is_group_star(source_user_id, dest_group_id)
+
+    def _join_to_group(self, group_id: int, user_id: int):
+        """
+        GET /api/join_to_group?group_id=<GroupId>?user_id=<UserId>
+        :param group_id: int
+        :param user_id: int
+        :return:
+        Response:
+        {
+            status: int,
+            message: string
+            UserGroup: {}
+        }
+        """
+        return self._use_cases.join_to_group(group_id, user_id)
+
+    def _update_group(self):
+        """
+        TODO
+        :return:
+        """
+        self._use_cases.update_group()
+        pass
+
+    def _get_popular_group(self):
+        """
+
+        :return:
+        Response:
+        {
+            status: int,
+            message: string
+            group: Group|None
+        }
+        """
+        return self._use_cases.get_popular_group()
 
 
 
