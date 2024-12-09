@@ -295,7 +295,9 @@ class Controller:
         group_count = self._application.group_use_cases.get_all_entities_count()
         announcement_count = self._application.announcement_use_cases.get_all_entities_count()
         place_count = self._application.place_use_cases.get_all_entities_count()
-
+        user_stars = self._application.user_use_cases.get_all_stars()
+        group_stars = self._application.group_use_cases.get_all_stars()
+        announcement_stars = self._application.announcement_use_cases.get_all_stars()
         response = {
             "popular_user": popular_user["user"],
             "popular_group": popular_group["group"],
@@ -303,7 +305,11 @@ class Controller:
             "user_count": user_count,
             "group_count": group_count,
             "announcement_count": announcement_count,
-            "place_count": place_count
+            "place_count": place_count,
+            "all_stars": user_stars+group_stars+announcement_stars,
+            "user_stars": user_stars,
+            "group_stars": group_stars,
+            "announcement_stars": announcement_stars
         }
 
 

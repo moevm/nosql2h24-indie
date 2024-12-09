@@ -176,3 +176,9 @@ class UserUseCases (BaseVertexUseCases):
                 "message": "users doesnt have stars!",
                 "user": None
             }
+
+    def get_all_stars(self):
+        star_use_cases = self.edge_use_cases.stars_use_cases
+        stars = star_use_cases.get_all_entities(star_use_cases.edge_collection_names.STARSTOUSER.value).all().batch()
+        stars_count = len(stars)
+        return stars_count
