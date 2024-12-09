@@ -10,7 +10,7 @@ from gighunt.modules.models import Group
 
 from gighunt.modules.clients.arangodb_client import ArangoDBClient
 from gighunt.modules.use_cases.base_vertex_use_cases import BaseVertexUseCases
-from gighunt.modules.models import GroupAnnouncement, Star, UserAnnouncement, Comment
+from gighunt.modules.models import GroupAnnouncement, Star, UserAnnouncement, Comment, UpdateGroup
 
 class GroupUseCases(BaseVertexUseCases):
 
@@ -51,7 +51,7 @@ class GroupUseCases(BaseVertexUseCases):
         announcements = []
         for group_ann_edge in group_announcements:
             current_ann = self.get_another_entity(group_ann_edge["_to"], "Announcement")
-            current_stars = star_use_cases.get_all_entities(star_use_cases.edge_collection_names.STARSTOANNOUNCEMENT).find({"_to": group_ann_edge["_to"]})
+            current_stars = star_use_cases.get_all_entities(star_use_cases.edge_collection_names.STARSTOANNOUNCEMENT.value).find({"_to": group_ann_edge["_to"]})
             current_ann_stars_count = len(current_stars)
             announcements.append({"announcement": current_ann, "stars": current_ann_stars_count})
 
@@ -114,8 +114,22 @@ class GroupUseCases(BaseVertexUseCases):
                 "UserGroup": {}
             }
 
-    #TODO
-    def update_group(self):
+    def update_group(self, update_group: UpdateGroup):
+        try:
+            group = self._graph.vertex_collection(self._name).update(
+                {"_key": str(update_group.id), "name": update_group.name,
+                 "avatar_uri": update_group.photo})
+            return {
+                "code": 200,
+                "status": "success update",
+                "user": group
+            }
+        except Exception as err:
+            return {
+                "code": 500,
+                "status": "something wrong: " + str(err),
+                "user": self.get_entity(str("User/" + str(update_group.id)))
+            }
         return
 
     def get_popular_group(self) -> Response:

@@ -38,6 +38,12 @@ class GroupRouter:
             methods=["POST"],
             tags=["Group"]
         )
+        self._router.add_api_route(
+            "/api/update_group",
+            self._update_group,
+            methods=["PUT"],
+            tags=["Group"]
+        )
 
     # TODO filters
     def _get_groups(self, page: int, page_size: int) -> Response:
@@ -133,15 +139,16 @@ class GroupRouter:
 
     def _update_group(self, update_group: UpdateGroup):
         '''
-        PUT /api/update_user
+        PUT /api/update_group
         :param update_group: UpdateGroup
         :return:
         {
+            status: int,
+            message: string
             group: group
         }
         '''
-        self._use_cases.update_group()
-        pass
+        return self._use_cases.update_group(update_group)
 
     def _get_popular_group(self):
         """
