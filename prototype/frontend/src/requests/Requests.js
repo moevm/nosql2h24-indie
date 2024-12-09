@@ -160,3 +160,33 @@ export function createPlace(placeName, placeType, placeAddress, placeNumber) {
         })
         .then(response => response.json());
 } 
+
+export function importData(data) {
+    return fetch(`${baseUrl}/import_data`, {
+            method: 'POST',
+            headers: {
+            },
+            body: data 
+        })
+        .then(response => response.json());
+}
+
+export function exportData() {
+    return fetch(`${baseUrl}/export_data`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => {
+            response.blob().then(blob => {
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'data.json';
+                document.body.appendChild(a);
+                a.click();
+                // a.remove();
+            });
+        });
+}

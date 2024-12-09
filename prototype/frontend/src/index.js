@@ -11,6 +11,7 @@ import AnnouncementsList from './pages/announcementslist/AnnouncementsList.js';
 import UsersList from './pages/userslist/UsersList.js';
 import GroupsList from './pages/groupslist/GroupsList.js';
 import PlacesList from './pages/placeslist/PlacesList.js';
+import Statistic from './pages/statistic/Statistic.js';
 
 const router = createBrowserRouter([
     {
@@ -47,7 +48,7 @@ const router = createBrowserRouter([
             },
             {
                 path: '/statistic',
-                element: <div>Statistic</div>
+                element: <Statistic></Statistic> 
             }
         ]
     }
