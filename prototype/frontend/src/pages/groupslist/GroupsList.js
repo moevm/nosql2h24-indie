@@ -3,7 +3,7 @@ import './GroupsList.css';
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from "react-router-dom";
 import Pagination from '../components/pagination/Pagination.js';
-import TextField from '@mui/material/TextField';
+import { CustomTextField, CustomButton } from '../components/CustomMuiComponents.js';
 import Button from '@mui/material/Button';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -101,9 +101,9 @@ export default function GroupsList(props) {
                 }
             </Pagination>
             <div className='fit-width'>
-                <div className='visible-layout flex-column flex-center' style={{padding: '20px', gap: '10px'}}>
-                    <TextField id="outlined-basic" label="Название" variant="outlined" value={newGroupName} onChange={(event) => setNewGroupName(event.target.value)}/>
-                    <Button variant="contained" onClick={handleCreateGroup}>Создать</Button>
+                <div className='visible-layout flex-column flex-center align-end' style={{padding: '20px', gap: '10px'}}>
+                    <CustomTextField id="outlined-basic" label="Название" variant="outlined" value={newGroupName} onChange={(event) => setNewGroupName(event.target.value)}/>
+                    <CustomButton variant="contained" onClick={handleCreateGroup}>Создать</CustomButton>
                 </div>
             </div>
         </div>

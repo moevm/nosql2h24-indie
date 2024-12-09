@@ -3,8 +3,7 @@ import './PlacesList.css';
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from "react-router-dom";
 import Pagination from '../components/pagination/Pagination.js';
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
+import { CustomButton, CustomTextField } from '../components/CustomMuiComponents.js';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -100,11 +99,11 @@ export default function PlacesList(props) {
             </Pagination>
             <div className='fit-width'>
                 <div className='visible-layout flex-column flex-center' style={{padding: '20px', gap: '10px'}}>
-                    <TextField id="outlined-basic" label="Название" variant="outlined" value={newPlaceName} onChange={(event) => setNewPlaceName(event.target.value)}/>
-                    <TextField id="outlined-basic" label="Тип" variant="outlined" value={newPlaceType} onChange={(event) => setNewPlaceType(event.target.value)}/>
-                    <TextField id="outlined-basic" label="Адрес" variant="outlined" value={newPlaceAddress} onChange={(event) => setNewPlaceAddress(event.target.value)}/>
-                    <TextField id="outlined-basic" label="Контактный номер" variant="outlined" value={newPlaceNumber} onChange={(event) => setNewPlaceNumber(event.target.value)}/>
-                    <Button variant="contained" onClick={handleCreateGroup}>Создать</Button>
+                    <CustomTextField id="outlined-basic" label="Название" variant="outlined" value={newPlaceName} onChange={(event) => setNewPlaceName(event.target.value)}/>
+                    <CustomTextField id="outlined-basic" label="Тип" variant="outlined" value={newPlaceType} onChange={(event) => setNewPlaceType(event.target.value)}/>
+                    <CustomTextField id="outlined-basic" label="Адрес" variant="outlined" value={newPlaceAddress} onChange={(event) => setNewPlaceAddress(event.target.value)}/>
+                    <CustomTextField id="outlined-basic" label="Контактный номер" variant="outlined" value={newPlaceNumber} onChange={(event) => setNewPlaceNumber(event.target.value)}/>
+                    <CustomButton variant="contained" onClick={handleCreateGroup}>Создать</CustomButton>
                 </div>
             </div>
         </div>
