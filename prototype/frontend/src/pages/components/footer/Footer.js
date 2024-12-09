@@ -34,9 +34,9 @@ export default function Footer(props) {
     }, [])
 
     useEffect(() => {
-        if (localStorage.getItem('userId') == undefined && location.pathname != '/') {
-            navigate('/');
-        } else if (localStorage.getItem('userId') != undefined && location.pathname == '/') {
+        if (localStorage.getItem('userId') == undefined && location.pathname !== '/auth') {
+            navigate('/auth');
+        } else if (localStorage.getItem('userId') != undefined && location.pathname === '/') {
             navigate('/announcements');
         }
     }, [location]);
@@ -50,46 +50,49 @@ export default function Footer(props) {
                         <Outlet></Outlet>
                     </TagsContext.Provider>
                 </UserContext.Provider>
-                <div className='navbar flex-row flex-center'>
-                    <div className='flex-row align-center' style={{gap: '40px'}}>
-                        <NavLink to='/announcements' className={checkActive} style={{textDecoration: 'none'}}>
-                            <div className='flex-column align-center'>
-                                <AnnouncementsIcon style={{width: '48px', height: '46px'}} part='icon' />
-                                <div className='icon-caption'>Объявления</div>
-                            </div>
-                        </NavLink>
-                        <NavLink to='/groups' className={checkActive} style={{textDecoration: 'none'}}>
-                            <div className='flex-column align-center'>
-                                <GroupsIcon style={{width: '48px', height: '46px'}} part='icon'/>
-                                <div className='icon-caption'>Группы</div>
-                            </div>
-                        </NavLink>
-                        <NavLink to='/users' className={checkActive} style={{textDecoration: 'none'}}>
-                            <div className='flex-column align-center'>
-                                <UsersIcon style={{width: '48px', height: '46px'}} part='icon'/>
-                                <div className='icon-caption'>Пользователи</div>
-                            </div>
-                        </NavLink>
-                        <NavLink to='/places' className={checkActive} style={{textDecoration: 'none'}}>
-                            <div className='flex-column align-center'>
-                                <PlacesIcon style={{width: '48px', height: '46px'}} part='icon'/>
-                                <div className='icon-caption'>Места</div>
-                            </div>
-                        </NavLink>
-                        <NavLink to={`/users/${userId}`} className={checkActive} style={{textDecoration: 'none'}}>
-                            <div className='flex-column align-center'>
-                                <ProfileIcon style={{width: '48px', height: '46px'}} part='icon'/>
-                                <div className='icon-caption'>Профиль</div>
-                            </div>
-                        </NavLink>
-                        <NavLink to='/statistic' className={checkActive} style={{textDecoration: 'none'}}>
-                            <div className='flex-column align-center'>
-                                <StatisticIcon style={{width: '48px', height: '46px'}} part='icon'/>
-                                <div className='icon-caption'>Статистика</div>
-                            </div>
-                        </NavLink>
-                    </div>
-                </div>
+                { localStorage.getItem('userId') != undefined ? 
+                    <div className='navbar flex-row flex-center'>
+                        <div className='flex-row align-center' style={{gap: '40px'}}>
+                            <NavLink to='/announcements' className={checkActive} style={{textDecoration: 'none'}}>
+                                <div className='flex-column align-center'>
+                                    <AnnouncementsIcon style={{width: '48px', height: '46px'}} part='icon' />
+                                    <div className='icon-caption'>Объявления</div>
+                                </div>
+                            </NavLink>
+                            <NavLink to='/groups' className={checkActive} style={{textDecoration: 'none'}}>
+                                <div className='flex-column align-center'>
+                                    <GroupsIcon style={{width: '48px', height: '46px'}} part='icon'/>
+                                    <div className='icon-caption'>Группы</div>
+                                </div>
+                            </NavLink>
+                            <NavLink to='/users' className={checkActive} style={{textDecoration: 'none'}}>
+                                <div className='flex-column align-center'>
+                                    <UsersIcon style={{width: '48px', height: '46px'}} part='icon'/>
+                                    <div className='icon-caption'>Пользователи</div>
+                                </div>
+                            </NavLink>
+                            <NavLink to='/places' className={checkActive} style={{textDecoration: 'none'}}>
+                                <div className='flex-column align-center'>
+                                    <PlacesIcon style={{width: '48px', height: '46px'}} part='icon'/>
+                                    <div className='icon-caption'>Места</div>
+                                </div>
+                            </NavLink>
+                            <NavLink to={`/users/${userId}`} className={checkActive} style={{textDecoration: 'none'}}>
+                                <div className='flex-column align-center'>
+                                    <ProfileIcon style={{width: '48px', height: '46px'}} part='icon'/>
+                                    <div className='icon-caption'>Профиль</div>
+                                </div>
+                            </NavLink>
+                            <NavLink to='/statistic' className={checkActive} style={{textDecoration: 'none'}}>
+                                <div className='flex-column align-center'>
+                                    <StatisticIcon style={{width: '48px', height: '46px'}} part='icon'/>
+                                    <div className='icon-caption'>Статистика</div>
+                                </div>
+                            </NavLink>
+                        </div>
+                    </div> :
+                    <></>
+                }
             </div>
         </div>
     </>;
