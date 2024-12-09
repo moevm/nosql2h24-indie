@@ -27,7 +27,6 @@ class GroupUseCases(BaseVertexUseCases):
             group_list.append({"group": group, "stars": stars})
         return group_list
 
-    #TODO add users and announcements in response
     def get_group(self, group_id: int) -> Response:
         group = self.get_entity(str(group_id))
         star_use_cases = self.edge_use_cases.stars_use_cases
