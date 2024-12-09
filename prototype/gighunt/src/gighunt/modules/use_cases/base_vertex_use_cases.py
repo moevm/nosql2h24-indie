@@ -41,3 +41,6 @@ class BaseVertexUseCases:
 
     def clear(self) -> None:
         self._graph.vertex_collection(self._name).truncate()
+
+    def get_all_entities_count(self) -> int:
+        return len(self.get_all_entities().all().batch())

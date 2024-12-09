@@ -291,7 +291,20 @@ class Controller:
         popular_user = self._application.user_use_cases.get_popular_user()
         popular_group = self._application.group_use_cases.get_popular_group()
         popular_announcement = self._application.announcement_use_cases.get_popular_announcement()
-        response = {"popular_user": popular_user["user"], "popular_group": popular_group["group"], "popular_announcement": popular_announcement["announcement"]}
+        user_count = self._application.user_use_cases.get_all_entities_count()
+        group_count = self._application.group_use_cases.get_all_entities_count()
+        announcement_count = self._application.announcement_use_cases.get_all_entities_count()
+        place_count = self._application.place_use_cases.get_all_entities_count()
+
+        response = {
+            "popular_user": popular_user["user"],
+            "popular_group": popular_group["group"],
+            "popular_announcement": popular_announcement["announcement"],
+            "user_count": user_count,
+            "group_count": group_count,
+            "announcement_count": announcement_count,
+            "place_count": place_count
+        }
 
 
 
