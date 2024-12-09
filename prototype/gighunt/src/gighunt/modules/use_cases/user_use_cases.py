@@ -136,8 +136,19 @@ class UserUseCases (BaseVertexUseCases):
         return static[key][static_field]
 
     def update_user(self, update_user: UpdateUser):
-        return self._graph.vertex_collection(self._name).update({"_key": str(update_user.id), "first_name": update_user.first_name, "last_name": update_user.last_name, "avatar_uri": update_user.photo})
-
+        try:
+            user = self._graph.vertex_collection(self._name).update({"_key": str(update_user.id), "first_name": update_user.first_name, "last_name": update_user.last_name, "avatar_uri": update_user.photo})
+            return {
+                "code": 200,
+                "status": "success update",
+                "user": user
+            }
+        except Exception as err:
+            return {
+                "code": 500,
+                "status": "something wrong: "+str(err),
+                "user": self.get_entity(str("User/"+str(update_user.id)))
+            }
 
     def get_popular_user(self) ->Response:
         try:

@@ -5,7 +5,7 @@ from fastapi import APIRouter, Response
 
 from gighunt.modules.models import Group
 from gighunt.modules.use_cases.group_use_cases import GroupUseCases
-from gighunt.modules.models import GroupAnnouncement, Star, UserAnnouncement, Comment
+from gighunt.modules.models import GroupAnnouncement, Star, UserAnnouncement, Comment, UpdateGroup
 
 class GroupRouter:
     def __init__(self, router: APIRouter, use_cases: GroupUseCases) -> None:
@@ -131,11 +131,15 @@ class GroupRouter:
         """
         return self._use_cases.join_to_group(group_id, user_id)
 
-    def _update_group(self):
-        """
-        TODO
+    def _update_group(self, update_group: UpdateGroup):
+        '''
+        PUT /api/update_user
+        :param update_group: UpdateGroup
         :return:
-        """
+        {
+            group: group
+        }
+        '''
         self._use_cases.update_group()
         pass
 
