@@ -34,11 +34,33 @@ class GroupUseCases(BaseVertexUseCases):
         stars = star_use_cases.get_all_entities(star_use_cases.edge_collection_names.STARSTOUSER.value).find(
             {"_to": str("Group/" + str(group_id))})
         stars_count = len(stars)
+        user_group_use_cases = self.edge_use_cases.user_group_use_cases
+        user_groups = user_group_use_cases.get_all_entities(
+            user_group_use_cases.edge_collection_names.USERGROUP.value).find(
+            {"_to": str("Group/" + str(group_id))}
+        ).batch()
+        users = []
+        for user_group_edge in user_groups:
+            current_user = self.get_another_entity(user_group_edge["_from"], "User")
+            current_join_date = user_group_edge["join_date"]
+            users.append({"user": current_user, "join_date": current_join_date})
+
+        prod_announcements = self.edge_use_cases.producer_announcement_use_cases
+        group_announcements = prod_announcements.get_all_entities(prod_announcements.edge_collection_names.ANNOUNCEMENTFROMGROUP.value).find(
+            {"_from": str("Group/" + str(group_id))}
+        ).batch()
+        announcements = []
+        for group_ann_edge in group_announcements:
+            current_ann = self.get_another_entity(group_ann_edge["_to"], "Announcement")
+            current_stars = star_use_cases.get_all_entities(star_use_cases.edge_collection_names.STARSTOANNOUNCEMENT).find({"_to": group_ann_edge["_to"]})
+            current_ann_stars_count = len(current_stars)
+            announcements.append({"announcement": current_ann, "stars": current_ann_stars_count})
+
         group = {
             "group": group,
             "stars": stars_count,
-            "participants": [],
-            "announcements": []
+            "participants": users,
+            "announcements": announcements
         }
         return group
 
