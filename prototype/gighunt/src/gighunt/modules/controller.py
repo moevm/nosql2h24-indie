@@ -34,6 +34,9 @@ class Controller:
         self._router.add_api_route(
             "/api/export_data", self._export_data, methods=["GET"]
         )
+        self._router.add_api_route(
+            "/api/get_total_stats", self._get_total_stats, methods=["GET"], tags=["Stats"]
+        )
 
         self.__fill_data_with_start_graph()
 
@@ -266,3 +269,30 @@ class Controller:
             filename="graph.json",
             media_type="application/json"
         )
+
+    def _get_total_stats(self):
+        """
+        GET /api/total_stats
+        :return:
+        Response {
+            popular_user: User
+            popular_group: Group
+            popular_announcement: Announcement
+            user_count: int
+            group_count: int
+            place_count: int
+            announcement_count: int
+            all_stars_count: int
+            user_stars_count: int
+            group_stars_count: int
+            announcement_stars_count: int
+        }
+        """
+        popular_user = self._application.user_use_cases.get_popular_user()
+        popular_group = self._application.group_use_cases.get_popular_group()
+        popular_announcement = self._application.announcement_use_cases.get_popular_announcement()
+        response = {"popular_user": popular_user["user"], "popular_group": popular_group["group"], "popular_announcement": popular_announcement["announcement"]}
+
+
+
+        return response

@@ -60,3 +60,27 @@ class UpdateGroup(BaseModel):
     id: int
     name: str
     photo: str
+
+class FilterUser(BaseModel):
+    first_name: str|None
+    last_name: str|None
+    talents: str|None
+    groups: str|None
+
+class FilterGroup(BaseModel):
+    name: str|None
+    genre: str|None
+    stars: str|int|None
+    participant: str|None
+
+class FilterAnnouncement(BaseModel):
+    producer: str|None
+    date: str|None
+    tag: str|None
+
+class FilterPlace(BaseModel):
+    name: str|None
+    type: str|None
+    address: str|None
+    number: str|None
+    equipment: str|None

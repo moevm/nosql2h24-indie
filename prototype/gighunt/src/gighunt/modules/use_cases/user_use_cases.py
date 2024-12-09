@@ -158,10 +158,17 @@ class UserUseCases (BaseVertexUseCases):
             users_id = [star["_to"] for star in stars]
             counter = Counter(users_id)
             popular_user_id = counter.most_common(1)[0][0]
+            popular_stars = star_use_cases.get_all_entities(star_use_cases.edge_collection_names.STARSTOUSER.value).find(
+                {"_to": str(popular_user_id)})
+            stars_count = len(popular_stars)
+            user = {
+                "user": self.get_entity(popular_user_id),
+                "stars": stars_count
+            }
             return {
                 "status": 200,
                 "message": "success",
-                "user": self.get_entity(popular_user_id)
+                "user": user
             }
         except IndexError as err:
             return {

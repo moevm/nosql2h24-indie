@@ -2,6 +2,7 @@ from arango.graph import Graph
 
 import datetime
 import time
+from collections import Counter
 
 from fastapi import Response
 
@@ -140,10 +141,28 @@ class GroupUseCases(BaseVertexUseCases):
             group_id = [star["_to"] for star in stars]
             counter = Counter(group_id)
             popular_group_id = counter.most_common(1)[0][0]
+
+            popular_stars = star_use_cases.get_all_entities(
+                star_use_cases.edge_collection_names.STARSTOGROUP.value).find(
+                {"_to": str(popular_group_id)})
+            stars_count = len(popular_stars)
+
+            user_group_use_cases = self.edge_use_cases.user_group_use_cases
+            user_groups = user_group_use_cases.get_all_entities(
+                user_group_use_cases.edge_collection_names.USERGROUP.value).find(
+                {"_to": str(popular_group_id)}
+            ).batch()
+            user_groups_count = len(user_groups)
+
+            group = {
+                "group": self.get_entity(popular_group_id),
+                "stars": stars_count,
+                "participants": user_groups_count
+            }
             return {
                 "status": 200,
                 "message": "success",
-                "group": self.get_entity(popular_group_id)
+                "group": group
             }
         except IndexError as err:
             return {

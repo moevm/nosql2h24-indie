@@ -2,6 +2,7 @@ from arango.graph import Graph
 
 import datetime
 import time
+from collections import Counter
 
 from gighunt.modules.clients.arangodb_client import ArangoDBClient
 from gighunt.modules.use_cases.base_vertex_use_cases import BaseVertexUseCases
@@ -119,10 +120,18 @@ class AnnouncementUseCases(BaseVertexUseCases):
             announcement_id = [star["_to"] for star in stars]
             counter = Counter(announcement_id)
             popular_announcement_id = counter.most_common(1)[0][0]
+            popular_stars = star_use_cases.get_all_entities(
+                star_use_cases.edge_collection_names.STARSTOANNOUNCEMENT.value).find(
+                {"_to": str(popular_announcement_id)})
+            stars_count = len(popular_stars)
+            announcement = {
+                "announcement": self.get_entity(popular_announcement_id),
+                "stars": stars_count
+            }
             return {
                 "status": 200,
                 "message": "success",
-                "announcement": self.get_entity(popular_announcement_id)
+                "announcement": announcement
             }
         except IndexError as err:
             return {
