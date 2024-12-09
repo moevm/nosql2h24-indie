@@ -6,7 +6,7 @@ from fastapi import APIRouter, Response
 
 from gighunt.modules.models import UserAuthorization, UserRegistration
 from gighunt.modules.use_cases.user_use_cases import UserUseCases
-from gighunt.modules.models import GroupAnnouncement, Star, UserAnnouncement, Comment
+from gighunt.modules.models import GroupAnnouncement, Star, UserAnnouncement, Comment, UpdateUser
 
 class UserRouter:
     def __init__(self, router: APIRouter, use_cases: UserUseCases) -> None:
@@ -41,6 +41,9 @@ class UserRouter:
         )
         self._router.add_api_route(
             "/api/popular_user", self._get_popular_user, methods=["GET"], tags=["Stats"]
+        )
+        self._router.add_api_route(
+            "/api/update_user", self._update_user, methods=["PUT"], tags=["User"]
         )
 
     def _authorization(self, user_authorization: UserAuthorization) -> Response:
@@ -125,13 +128,18 @@ class UserRouter:
         """
         return self._use_cases.get_static_field(static_field)
 
-    def _update_user(self):
-        """
-        TODO
+    def _update_user(self, update_user:UpdateUser):
+        '''
+        PUT /api/update_user
+        :param update_user: UpdateUser
         :return:
-        """
-        self._use_cases.update_user()
-        pass
+        {
+            code: int,
+            status: str,
+            user: User
+        }
+        '''
+        return self._use_cases.update_user(update_user)
 
     def _get_popular_user(self):
         """

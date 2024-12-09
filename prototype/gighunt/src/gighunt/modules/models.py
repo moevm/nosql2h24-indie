@@ -48,3 +48,15 @@ class Star(BaseModel):
 
 class Group(BaseModel):
     name: str
+
+class UpdateUser(BaseModel):
+    id: int
+    first_name: str
+    last_name: str
+    talents: list
+    photo: str
+
+class UpdateGroup(BaseModel):
+    id: int
+    name: str
+    photo: str

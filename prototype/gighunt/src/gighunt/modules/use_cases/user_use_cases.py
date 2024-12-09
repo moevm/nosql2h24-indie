@@ -10,7 +10,7 @@ from arango.collection import VertexCollection
 
 from gighunt.modules.use_cases.all_edge_use_cases import EdgeCollectionUseCases
 
-from gighunt.modules.models import UserAuthorization, UserRegistration
+from gighunt.modules.models import UserAuthorization, UserRegistration, UpdateUser
 from gighunt.modules.models import Star
 
 class UserUseCases (BaseVertexUseCases):
@@ -36,7 +36,7 @@ class UserUseCases (BaseVertexUseCases):
             "equipment": [],
             "tags": ["Релиз", "Концерт", "Поиск участников", "Поиск группы", "Поиск места", "Предложение места", "Поболтать", "Поиск тульпы", "Поиск Волынского"],
             "talents": ["vocal", "guitar", "viola", "bass", "percussion"],
-            "genres": []
+            "genres": ["Рок", "Джаз", "Электронная", "Поп", "Рэп", "Фолк", "Другое"]
         }
         self.static_data_vertex = self._db_client.add_vertex(self._graph, self.static_collection_name,static_data)
 
@@ -135,8 +135,9 @@ class UserUseCases (BaseVertexUseCases):
         key = list(static.keys())[0]
         return static[key][static_field]
 
-    def update_user(self):
-        return
+    def update_user(self, update_user: UpdateUser):
+        return self._graph.vertex_collection(self._name).update({"_key": str(update_user.id), "first_name": update_user.first_name, "last_name": update_user.last_name, "avatar_uri": update_user.photo})
+
 
     def get_popular_user(self) ->Response:
         try:
