@@ -5,16 +5,16 @@ from fastapi import APIRouter, Response
 
 from gighunt.modules.models import Group
 from gighunt.modules.use_cases.group_use_cases import GroupUseCases
-from gighunt.modules.models import GroupAnnouncement, Star, UserAnnouncement, Comment, UpdateGroup
+from gighunt.modules.models import GroupAnnouncement, Star, UserAnnouncement, Comment, UpdateGroup, FilterGroup
 
 class GroupRouter:
     def __init__(self, router: APIRouter, use_cases: GroupUseCases) -> None:
         self._router = router
         self._use_cases = use_cases
         self._router.add_api_route(
-            "/api/groups/{page}{page_size}",
+            "/api/groups",
             self._get_groups,
-            methods=["GET"],
+            methods=["POST"],
             tags=["Group"],
         )
         self._router.add_api_route(
@@ -45,10 +45,9 @@ class GroupRouter:
             tags=["Group"]
         )
 
-    # TODO filters
-    def _get_groups(self, page: int, page_size: int) -> Response:
+    def _get_groups(self, page: int, page_size: int, filters: FilterGroup) -> Response:
         """
-        GET /api/groups?page=<pageNumber>&page_size=<pageSize>
+        POST /api/groups
 
         Response:
         {[
@@ -59,7 +58,7 @@ class GroupRouter:
             ...
         ]}
         """
-        return self._use_cases.get_groups(page,page_size, {})
+        return self._use_cases.get_groups(page,page_size, filters)
 
     def _get_group(self, group_id: int) -> Response:
         """

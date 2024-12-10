@@ -3,6 +3,7 @@ from arango.graph import Graph
 import datetime
 import time
 from collections import Counter
+import re
 
 from fastapi import Response
 
@@ -11,17 +12,68 @@ from gighunt.modules.models import Group
 
 from gighunt.modules.clients.arangodb_client import ArangoDBClient
 from gighunt.modules.use_cases.base_vertex_use_cases import BaseVertexUseCases
-from gighunt.modules.models import GroupAnnouncement, Star, UserAnnouncement, Comment, UpdateGroup
+from gighunt.modules.models import GroupAnnouncement, Star, UserAnnouncement, Comment, UpdateGroup, FilterGroup
 
 class GroupUseCases(BaseVertexUseCases):
 
-    def get_groups(self, page: int, page_size: int, filters: dict) -> Response:
-        cursor = self.get_all_entities().all(skip=(page - 1) * page_size, limit=page_size)
+    def __create_filters(self, filters: FilterGroup)->dict:
+        query_filters = {}
+        # name: str | None
+        # genre: str | None
+        # stars: str | int | None
+        # participant: str | None
+        if (filters.name):
+            query_filters["name"] = f".*{filters.name.lower()}.*"
+        if (filters.genre):
+            query_filters["genre"] = f".*{filters.genre.lower()}.*"
+        if (filters.stars):
+            query_filters["stars"] = f"{filters.stars}"
+        if (filters.participant):
+            query_filters["participant"] = f".*{filters.participant.lower()}.*"
+
+        return query_filters
+    def __find_by_filters(self, deque, filters)->list:
+        query_filters = self.__create_filters(filters)
+        groups = []
+        while len(deque):
+            flag = True
+            group = deque.pop()
+            if query_filters.get("name") and not re.match(query_filters["name"], group["name"].lower()):
+                flag = False
+            if query_filters.get("genre") and not re.match(query_filters["genre"], ''.join(group["genres"]).lower()):
+                flag = False
+            if query_filters.get("stars"):
+                stars_use_cases = self.edge_use_cases.stars_use_cases
+                stars_count = len(stars_use_cases.get_all_entities(stars_use_cases.edge_collection_names.STARSTOGROUP.value).find({"_to":group["_id"]}).batch())
+                try:
+                    if int(query_filters["stars"])> stars_count:
+                        flag = False
+                except ValueError:
+                    print("На поиск по количеству звезд пришло не число!")
+                    flag = False
+
+            if (query_filters.get("participant")):
+                user_group_use_case = self.edge_use_cases.user_group_use_cases
+                ug_list = user_group_use_case.get_all_entities(
+                    user_group_use_case.edge_collection_names.USERGROUP.value).find({"_to": group["_id"]}).batch()
+                user_names = ""
+                for current_ug in ug_list:
+                    current_user = self.get_another_entity(current_ug["_from"], "User")
+                    user_names+=current_user["first_name"]+current_user["last_name"]
+                if not re.match(query_filters["participant"], user_names.lower()):
+                    flag = False
+            if (flag):
+                groups.append(group)
+        return groups
+
+    def get_groups(self, page: int, page_size: int, filters: FilterGroup) -> Response:
+        cursor = self.get_all_entities().all()
         deque = cursor.batch()
+        groups = self.__find_by_filters(deque, filters)[(page - 1) * page_size : (page - 1) * page_size + page_size]
         group_list = []
         star_use_cases = self.edge_use_cases.stars_use_cases
-        while len(deque):
-            group = deque.pop()
+        while len(groups):
+            group = groups.pop()
             star_cursor = star_use_cases.get_all_entities(star_use_cases.edge_collection_names.STARSTOGROUP.value).find(
                 {"_to": str(group["_id"])})
             stars = list(star_cursor.batch())
