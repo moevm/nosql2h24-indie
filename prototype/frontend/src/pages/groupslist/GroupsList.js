@@ -100,10 +100,19 @@ export default function GroupsList(props) {
                     })
                 }
             </Pagination>
-            <div className='fit-width'>
-                <div className='visible-layout flex-column flex-center align-end' style={{padding: '20px', gap: '10px'}}>
-                    <CustomTextField id="outlined-basic" label="Название" variant="outlined" value={newGroupName} onChange={(event) => setNewGroupName(event.target.value)}/>
-                    <CustomButton variant="contained" onClick={handleCreateGroup}>Создать</CustomButton>
+            <div className='flex-column fit-width' style={{paddingTop: '80px', gap: '20px'}}>
+                <div className='visible-layout flex-column flex-center align-start' style={{padding: '20px', gap: '12px', width: '340px'}}>
+                    <div className='caption'>Создать группу</div>
+                    <CustomTextField sx={{width: '100%'}} label="Название" variant="outlined" value={newGroupName} onChange={(event) => setNewGroupName(event.target.value)}/>
+                    <CustomButton variant="contained" sx={{alignSelf: 'end'}} onClick={handleCreateGroup}>Создать</CustomButton>
+                </div>
+                <div className='visible-layout flex-column flex-center align-start' style={{padding: '20px', gap: '12px', width: '340px'}}>
+                    <div className='caption'>Фильтрация</div>
+                    <CustomTextField sx={{width: '100%'}} label="Название"/>
+                    <CustomTextField sx={{width: '100%'}} label="Жанр"/>
+                    <CustomTextField sx={{width: '100%'}} label="Звезды"/>
+                    <CustomTextField sx={{width: '100%'}} label="Участник"/>
+                    <CustomButton variant="contained" sx={{alignSelf: 'end'}}>Примерить</CustomButton>
                 </div>
             </div>
         </div>

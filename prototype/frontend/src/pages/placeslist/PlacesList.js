@@ -97,13 +97,23 @@ export default function PlacesList(props) {
                     })
                 }
             </Pagination>
-            <div className='fit-width'>
-                <div className='visible-layout flex-column flex-center' style={{padding: '20px', gap: '10px'}}>
-                    <CustomTextField id="outlined-basic" label="Название" variant="outlined" value={newPlaceName} onChange={(event) => setNewPlaceName(event.target.value)}/>
-                    <CustomTextField id="outlined-basic" label="Тип" variant="outlined" value={newPlaceType} onChange={(event) => setNewPlaceType(event.target.value)}/>
-                    <CustomTextField id="outlined-basic" label="Адрес" variant="outlined" value={newPlaceAddress} onChange={(event) => setNewPlaceAddress(event.target.value)}/>
-                    <CustomTextField id="outlined-basic" label="Контактный номер" variant="outlined" value={newPlaceNumber} onChange={(event) => setNewPlaceNumber(event.target.value)}/>
-                    <CustomButton variant="contained" onClick={handleCreateGroup}>Создать</CustomButton>
+            <div className='flex-column fit-width' style={{paddingTop: '80px', gap: '20px'}}>
+                <div className='visible-layout flex-column flex-center align-start' style={{padding: '20px', gap: '12px', width: '340px'}}>
+                    <div className='caption'>Добавить место</div>
+                    <CustomTextField sx={{width: '100%'}} label="Название" value={newPlaceName} onChange={(event) => setNewPlaceName(event.target.value)}/>
+                    <CustomTextField sx={{width: '100%'}} label="Тип" value={newPlaceType} onChange={(event) => setNewPlaceType(event.target.value)}/>
+                    <CustomTextField sx={{width: '100%'}} label="Адрес" value={newPlaceAddress} onChange={(event) => setNewPlaceAddress(event.target.value)}/>
+                    <CustomTextField sx={{width: '100%'}} label="Контактный номер" value={newPlaceNumber} onChange={(event) => setNewPlaceNumber(event.target.value)}/>
+                    <CustomButton sx={{alignSelf: 'end'}} variant="contained" onClick={handleCreateGroup}>Создать</CustomButton>
+                </div>
+                <div className='visible-layout flex-column flex-center align-start' style={{padding: '20px', gap: '12px', width: '340px'}}>
+                    <div className='caption'>Фильтрация</div>
+                    <CustomTextField sx={{width: '100%'}} label="Название"/>
+                    <CustomTextField sx={{width: '100%'}} label="Тип"/>
+                    <CustomTextField sx={{width: '100%'}} label="Адрес"/>
+                    <CustomTextField sx={{width: '100%'}} label="Контактный номер"/>
+                    <CustomTextField sx={{width: '100%'}} label="Оборудование"/>
+                    <CustomButton variant="contained" sx={{alignSelf: 'end'}}>Примерить</CustomButton>
                 </div>
             </div>
         </div>

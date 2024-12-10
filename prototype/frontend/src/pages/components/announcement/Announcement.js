@@ -50,47 +50,49 @@ export default function Announcement(props) {
     }
 
     return <>
-        <ToastContainer></ToastContainer>
-        <div className='visible-layout flex-column width-full' style={{height: 'fit-content', padding: '10px 0 10px 0', gap: '10px'}}>
-            <div className='border-box flex-row width-full flex-space' style={{padding: '0 20px 0 20px'}}>
-                <div className='flex-row' style={{gap: '20px'}}>
-                    <div className='author-name'>
-                        {props.authorName}
+        <div>
+            <ToastContainer></ToastContainer>
+            <div className='visible-layout flex-column width-full' style={{height: 'fit-content', padding: '10px 0 10px 0', gap: '10px'}}>
+                <div className='border-box flex-row width-full flex-space' style={{padding: '0 20px 0 20px'}}>
+                    <div className='flex-row' style={{gap: '20px'}}>
+                        <div className='author-name'>
+                            {props.authorName}
+                        </div>
+                        <SelectTag 
+                            value={props.tag}
+                            disabled={true}
+                        />
                     </div>
-                    <SelectTag 
-                        value={props.tag}
-                        disabled={true}
-                    />
+                    <div className='announcement-date'>
+                        {props.date}
+                    </div>
                 </div>
-                <div className='announcement-date'>
-                    {props.date}
+                <div className='border-box flex-row width-full flex-space align-start' style={{padding: '0 20px 0 20px'}}>
+                    <div className='annoncement-content width-full'>
+                        {props.content}
+                    </div>
+                    <div className='flex-row align-center flex-center' style={{gap: '5px'}}>
+                        <div className='announcement-stars-count'>{starsAmount}</div>
+                        <StarIcon
+                            style={{
+                                stroke: 'var(--primary-color)', 
+                                fill: announcementStarred ? 'var(--primary-color)' : 'none'
+                            }}
+                            onClick={handleStarClick}
+                        />
+                    </div> 
                 </div>
-            </div>
-            <div className='border-box flex-row width-full flex-space align-start' style={{padding: '0 20px 0 20px'}}>
-                <div className='annoncement-content width-full'>
-                    {props.content}
-                </div>
-                <div className='flex-row align-center flex-center' style={{gap: '5px'}}>
-                    <div className='announcement-stars-count'>{starsAmount}</div>
-                    <StarIcon
-                        style={{
-                            stroke: 'var(--primary-color)', 
-                            fill: announcementStarred ? 'var(--primary-color)' : 'none'
+                <div className='flex-row border-box width-full flex-end' style={{padding: '0 20px 0 40px'}}>
+                    <CustomSmallButton
+                        className='actions-button'
+                        variant='contained'
+                        onClick={() => {
+                            toast("Комментарии запрещены!");
                         }}
-                        onClick={handleStarClick}
-                    />
-                </div> 
-            </div>
-            <div className='flex-row border-box width-full flex-end' style={{padding: '0 20px 0 40px'}}>
-                <CustomSmallButton
-                    className='actions-button'
-                    variant='contained'
-                    onClick={() => {
-                        toast("Комментарии запрещены!");
-                    }}
-                >
-                    Комментарии
-                </CustomSmallButton>
+                    >
+                        Комментарии
+                    </CustomSmallButton>
+                </div>
             </div>
         </div>
     </>;
