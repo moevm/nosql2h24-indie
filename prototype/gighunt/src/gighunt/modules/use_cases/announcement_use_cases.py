@@ -52,7 +52,7 @@ class AnnouncementUseCases(BaseVertexUseCases):
         return announcements
 
     def get_announcements(self, page: int, page_size: int, filters: FilterAnnouncement) -> Response:
-        cursor = self.get_all_entities().all(skip=(page - 1) * page_size, limit=page_size)
+        cursor = self.get_all_entities().all()
         deque = cursor.batch()
         announcements = self.__find_by_filters(deque, filters)[(page - 1) * page_size : (page - 1) * page_size + page_size]
         announcement_list = []
