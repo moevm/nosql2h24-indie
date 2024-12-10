@@ -22,6 +22,12 @@ export default function PlacesList(props) {
     const [newPlaceAddress, setNewPlaceAddress] = useState('');
     const [newPlaceNumber, setNewPlaceNumber] = useState('');
 
+    const [filterPlaceName, setFilterPlaceName] = useState('');
+    const [filterPlaceType, setFilterPlaceType] = useState('');
+    const [filterPlaceAddress, setFilterPlaceAddress] = useState('');
+    const [filterPlaceNumber, setFilterPlaceNumber] = useState('');
+    const [filterPlaceEquipment, setFilterPlaceEquipment] = useState('');
+
     const handleCreateGroup = (event) => {
         createPlace(newPlaceName, newPlaceType, newPlaceAddress, newPlaceNumber)
             .then(response => {
@@ -32,9 +38,29 @@ export default function PlacesList(props) {
             })
     }
 
+    const handleFilter = (event) => {
+        const filter = {
+            name: filterPlaceName,
+            type: filterPlaceType,
+            address: filterPlaceAddress,
+            number: filterPlaceNumber,
+            equipment: filterPlaceEquipment
+        }
+        getPlaces(currentPage, pageSize, filter).then((response) => {
+            setPlaces(response);
+        });
+    }
+
     useEffect(() => {
         setSearchParams({page: currentPage, page_size: pageSize});
-        getPlaces(currentPage, pageSize).then((response) => {
+        const filter = {
+            name: filterPlaceName,
+            type: filterPlaceType,
+            address: filterPlaceAddress,
+            number: filterPlaceNumber,
+            equipment: filterPlaceEquipment
+        }
+        getPlaces(currentPage, pageSize, filter).then((response) => {
             setPlaces(response);
         });
     }, [currentPage]);
@@ -108,12 +134,12 @@ export default function PlacesList(props) {
                 </div>
                 <div className='visible-layout flex-column flex-center align-start' style={{padding: '20px', gap: '12px', width: '340px'}}>
                     <div className='caption'>Фильтрация</div>
-                    <CustomTextField sx={{width: '100%'}} label="Название"/>
-                    <CustomTextField sx={{width: '100%'}} label="Тип"/>
-                    <CustomTextField sx={{width: '100%'}} label="Адрес"/>
-                    <CustomTextField sx={{width: '100%'}} label="Контактный номер"/>
-                    <CustomTextField sx={{width: '100%'}} label="Оборудование"/>
-                    <CustomButton variant="contained" sx={{alignSelf: 'end'}}>Примерить</CustomButton>
+                    <CustomTextField sx={{width: '100%'}} label="Название" value={filterPlaceName} onChange={(event) => setFilterPlaceName(event.target.value)}/>
+                    <CustomTextField sx={{width: '100%'}} label="Тип" value={filterPlaceType} onChange={(event) => setFilterPlaceType(event.target.value)}/>
+                    <CustomTextField sx={{width: '100%'}} label="Адрес" value={filterPlaceAddress} onChange={(event) => setFilterPlaceAddress(event.target.value)}/>
+                    <CustomTextField sx={{width: '100%'}} label="Контактный номер" value={filterPlaceNumber} onChange={(event) => setFilterPlaceNumber(event.target.value)}/>
+                    <CustomTextField sx={{width: '100%'}} label="Оборудование" value={filterPlaceEquipment} onChange={(event) => setFilterPlaceEquipment(event.target.value)}/>
+                    <CustomButton variant="contained" sx={{alignSelf: 'end'}} onClick={handleFilter}>Примерить</CustomButton>
                 </div>
             </div>
         </div>

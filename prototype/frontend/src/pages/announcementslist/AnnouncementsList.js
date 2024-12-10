@@ -18,10 +18,31 @@ export default function AnnouncementsList(props) {
     const [currentPage, setCurrentPage] = useState(1);
     const [announcements, setAnnouncements] = useState([]);
 
+    const [filterAuthor, setFilterAuthor] = useState('');
+    const [filterDate, setFilterDate] = useState('');
+    const [filterTag, setFilterTag] = useState('');
+
+    const handleFilter = (event) => {
+        const filter = {
+            producer: filterAuthor,
+            date: filterDate,
+            tag: filterTag
+        }
+        getAnnouncements(currentPage, pageSize, filter).then((response) => {
+            setAnnouncements(response);
+        });
+    }
+
     useEffect(() => {
         setSearchParams({page: currentPage, page_size: pageSize});
-        getAnnouncements(currentPage, pageSize).then((response) => {
+        const filter = {
+            producer: filterAuthor,
+            date: filterDate,
+            tag: filterTag
+        }
+        getAnnouncements(currentPage, pageSize, filter).then((response) => {
             setAnnouncements(response);
+            console.log(response);
         });
     }, [currentPage]);
 
@@ -50,7 +71,7 @@ export default function AnnouncementsList(props) {
                         return <Announcement
                             key={announcement.announcement._key}
                             announcementId={announcement.announcement._key}
-                            authorName={'Пока проблемы с тем, чтобы получить имя автора...'}
+                            authorName={announcement.sender.first_name == undefined ? announcement.sender.name : announcement.sender.first_name}
                             tag={announcement.announcement.tag}
                             date={announcement.announcement.creation_date}
                             content={announcement.announcement.content}
@@ -62,10 +83,10 @@ export default function AnnouncementsList(props) {
             <div className='flex-column fit-width' style={{paddingTop: '80px', gap: '20px'}}>
                 <div className='visible-layout flex-column flex-center align-start' style={{padding: '20px', gap: '12px', width: '340px'}}>
                     <div className='caption'>Фильтрация</div>
-                    <CustomTextField sx={{width: '100%'}} label="Группа или имя пользователя"/>
-                    <CustomTextField sx={{width: '100%'}} label="Дата"/>
-                    <CustomTextField sx={{width: '100%'}} label="Тег"/>
-                    <CustomButton variant='contained' sx={{alignSelf: 'end'}}>Применить</CustomButton>
+                    <CustomTextField sx={{width: '100%'}} label="Автор" value={filterAuthor} onChange={(event) => {setFilterAuthor(event.target.value)}}/>
+                    <CustomTextField sx={{width: '100%'}} label="Дата" value={filterDate} onChange={(event) => {setFilterDate(event.target.value)}}/>
+                    <CustomTextField sx={{width: '100%'}} label="Тег" value={filterTag} onChange={(event) => {setFilterTag(event.target.value)}}/>
+                    <CustomButton variant='contained' sx={{alignSelf: 'end'}} onClick={handleFilter}>Применить</CustomButton>
                 </div>
             </div>
         </div>

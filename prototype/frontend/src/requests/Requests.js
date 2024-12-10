@@ -99,42 +99,46 @@ export function registration(firstName, lastName, email, password) {
         .then(response => response.json());
 }
 
-export function getAnnouncements(page, pageSize) {
-    return fetch(`${baseUrl}/announcement/${page}${pageSize}`, {
-            method: 'GET',
+export function getAnnouncements(page, pageSize, filter) {
+    return fetch(`${baseUrl}/announcement?page=${page}&page_size=${pageSize}`, {
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
-            }
+            },
+            body: JSON.stringify(filter)
         })
         .then(response => response.json());
 }
 
-export function getUsers(page, pageSize) {
-    return fetch(`${baseUrl}/users/${page}${pageSize}`, {
-            method: 'GET',
+export function getUsers(page, pageSize, filter) {
+    return fetch(`${baseUrl}/users?page=${page}&page_size=${pageSize}`, {
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
-            }
+            },
+            body: JSON.stringify(filter)
         })
         .then(response => response.json());
 }
 
-export function getGroups(page, pageSize) {
-    return fetch(`${baseUrl}/groups/${page}${pageSize}`, {
-            method: 'GET',
+export function getGroups(page, pageSize, filter) {
+    return fetch(`${baseUrl}/groups?page=${page}&page_size=${pageSize}`, {
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
-            }
+            },
+            body: JSON.stringify(filter)
         })
         .then(response => response.json());
 }
 
-export function getPlaces(page, pageSize) {
-    return fetch(`${baseUrl}/places/${page}${pageSize}`, {
-            method: 'GET',
+export function getPlaces(page, pageSize, filter) {
+    return fetch(`${baseUrl}/places?page=${page}&page_size=${pageSize}`, {
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
-            }
+            },
+            body: JSON.stringify(filter)
         })
         .then(response => response.json());
 }

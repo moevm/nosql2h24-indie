@@ -23,6 +23,23 @@ export default function GroupsList(props) {
 
     const [newGroupName, setNewGroupName] = useState('');
 
+    const [filterGroupName, setFilterGroupName] = useState('');
+    const [filterGroupGenre, setFilterGroupGenre] = useState('');
+    const [filterGroupStars, setFilterGroupStars] = useState('');
+    const [filterGroupMembers, setFilterGroupMembers] = useState('');
+
+    const handleFilter = (event) => {
+        const filter = {
+            name: filterGroupName,
+            genre: filterGroupGenre,
+            stars: filterGroupStars,
+            participant: filterGroupMembers
+        }
+        getGroups(currentPage, pageSize, filter).then((response) => {
+            setGroups(response);
+        });
+    }
+
     const handleCreateGroup = (event) => {
         createGroup(newGroupName)
             .then(response => {
@@ -35,7 +52,13 @@ export default function GroupsList(props) {
 
     useEffect(() => {
         setSearchParams({page: currentPage, page_size: pageSize});
-        getGroups(currentPage, pageSize).then((response) => {
+        const filter = {
+            name: filterGroupName,
+            genre: filterGroupGenre,
+            stars: filterGroupStars,
+            participant: filterGroupMembers
+        }
+        getGroups(currentPage, pageSize, filter).then((response) => {
             setGroups(response);
         });
     }, [currentPage]);
@@ -108,11 +131,11 @@ export default function GroupsList(props) {
                 </div>
                 <div className='visible-layout flex-column flex-center align-start' style={{padding: '20px', gap: '12px', width: '340px'}}>
                     <div className='caption'>Фильтрация</div>
-                    <CustomTextField sx={{width: '100%'}} label="Название"/>
-                    <CustomTextField sx={{width: '100%'}} label="Жанр"/>
-                    <CustomTextField sx={{width: '100%'}} label="Звезды"/>
-                    <CustomTextField sx={{width: '100%'}} label="Участник"/>
-                    <CustomButton variant="contained" sx={{alignSelf: 'end'}}>Примерить</CustomButton>
+                    <CustomTextField sx={{width: '100%'}} label="Название" value={filterGroupName} onChange={(event) => setFilterGroupName(event.target.value)}/>
+                    <CustomTextField sx={{width: '100%'}} label="Жанр" value={filterGroupGenre} onChange={(event) => setFilterGroupGenre(event.target.value)}/>
+                    <CustomTextField sx={{width: '100%'}} label="Звезд не менее чем" value={filterGroupStars} onChange={(event) => setFilterGroupStars(event.target.value)}/>
+                    <CustomTextField sx={{width: '100%'}} label="Участник" value={filterGroupMembers} onChange={(event) => setFilterGroupMembers(event.target.value)}/>
+                    <CustomButton variant="contained" sx={{alignSelf: 'end'}} onClick={handleFilter}>Примерить</CustomButton>
                 </div>
             </div>
         </div>

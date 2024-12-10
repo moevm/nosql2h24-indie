@@ -19,9 +19,32 @@ export default function UsersList(props) {
     const [currentPage, setCurrentPage] = useState(1);
     const [users, setUsers] = useState([]);
 
+    const [filterName, setFilterName] = useState('');
+    const [filterSurname, setFilterSurname] = useState('');
+    const [filterTalent, setFilterTalent] = useState('');
+    const [filterGroup, setFilterGroup] = useState('');
+
+    const handleFilter = (event) => {
+        const filter = {
+            first_name: filterName,
+            last_name: filterSurname,
+            talents: filterTalent,
+            groups: filterGroup
+        }
+        getUsers(currentPage, pageSize, filter).then((response) => {
+            setUsers(response);
+        });
+    }
+
     useEffect(() => {
         setSearchParams({page: currentPage, page_size: pageSize});
-        getUsers(currentPage, pageSize).then((response) => {
+        const filter = {
+            first_name: filterName,
+            last_name: filterSurname,
+            talents: filterTalent,
+            groups: filterGroup
+        }
+        getUsers(currentPage, pageSize, filter).then((response) => {
             setUsers(response);
         });
     }, [currentPage]);
@@ -90,11 +113,11 @@ export default function UsersList(props) {
             <div className='flex-column fit-width' style={{paddingTop: '80px', gap: '20px'}}>
                 <div className='visible-layout flex-column flex-center align-start' style={{padding: '20px', gap: '12px', width: '340px'}}>
                     <div className='caption'>Фильтрация</div>
-                    <CustomTextField sx={{width: '100%'}} label="Имя" variant="outlined"/>
-                    <CustomTextField sx={{width: '100%'}} label="Фамилия" variant="outlined"/>
-                    <CustomTextField sx={{width: '100%'}} label="Талант" variant="outlined"/>
-                    <CustomTextField sx={{width: '100%'}} label="Группа" variant="outlined"/>
-                    <CustomButton variant='contained' sx={{alignSelf: 'end'}}>Применить</CustomButton>
+                    <CustomTextField sx={{width: '100%'}} label="Имя" value={filterName} onChange={(event) => {setFilterName(event.target.value)}}/>
+                    <CustomTextField sx={{width: '100%'}} label="Фамилия" value={filterSurname} onChange={(event) => {setFilterSurname(event.target.value)}}/>
+                    <CustomTextField sx={{width: '100%'}} label="Талант" value={filterTalent} onChange={(event) => {setFilterTalent(event.target.value)}}/>
+                    <CustomTextField sx={{width: '100%'}} label="Группа" value={filterGroup} onChange={(event) => {setFilterGroup(event.target.value)}}/>
+                    <CustomButton variant='contained' sx={{alignSelf: 'end'}} onClick={handleFilter}>Применить</CustomButton>
                 </div>
             </div>
         </div>
