@@ -3,7 +3,7 @@ import time
 
 from fastapi import APIRouter, Response
 
-from gighunt.modules.models import GroupAnnouncement, Star, UserAnnouncement, Comment
+from gighunt.modules.models import GroupAnnouncement, Star, UserAnnouncement, Comment, FilterAnnouncement
 from gighunt.modules.use_cases.announcement_use_cases import AnnouncementUseCases
 
 
@@ -12,9 +12,9 @@ class AnnouncementRouter:
         self._router = router
         self._use_cases = use_cases
         self._router.add_api_route(
-            "/api/announcement/{page}{page_size}",
+            "/api/announcement",
             self._get_announcements,
-            methods=["GET"],
+            methods=["POST"],
             tags=["Announcement"],
         )
         self._router.add_api_route(
@@ -48,10 +48,9 @@ class AnnouncementRouter:
             tags=["Announcement"]
         )
 
-    # TODO filters
-    def _get_announcements(self, page: int, page_size: int) -> Response:
+    def _get_announcements(self, page: int, page_size: int, filters: FilterAnnouncement) -> Response:
         """
-        GET /api/announcements?page=<pageNumber>&page_size=<pageSize>
+        POST /api/announcements
 
         Response:
         [
@@ -63,7 +62,7 @@ class AnnouncementRouter:
             ...
         ]
         """
-        return self._use_cases.get_announcements(page, page_size, {})
+        return self._use_cases.get_announcements(page, page_size, filters)
 
     def _get_comments(self, announcement_id: int) -> Response:
         """

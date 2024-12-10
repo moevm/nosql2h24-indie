@@ -1,3 +1,5 @@
+import re
+
 from arango.graph import Graph
 
 import datetime
@@ -9,17 +11,54 @@ from gighunt.modules.use_cases.base_vertex_use_cases import BaseVertexUseCases
 
 from fastapi import Response
 
-from gighunt.modules.models import GroupAnnouncement, Star, UserAnnouncement, Comment
+from gighunt.modules.models import GroupAnnouncement, Star, UserAnnouncement, Comment, FilterAnnouncement
 
 class AnnouncementUseCases(BaseVertexUseCases):
 
-    def get_announcements(self, page: int, page_size: int, filters: dict) -> Response:
-        cursor = self.get_all_entities().all(skip=(page - 1) * page_size, limit=page_size)
+    def __create_filters(self, filters: FilterAnnouncement)->dict:
+        query_filters = {}
+        if (filters.producer):
+            query_filters["producer"] = f".*{filters.producer.lower()}.*"
+        if (filters.date):
+            query_filters["date"] = f".*{filters.date.lower()}.*"
+        if (filters.tag):
+            query_filters["tag"] = f".*{filters.tag.lower()}.*"
+        return query_filters
+    def __find_by_filters(self, deque, filters:FilterAnnouncement)->list:
+        query_filters = self.__create_filters(filters)
+        announcements = []
+        while(len(deque)):
+            flag = True
+            ann = deque.pop()
+            if query_filters.get("producer"):
+                producer_ann_use_case = self.edge_use_cases.producer_announcement_use_cases
+                users_ann = producer_ann_use_case.get_all_entities(producer_ann_use_case.edge_collection_names.ANNOUNCEMENTFROMUSER.value).find({"_to": ann["_id"]}).batch()
+                group_ann = producer_ann_use_case.get_all_entities(producer_ann_use_case.edge_collection_names.ANNOUNCEMENTFROMGROUP.value).find({"_to": ann["_id"]}).batch()
+                producer_pattern = ""
+                if (len(users_ann)):
+                    user = self.get_another_entity(users_ann.pop()["_from"], "User")
+                    producer_pattern = user["first_name"]+user["last_name"]
+                elif (len(group_ann)):
+                    group = self.get_another_entity(group_ann.pop()["_from"], "Group")
+                    producer_pattern = group["name"]
+                if not re.match(query_filters["producer"], producer_pattern.lower()):
+                    flag = False
+            if query_filters.get("date") and not re.match(query_filters["date"], ann["creation_date"]):
+                flag = False
+            if query_filters.get("tag") and not re.match(query_filters["tag"], ann["tag"]):
+                flag = False
+            if (flag):
+                announcements.append(ann)
+        return announcements
+
+    def get_announcements(self, page: int, page_size: int, filters: FilterAnnouncement) -> Response:
+        cursor = self.get_all_entities().all()
         deque = cursor.batch()
+        announcements = self.__find_by_filters(deque, filters)[(page - 1) * page_size : (page - 1) * page_size + page_size]
         announcement_list = []
         star_use_cases = self.edge_use_cases.stars_use_cases
-        while len(deque):
-            announcement = deque.pop()
+        while len(announcements):
+            announcement = announcements.pop()
             producer_announcements_use_case = self.edge_use_cases.producer_announcement_use_cases
             user_ann = list(producer_announcements_use_case.get_all_entities(producer_announcements_use_case.edge_collection_names.ANNOUNCEMENTFROMUSER.value).find({"_to":announcement["_id"]}).batch())
             group_ann = list(producer_announcements_use_case.get_all_entities(producer_announcements_use_case.edge_collection_names.ANNOUNCEMENTFROMGROUP.value).find({"_to":announcement["_id"]}).batch())

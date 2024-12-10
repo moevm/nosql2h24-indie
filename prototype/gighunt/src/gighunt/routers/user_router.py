@@ -6,7 +6,7 @@ from fastapi import APIRouter, Response
 
 from gighunt.modules.models import UserAuthorization, UserRegistration
 from gighunt.modules.use_cases.user_use_cases import UserUseCases
-from gighunt.modules.models import GroupAnnouncement, Star, UserAnnouncement, Comment, UpdateUser
+from gighunt.modules.models import GroupAnnouncement, Star, UserAnnouncement, Comment, UpdateUser, FilterUser
 
 class UserRouter:
     def __init__(self, router: APIRouter, use_cases: UserUseCases) -> None:
@@ -22,9 +22,9 @@ class UserRouter:
             "/api/user/{user_id}", self._get_user, methods=["GET"], tags=["User"]
         )
         self._router.add_api_route(
-            "/api/users/{page}{page_size}",
+            "/api/users",
             self._get_users,
-            methods=["GET"],
+            methods=["POST"],
             tags=["User"],
         )
         self._router.add_api_route(
@@ -52,10 +52,14 @@ class UserRouter:
     def _registration(self, user_registration: UserRegistration) -> Response:
         return self._use_cases.registration(user_registration)
 
-    def _get_users(self, page: int, page_size: int) -> Response:
+    def _get_users(self, page: int, page_size: int, filters: FilterUser) -> Response:
         """
-        GET /api/users?page=<pageNumber>&page_size=<pageSize>
-
+        POST /api/users
+        {
+            page: int,
+            page_size: int
+            filters: FilterUser
+        }
         Response:
         [
             {
@@ -65,7 +69,8 @@ class UserRouter:
             ...
         ]
         """
-        return self._use_cases.get_users(page, page_size, {})
+        print(filters)
+        return self._use_cases.get_users(page, page_size, filters)
 
     def _get_user(self, user_id: int) -> Response:
         """
