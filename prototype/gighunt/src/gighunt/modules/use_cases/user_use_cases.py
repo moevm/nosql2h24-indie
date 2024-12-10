@@ -3,6 +3,7 @@ from fastapi import Response
 
 import datetime
 from collections import Counter
+import re
 
 from gighunt.modules.clients.arangodb_client import ArangoDBClient
 from gighunt.modules.use_cases.base_vertex_use_cases import BaseVertexUseCases
@@ -10,7 +11,7 @@ from arango.collection import VertexCollection
 
 from gighunt.modules.use_cases.all_edge_use_cases import EdgeCollectionUseCases
 
-from gighunt.modules.models import UserAuthorization, UserRegistration, UpdateUser
+from gighunt.modules.models import UserAuthorization, UserRegistration, UpdateUser, FilterUser
 from gighunt.modules.models import Star
 
 class UserUseCases (BaseVertexUseCases):
@@ -56,13 +57,49 @@ class UserUseCases (BaseVertexUseCases):
         }
         return self.create_new_entity(db_user)
 
-    def get_users(self, page: int, page_size: int, filters: dict) -> Response:
-        cursor = self.get_all_entities().all(skip=(page - 1) * page_size, limit=page_size)
-        deque = cursor.batch()
+    def __create_filters(self, filters: FilterUser)->dict:
+        query_filters = {}
+        if (filters.first_name):
+            query_filters["first_name"] = f".*{filters.first_name.lower()}.*"
+        if (filters.last_name):
+            query_filters["last_name"] = f".*{filters.last_name.lower()}.*"
+        if (filters.talents):
+            query_filters["talents"] = f".*{filters.talents.lower()}.*"
+        if (filters.groups):
+            query_filters["groups"] = f".*{filters.groups.lower()}.*"
+        return query_filters
+    def __find_by_filters(self, deque, filters)->list:
+        query_filters = self.__create_filters(filters)
+        users = []
+        while(len(deque)):
+            flag = True
+            user = deque.pop()
+            if query_filters.get("first_name") and not re.match(query_filters["first_name"], user["first_name"].lower()):
+                flag =False
+            if query_filters.get("last_name") and not re.match(query_filters["last_name"], user["last_name"].lower()):
+                flag =False
+            if query_filters.get("talents") and not re.match(query_filters["talents"], ''.join(user["talents"]).lower()):
+                flag = False
+            if query_filters.get("groups"):
+                user_group_use_case = self.edge_use_cases.user_group_use_cases
+                ug_list = user_group_use_case.get_all_entities(user_group_use_case.edge_collection_names.USERGROUP.value).find({"_from": user["_id"]}).batch()
+                group_names = ""
+                for current_ug in ug_list:
+                    current_group = self.get_another_entity(current_ug["_to"], "Group")
+                    group_names+=current_group["name"]
+                if not re.match(query_filters["groups"], group_names.lower()):
+                    flag = False
+            if(flag):
+                users.append(user)
+        return users
+    def get_users(self, page: int, page_size: int, filters: FilterUser) -> Response:
+        query_filters = self.__create_filters(filters)
+        deque = self.get_all_entities().all().batch()
+        users = self.__find_by_filters(deque, filters)[(page - 1) * page_size : (page - 1) * page_size + page_size]
         users_list = []
         star_use_cases = self.edge_use_cases.stars_use_cases
-        while len(deque):
-            user = deque.pop()
+        while len(users):
+            user = users.pop()
             print(user["_id"])
             star_cursor = star_use_cases.get_all_entities(star_use_cases.edge_collection_names.STARSTOUSER.value).find(
                 {"_to": str(user["_id"])})
