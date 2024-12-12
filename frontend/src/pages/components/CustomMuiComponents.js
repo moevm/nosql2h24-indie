@@ -9,6 +9,10 @@ import TextField from '@mui/material/TextField';
 
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
+import Select from '@mui/material/Select';
+import InputLabel from '@mui/material/InputLabel';
+import FormControl from '@mui/material/FormControl';
+
 export const CustomButton = styled(Button)(() => ({
     width: '120px',
     height: '40px',
@@ -102,3 +106,50 @@ export const CustomDatePicker = styled(DatePicker)(() => ({
     }
 }));
 
+export const CustomSelect = styled(Select)(() => ({
+    "& .MuiSelect-icon": {
+        color: 'var(--base-color)'
+    },
+    "& .MuiOutlinedInput-notchedOutline": {
+        border: 'none',
+        color: 'red',
+    },
+    "& fieldset": {
+        border: 'none',
+        color: 'red',
+    },
+    "& .MuiInputBase-input": {
+        height: '23px',
+        fontSize: '16px',
+        padding: '0 10px',
+        backgroundColor: 'var(--text-color)',
+        color: 'var(--base-color)',
+        borderRadius: '10px',
+    },
+    "&.Mui-focused": {
+        borderRadius: '10px',
+    },
+}));
+
+export function Dropdown(props) {
+    return <>
+        <FormControl>
+            <InputLabel
+                sx={{
+                    transform: 'translate(12px, 20%) scale(0.75)',
+                    fontSize: '16px',
+                    "&.Mui-focused": {
+                        color: 'var(--base-color)'
+                    }
+                }}
+            >{props.label}</InputLabel>
+            <CustomSelect
+                label={props.label}
+            >
+                {
+                    props.children
+                }
+            </CustomSelect>
+        </FormControl>
+    </>
+}

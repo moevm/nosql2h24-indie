@@ -27,15 +27,7 @@ export default function AnnouncementsList(props) {
     const [filterStarsTo, setFilterStarsTo] = useState('');
     const [filterTag, setFilterTag] = useState('');
 
-    // TODO: remove
-    const filterDate = '';
-
     const handleFilter = (event) => {
-        const oldFilter = {
-            producer: filterAuthor,
-            date: filterDate,
-            tag: filterTag
-        }
         const filter = {
             producer: filterAuthor,
             from_date: filterDateFrom,
@@ -99,7 +91,7 @@ export default function AnnouncementsList(props) {
                             date={format(new Date(announcement.announcement.creation_date), 'HH:mm dd.MM.yyyy')}
                             content={announcement.announcement.content}
                             starsAmount={announcement.stars.length}
-                        ></Announcement>
+                        />
                     })
                 }
             </Pagination>

@@ -9,6 +9,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import { getGroups, createGroup } from '../../requests/Requests.js';
+import GroupItem from '../components/groupitem/GroupItem.js';
 
 import { ReactComponent as BigStarIcon } from './assets/big-star.svg';
 
@@ -109,41 +110,15 @@ export default function GroupsList(props) {
             >
                 {
                     groups.map((group) => {
-                        return <div key={group.group._id} className='visible-layout width-full' style={{minWidth: '0px', height: '230px'}}>
-                            <div className='border-box height-full width-full' style={{padding: '30px 0 30px 0'}}>
-                                <div className='flex-row flex-space border-box width-full height-full' style={{padding: '0 100px 0 60px', gap: '30px'}}>
-                                    <div className='fit-width'>
-                                        <div className='avatar-container'>
-                                            <img className='width-full height-full' style={{objectFit: 'cover'}} alt='' src={group.group.avatar_uri}></img>
-                                        </div>
-                                    </div>
-                                    <div className='flex-column flex-center height-full width-full' style={{gap: '5px'}}>
-                                        <div className='flex-row flex-space width-full'>
-                                            <div className='flex-column'>
-                                                <div className='first-name-text'>{group.group.name}</div>
-                                            </div> 
-                                            <div className='flex-column align-center flex-center' style={{gap: '5px'}}>
-                                                <BigStarIcon
-                                                    style={{
-                                                        stroke: 'var(--primary-color)', 
-                                                        fill: true ? 'var(--primary-color)' : 'none'
-                                                    }}
-                                                />
-                                                <div className='stars-count'>{group.stars.length}</div>
-                                            </div> 
-                                        </div>
-                                        <div className='flex-row flex-space width-full'>
-                                            <div className='tertiary-info'>Жанры</div>
-                                            <div className='tertiary-info'>{JSON.stringify(group.group.genres)}</div>
-                                        </div>
-                                        <div className='flex-row flex-space width-full'>
-                                            <div className='tertiary-info'>Последнее изменение</div>
-                                            <div className='tertiary-info'>{group.group.last_edit_date}</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        return <GroupItem
+                            key={group.group._key}
+                            name={group.group.name}
+                            creationDate={group.group.creation_date}
+                            lastEditDate={group.group.last_edit_date}
+                            avatarUri={group.group.avatar_uri}
+                            genres={group.group.genres}
+                            stars={group.stars.length}
+                        />
                     })
                 }
             </Pagination>
