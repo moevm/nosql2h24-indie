@@ -47,6 +47,12 @@ class AnnouncementRouter:
             methods=["GET"],
             tags=["Announcement"]
         )
+        self._router.add_api_route(
+            "/api/get_announcement",
+            self._get_announcement,
+            methods=["GET"],
+            tags=["Announcement"]
+        )
 
     def _get_announcements(self, page: int, page_size: int, filters: FilterAnnouncement) -> Response:
         """
@@ -151,4 +157,19 @@ class AnnouncementRouter:
         }
         """
         return self._use_cases.get_popular_announcement()
+
+    def _get_announcement(self, ann_id: int):
+        """
+
+        :param ann_id:
+        :return:
+        {
+            announcement: Announcement
+            stars: int
+            sender: User|Group
+            comments: Comment
+        }
+        """
+
+        return self._use_cases.get_announcement(ann_id)
 

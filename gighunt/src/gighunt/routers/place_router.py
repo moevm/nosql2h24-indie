@@ -20,6 +20,9 @@ class PlaceRouter:
         self._router.add_api_route(
             "/api/place", self._add_place, methods=["POST"], tags=["Place"]
         )
+        self._router.add_api_route(
+            "/api/get_place", self._get_place, methods=["GET"], tags=["Place"]
+        )
 
     def _get_places(self, page: int, page_size: int, filters: FilterPlace) -> Response:
         """
@@ -46,3 +49,6 @@ class PlaceRouter:
         }
         """
         return self._use_cases.add_place(place)
+
+    def _get_place(self, place_id: int):
+        return self._use_cases.get_place(place_id)

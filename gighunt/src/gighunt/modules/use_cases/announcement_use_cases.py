@@ -221,3 +221,35 @@ class AnnouncementUseCases(BaseVertexUseCases):
         stars_count = len(stars)
         return stars_count
 
+    def get_announcement(self, ann_id: int):
+        ann_entity = self.get_entity(str(ann_id))
+        star_use_cases = self.edge_use_cases.stars_use_cases
+        stars = star_use_cases.get_all_entities(star_use_cases.edge_collection_names.STARSTOANNOUNCEMENT.value).find(
+            {"_to": str("Announcement/" + str(ann_id))})
+        stars_count = len(stars)
+        producer_announcements_use_case = self.edge_use_cases.producer_announcement_use_cases
+        user_ann = list(producer_announcements_use_case.get_all_entities(
+            producer_announcements_use_case.edge_collection_names.ANNOUNCEMENTFROMUSER.value).find(
+            {"_to": ann_entity["_id"]}).batch())
+        group_ann = list(producer_announcements_use_case.get_all_entities(
+            producer_announcements_use_case.edge_collection_names.ANNOUNCEMENTFROMGROUP.value).find(
+            {"_to": ann_entity["_id"]}).batch())
+        sender = {}
+        if len(user_ann):
+            prod_ann = user_ann[0]
+            sender = self.get_another_entity(prod_ann.get("_from"), "User")
+        elif len(group_ann):
+            prod_ann = group_ann[0]
+            sender = self.get_another_entity(prod_ann.get("_from"), "Group")
+        else:
+            print("no sender?")
+        comments = self.get_comments(ann_id)
+
+        announcement = {
+            "announcement": ann_entity,
+            "stars": stars_count,
+            "sender": sender,
+            "comments": comments
+        }
+        return announcement
+

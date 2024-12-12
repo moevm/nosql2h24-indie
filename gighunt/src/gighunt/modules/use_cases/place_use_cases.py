@@ -100,5 +100,8 @@ class PlaceUseCases(BaseVertexUseCases):
         }
         return self.create_new_entity(db_place)
 
+    def get_place(self, place_id: int) ->Response:
+        return self.get_entity(str(place_id))
+
     pass
 
