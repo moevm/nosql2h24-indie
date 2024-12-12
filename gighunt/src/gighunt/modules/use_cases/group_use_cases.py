@@ -78,7 +78,7 @@ class GroupUseCases(BaseVertexUseCases):
                 {"_to": str(group["_id"])})
             stars = list(star_cursor.batch())
             group_list.append({"group": group, "stars": stars})
-        return group_list
+        return {"group_list": group_list , "count": self.get_all_entities_count()}
 
     def get_group(self, group_id: int) -> Response:
         group = self.get_entity(str(group_id))

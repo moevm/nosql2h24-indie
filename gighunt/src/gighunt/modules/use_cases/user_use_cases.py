@@ -106,7 +106,7 @@ class UserUseCases (BaseVertexUseCases):
             stars = list(star_cursor.batch())
             users_list.append({"user": user, "stars": stars})
 
-        return users_list
+        return {"users_list": users_list, "count": self.get_all_entities_count()}
 
     def get_user(self, user_id: int) -> Response:
         user = self.get_entity(str(user_id))

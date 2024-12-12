@@ -75,7 +75,10 @@ class FilterGroup(BaseModel):
 
 class FilterAnnouncement(BaseModel):
     producer: str|None
-    date: str|None
+    from_date: str|None
+    to_date: str|None
+    from_stars: str|int|None
+    to_stars: str|int|None
     tag: str|None
 
 class FilterPlace(BaseModel):

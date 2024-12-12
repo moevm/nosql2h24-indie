@@ -54,7 +54,7 @@ class PlaceUseCases(BaseVertexUseCases):
         while len(places):
             place = places.pop()
             places_list.append(place)
-        return places_list
+        return {"places_list": places_list, "count": self.get_all_entities_count()}
 
     def add_place(self, place: Place) -> Response:
         db_place = {

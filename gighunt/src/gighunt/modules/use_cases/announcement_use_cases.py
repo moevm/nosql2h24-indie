@@ -19,8 +19,16 @@ class AnnouncementUseCases(BaseVertexUseCases):
         query_filters = {}
         if (filters.producer):
             query_filters["producer"] = f".*{filters.producer.lower()}.*"
-        if (filters.date):
-            query_filters["date"] = f".*{filters.date.lower()}.*"
+        # if (filters.date):
+        #     query_filters["date"] = f".*{filters.date.lower()}.*"
+        if (filters.from_date):
+            query_filters["from_date"] = datetime.datetime.fromisoformat(filters.from_date) #datetime.datetime.strptime(filters.from_date, "%Y-%m-%dT%H:%M:%SZ")
+        if (filters.to_date):
+            query_filters["to_date"] = datetime.datetime.fromisoformat(filters.to_date) #datetime.datetime.strptime(filters.to_date, "%Y-%m-%dT%H:%M:%SZ")
+        if (filters.from_stars):
+            query_filters["from_stars"] = int(filters.from_stars)
+        if (filters.to_stars):
+            query_filters["to_stars"] = int(filters.to_stars)
         if (filters.tag):
             query_filters["tag"] = f".*{filters.tag.lower()}.*"
         return query_filters
@@ -43,8 +51,35 @@ class AnnouncementUseCases(BaseVertexUseCases):
                     producer_pattern = group["name"]
                 if not re.match(query_filters["producer"], producer_pattern.lower()):
                     flag = False
-            if query_filters.get("date") and not re.match(query_filters["date"], ann["creation_date"]):
-                flag = False
+            # if query_filters.get("date") and not re.match(query_filters["date"], ann["creation_date"]):
+            #     flag = False
+            if (query_filters.get("from_date")):
+                cur_date = datetime.datetime.fromisoformat(ann["creation_date"]) #datetime.datetime.strptime(ann["creation_date"], "%Y-%m-%d") 2024-11-30T21:00:00.000Z
+                #print(query_filters["from_date"], cur_date)
+                if query_filters["from_date"].timestamp()> cur_date.timestamp():
+                    flag = False
+            if (query_filters.get("to_date")):
+                cur_date = datetime.datetime.fromisoformat(ann["creation_date"])  #datetime.datetime.strptime(ann["creation_date"], "%Y-%m-%d")
+                if query_filters["to_date"].timestamp()< cur_date.timestamp():
+                    flag = False
+            if query_filters.get("from_stars"):
+                stars_use_cases = self.edge_use_cases.stars_use_cases
+                stars_count = len(stars_use_cases.get_all_entities(stars_use_cases.edge_collection_names.STARSTOANNOUNCEMENT.value).find({"_to":ann["_id"]}).batch())
+                try:
+                    if int(query_filters["from_stars"])> stars_count:
+                        flag = False
+                except ValueError:
+                    print("На поиск по количеству звезд пришло не число!")
+                    flag = False
+            if query_filters.get("to_stars"):
+                stars_use_cases = self.edge_use_cases.stars_use_cases
+                stars_count = len(stars_use_cases.get_all_entities(stars_use_cases.edge_collection_names.STARSTOANNOUNCEMENT.value).find({"_to":ann["_id"]}).batch())
+                try:
+                    if int(query_filters["to_stars"])< stars_count:
+                        flag = False
+                except ValueError:
+                    print("На поиск по количеству звезд пришло не число!")
+                    flag = False
             if query_filters.get("tag") and not re.match(query_filters["tag"], ann["tag"]):
                 flag = False
             if (flag):
@@ -77,7 +112,7 @@ class AnnouncementUseCases(BaseVertexUseCases):
             user_stars = {}
             stars = list(star_cursor.batch())
             announcement_list.append({"announcement": announcement, "stars": stars, "sender": sender})
-        return announcement_list
+        return {"announcement_list": announcement_list, "count": self.get_all_entities_count()}
 
     def get_comments(self, announcement_id: int) -> Response:
         cursor = self.get_all_entities().find({"_to":str("Announcement/"+str(announcement_id))})
