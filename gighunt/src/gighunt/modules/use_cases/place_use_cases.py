@@ -24,6 +24,17 @@ class PlaceUseCases(BaseVertexUseCases):
             query_filters["number"] =  fr".*{re.escape(filters.number.lower())}.*"
         if filters.equipment:
             query_filters["equipment"] = f".*{filters.equipment.lower()}.*"
+        if (filters.from_date):
+            query_filters["from_date"] = datetime.datetime.fromisoformat(
+                filters.from_date)  # datetime.datetime.strptime(filters.from_date, "%Y-%m-%dT%H:%M:%SZ")
+        if (filters.to_date):
+            query_filters["to_date"] = datetime.datetime.fromisoformat(
+                filters.to_date)  # datetime.datetime.strptime(filters.to_date, "%Y-%m-%dT%H:%M:%SZ")
+        if (filters.from_creation):
+            query_filters["from_creation"] = datetime.datetime.fromisoformat(
+                filters.from_creation)  # datetime.datetime.strptime(filters.from_date, "%Y-%m-%dT%H:%M:%SZ")
+        if (filters.to_creation):
+            query_filters["to_creation"] = datetime.datetime.fromisoformat(filters.to_creation)
         return query_filters
     def __find_by_filters(self, deque, filters)->list:
         query_filters = self.__create_filters(filters)
@@ -41,6 +52,25 @@ class PlaceUseCases(BaseVertexUseCases):
                 flag = False
             if query_filters.get("equipment") and not re.match(query_filters["equipment"], ''.join(list(place["equipment"].values())).lower()):
                 flag = False
+            if (query_filters.get("from_date")):
+                cur_date = datetime.datetime.fromisoformat(place["last_edit_date"])  # datetime.datetime.strptime(ann["creation_date"], "%Y-%m-%d") 2024-11-30T21:00:00.000Z
+                # print(query_filters["from_date"], cur_date)
+                if query_filters["from_date"].timestamp() > cur_date.timestamp():
+                    flag = False
+            if (query_filters.get("to_date")):
+                cur_date = datetime.datetime.fromisoformat(place["last_edit_date"])  # datetime.datetime.strptime(ann["creation_date"], "%Y-%m-%d")
+                if query_filters["to_date"].timestamp() < cur_date.timestamp():
+                    flag = False
+            if (query_filters.get("from_creation")):
+                cur_date = datetime.datetime.fromisoformat(place["creation_date"])  # datetime.datetime.strptime(ann["creation_date"], "%Y-%m-%d") 2024-11-30T21:00:00.000Z
+                # print(query_filters["from_date"], cur_date)
+                if query_filters["from_creation"].timestamp() > cur_date.timestamp():
+                    flag = False
+            if (query_filters.get("to_creation")):
+                cur_date = datetime.datetime.fromisoformat(
+                    place["creation_date"])  # datetime.datetime.strptime(ann["creation_date"], "%Y-%m-%d")
+                if query_filters["to_creation"].timestamp() < cur_date.timestamp():
+                    flag = False
             if (flag):
                 places.append(place)
         return places

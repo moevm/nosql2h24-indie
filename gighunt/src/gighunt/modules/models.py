@@ -98,3 +98,7 @@ class FilterPlace(BaseModel):
     address: str|None
     number: str|None
     equipment: str|None
+    from_date: str | None
+    to_date: str | None
+    from_creation: str | None
+    to_creation: str | None
