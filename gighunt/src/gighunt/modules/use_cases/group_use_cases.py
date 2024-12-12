@@ -133,7 +133,17 @@ class GroupUseCases(BaseVertexUseCases):
             star_cursor = star_use_cases.get_all_entities(star_use_cases.edge_collection_names.STARSTOGROUP.value).find(
                 {"_to": str(group["_id"])})
             stars = list(star_cursor.batch())
-            group_list.append({"group": group, "stars": stars})
+            user_group_use_cases = self.edge_use_cases.user_group_use_cases
+            user_groups = user_group_use_cases.get_all_entities(
+                user_group_use_cases.edge_collection_names.USERGROUP.value).find(
+                {"_to": group["_id"]}
+            ).batch()
+            users = []
+            for user_group_edge in user_groups:
+                current_user = self.get_another_entity(user_group_edge["_from"], "User")
+                current_join_date = user_group_edge["join_date"]
+                users.append({"user": current_user, "join_date": current_join_date})
+            group_list.append({"group": group, "stars": stars, "users": users})
         return {"group_list": group_list , "count": self.get_all_entities_count()}
 
     def get_group(self, group_id: int) -> Response:
