@@ -70,7 +70,12 @@ class FilterUser(BaseModel):
 class FilterGroup(BaseModel):
     name: str|None
     genre: str|None
-    stars: str|int|None
+    from_date: str | None
+    to_date: str | None
+    from_creation: str | None
+    to_creation: str | None
+    from_stars: str | int | None
+    to_stars: str | int | None
     participant: str|None
 
 class FilterAnnouncement(BaseModel):

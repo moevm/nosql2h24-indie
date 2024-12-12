@@ -20,14 +20,31 @@ class GroupUseCases(BaseVertexUseCases):
         query_filters = {}
         # name: str | None
         # genre: str | None
-        # stars: str | int | None
+        # from_date: str | None
+        # to_date: str | None
+        # from_creation: str | None
+        # to_creation: str | None
+        # from_stars: str | int | None
+        # to_stars: str | int | None
         # participant: str | None
         if (filters.name):
             query_filters["name"] = f".*{filters.name.lower()}.*"
         if (filters.genre):
             query_filters["genre"] = f".*{filters.genre.lower()}.*"
-        if (filters.stars):
-            query_filters["stars"] = f"{filters.stars}"
+        # if (filters.stars):
+        #     query_filters["stars"] = f"{filters.stars}"
+        if (filters.from_date):
+            query_filters["from_date"] = datetime.datetime.fromisoformat(filters.from_date) #datetime.datetime.strptime(filters.from_date, "%Y-%m-%dT%H:%M:%SZ")
+        if (filters.to_date):
+            query_filters["to_date"] = datetime.datetime.fromisoformat(filters.to_date) #datetime.datetime.strptime(filters.to_date, "%Y-%m-%dT%H:%M:%SZ")
+        if (filters.from_creation):
+            query_filters["from_creation"] = datetime.datetime.fromisoformat(filters.from_creation) #datetime.datetime.strptime(filters.from_date, "%Y-%m-%dT%H:%M:%SZ")
+        if (filters.to_creation):
+            query_filters["to_creation"] = datetime.datetime.fromisoformat(filters.to_creation)
+        if (filters.from_stars):
+            query_filters["from_stars"] = int(filters.from_stars)
+        if (filters.to_stars):
+            query_filters["to_stars"] = int(filters.to_stars)
         if (filters.participant):
             query_filters["participant"] = f".*{filters.participant.lower()}.*"
 
@@ -42,11 +59,50 @@ class GroupUseCases(BaseVertexUseCases):
                 flag = False
             if query_filters.get("genre") and not re.match(query_filters["genre"], ''.join(group["genres"]).lower()):
                 flag = False
-            if query_filters.get("stars"):
+            # if query_filters.get("stars"):
+            #     stars_use_cases = self.edge_use_cases.stars_use_cases
+            #     stars_count = len(stars_use_cases.get_all_entities(stars_use_cases.edge_collection_names.STARSTOGROUP.value).find({"_to":group["_id"]}).batch())
+            #     try:
+            #         if int(query_filters["stars"])> stars_count:
+            #             flag = False
+            #     except ValueError:
+            #         print("На поиск по количеству звезд пришло не число!")
+            #         flag = False
+            if (query_filters.get("from_date")):
+                cur_date = datetime.datetime.fromisoformat(group["last_edit_date"])  # datetime.datetime.strptime(ann["creation_date"], "%Y-%m-%d") 2024-11-30T21:00:00.000Z
+                # print(query_filters["from_date"], cur_date)
+                if query_filters["from_date"].timestamp() > cur_date.timestamp():
+                    flag = False
+            if (query_filters.get("to_date")):
+                cur_date = datetime.datetime.fromisoformat(group["last_edit_date"])  # datetime.datetime.strptime(ann["creation_date"], "%Y-%m-%d")
+                if query_filters["to_date"].timestamp() < cur_date.timestamp():
+                    flag = False
+            if (query_filters.get("from_creation")):
+                cur_date = datetime.datetime.fromisoformat(group["creation_date"])  # datetime.datetime.strptime(ann["creation_date"], "%Y-%m-%d") 2024-11-30T21:00:00.000Z
+                # print(query_filters["from_date"], cur_date)
+                if query_filters["from_creation"].timestamp() > cur_date.timestamp():
+                    flag = False
+            if (query_filters.get("to_creation")):
+                cur_date = datetime.datetime.fromisoformat(
+                    group["creation_date"])  # datetime.datetime.strptime(ann["creation_date"], "%Y-%m-%d")
+                if query_filters["to_creation"].timestamp() < cur_date.timestamp():
+                    flag = False
+            if query_filters.get("from_stars"):
                 stars_use_cases = self.edge_use_cases.stars_use_cases
-                stars_count = len(stars_use_cases.get_all_entities(stars_use_cases.edge_collection_names.STARSTOGROUP.value).find({"_to":group["_id"]}).batch())
+                stars_count = len(stars_use_cases.get_all_entities(
+                    stars_use_cases.edge_collection_names.STARSTOGROUP.value).find({"_to": group["_id"]}).batch())
                 try:
-                    if int(query_filters["stars"])> stars_count:
+                    if int(query_filters["from_stars"]) > stars_count:
+                        flag = False
+                except ValueError:
+                    print("На поиск по количеству звезд пришло не число!")
+                    flag = False
+            if query_filters.get("to_stars"):
+                stars_use_cases = self.edge_use_cases.stars_use_cases
+                stars_count = len(stars_use_cases.get_all_entities(
+                    stars_use_cases.edge_collection_names.STARSTOGROUP.value).find({"_to": group["_id"]}).batch())
+                try:
+                    if int(query_filters["to_stars"]) < stars_count:
                         flag = False
                 except ValueError:
                     print("На поиск по количеству звезд пришло не число!")
