@@ -3,6 +3,8 @@ import './Footer.css';
 import React, { useState, useEffect } from 'react';
 import { NavLink, Outlet, useNavigate, useLocation } from 'react-router-dom';
 
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3'
 import { TagsContext } from '../../../contexts/TagsContext.js';
 import { UserContext } from '../../../contexts/UserContext.js';
 
@@ -44,12 +46,19 @@ export default function Footer(props) {
     return <>
         <div className='backdrop'></div>
         <div className='layout'>
-            <div className='border-box width-full height-full' style={{position: 'relative', minWidth: '970px', paddingBottom: '160px'}}>
-                <UserContext.Provider value={[userId, setUserId]}>
-                    <TagsContext.Provider value={tags}>
-                        <Outlet></Outlet>
-                    </TagsContext.Provider>
-                </UserContext.Provider>
+            <div className='border-box width-full height-full border-box' style={{position: 'relative', minWidth: '970px', paddingBottom: '160px'}}>
+                <div
+                    className='width-full height-full border-box'
+                    style={{overflowX: 'visible', overflowY: 'auto'}}
+                >
+                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                        <UserContext.Provider value={[userId, setUserId]}>
+                            <TagsContext.Provider value={tags}>
+                                <Outlet></Outlet>
+                            </TagsContext.Provider>
+                        </UserContext.Provider>
+                    </LocalizationProvider>
+                </div>
                 { localStorage.getItem('userId') != undefined ? 
                     <div className='navbar flex-row flex-center'>
                         <div className='flex-row align-center' style={{gap: '40px'}}>

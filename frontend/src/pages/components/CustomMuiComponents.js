@@ -7,6 +7,8 @@ import TabList from '@mui/lab/TabList';
 
 import TextField from '@mui/material/TextField';
 
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+
 export const CustomButton = styled(Button)(() => ({
     width: '120px',
     height: '40px',
@@ -72,3 +74,31 @@ export const VisuallyHiddenInput = styled('input')({
     whiteSpace: 'nowrap',
     width: 1,
 });
+
+export const CustomDatePicker = styled(DatePicker)(() => ({
+    "& .MuiInputBase-input": {
+        height: '23px',
+        fontSize: '16px',
+        padding: '0 10px',
+        backgroundColor: 'var(--text-color)',
+        color: 'var(--base-color)',
+        borderRadius: '10px',
+    },
+    "& fieldset": {
+        border: 'none',
+        color: 'red',
+    },
+    "& label.Mui-focused": {
+        display: "none"
+    },
+    "& label.MuiFormLabel-filled": {
+        display: "none"
+    },
+    "& label": {
+        transform: 'translate(12px, 30%) scale(0.75)'
+    },
+    svg: {
+        color: 'var(--primary-color)'
+    }
+}));
+

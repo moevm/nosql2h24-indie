@@ -40,12 +40,15 @@ export default function Announcement(props) {
 
     const handleStarClick = (event) => {
         if (announcementStarred) {
-            toast("Ты уже поставил звездочку!");
+            addStarToAnnouncement(authentifiedUserId, props.announcementId).then((response) => {
+                setAnnouncementStarred(false);
+                setStarsAmount(Number(starsAmount) - 1);
+            });
         } else {
             addStarToAnnouncement(authentifiedUserId, props.announcementId).then((response) => {
                 setAnnouncementStarred(true);
                 setStarsAmount(Number(starsAmount) + 1);
-            })
+            });
         }
     }
 
@@ -56,7 +59,7 @@ export default function Announcement(props) {
                 <div className='border-box flex-row width-full flex-space' style={{padding: '0 20px 0 20px'}}>
                     <div className='flex-row' style={{gap: '20px'}}>
                         <div className='author-name'>
-                            {props.authorName}
+                            Автор: {props.authorName}
                         </div>
                         <SelectTag 
                             value={props.tag}

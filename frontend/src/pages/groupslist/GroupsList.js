@@ -3,7 +3,7 @@ import './GroupsList.css';
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from "react-router-dom";
 import Pagination from '../components/pagination/Pagination.js';
-import { CustomTextField, CustomButton } from '../components/CustomMuiComponents.js';
+import { CustomTextField, CustomButton, CustomDatePicker } from '../components/CustomMuiComponents.js';
 import Button from '@mui/material/Button';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -124,16 +124,43 @@ export default function GroupsList(props) {
                 }
             </Pagination>
             <div className='flex-column fit-width' style={{paddingTop: '80px', gap: '20px'}}>
-                <div className='visible-layout flex-column flex-center align-start' style={{padding: '20px', gap: '12px', width: '340px'}}>
+                <div className='visible-layout flex-column flex-center align-start' style={{padding: '20px', gap: '12px', width: '340px', maxWidth: '340px'}}>
                     <div className='caption'>Создать группу</div>
                     <CustomTextField sx={{width: '100%'}} label="Название" variant="outlined" value={newGroupName} onChange={(event) => setNewGroupName(event.target.value)}/>
                     <CustomButton variant="contained" sx={{alignSelf: 'end'}} onClick={handleCreateGroup}>Создать</CustomButton>
                 </div>
                 <div className='visible-layout flex-column flex-center align-start' style={{padding: '20px', gap: '12px', width: '340px'}}>
                     <div className='caption'>Фильтрация</div>
+                    <div className='caption' style={{fontSize: '15px', fontWeight: 'normal'}}>Название</div>
                     <CustomTextField sx={{width: '100%'}} label="Название" value={filterGroupName} onChange={(event) => setFilterGroupName(event.target.value)}/>
+                    <div className='caption' style={{fontSize: '15px', fontWeight: 'normal'}}>Жанр</div>
                     <CustomTextField sx={{width: '100%'}} label="Жанр" value={filterGroupGenre} onChange={(event) => setFilterGroupGenre(event.target.value)}/>
-                    <CustomTextField sx={{width: '100%'}} label="Звезд не менее чем" value={filterGroupStars} onChange={(event) => setFilterGroupStars(event.target.value)}/>
+                    <div className='caption' style={{fontSize: '15px', fontWeight: 'normal'}}>Число звезд</div>
+                    <div
+                        className='flex-row width-full flex-space'
+                        style={{gap: '5px'}}
+                    >
+                        <CustomTextField type="number" label="От"/>
+                        <CustomTextField type="number" label="До"/>
+
+                    </div>
+                    <div className='caption' style={{fontSize: '15px', fontWeight: 'normal'}}>Дата изменения</div>
+                    <div
+                        className='flex-column width-full flex-space'
+                        style={{gap: '5px'}}
+                    >
+                        <CustomDatePicker label="От"></CustomDatePicker>
+                        <CustomDatePicker label="До"></CustomDatePicker>
+                    </div>
+                    <div className='caption' style={{fontSize: '15px', fontWeight: 'normal'}}>Дата создания</div>
+                    <div
+                        className='flex-column width-full flex-space'
+                        style={{gap: '5px'}}
+                    >
+                        <CustomDatePicker label="От"></CustomDatePicker>
+                        <CustomDatePicker label="До"></CustomDatePicker>
+                    </div>
+                    <div className='caption' style={{fontSize: '15px', fontWeight: 'normal'}}>Участник</div>
                     <CustomTextField sx={{width: '100%'}} label="Участник" value={filterGroupMembers} onChange={(event) => setFilterGroupMembers(event.target.value)}/>
                     <CustomButton variant="contained" sx={{alignSelf: 'end'}} onClick={handleFilter}>Примерить</CustomButton>
                 </div>

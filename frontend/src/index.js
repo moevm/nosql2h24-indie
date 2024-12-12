@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
 
 import Footer from './pages/components/footer/Footer.js';
 import UserProfile from './pages/userprofile/UserProfilePage.js';
@@ -58,5 +59,18 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <React.StrictMode>
         <RouterProvider router={router}/>
+        <ToastContainer
+            position="bottom-left"
+            autoClose={5000}
+            hideProgressBar
+            newestOnTop
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss={false}
+            draggable={false}
+            pauseOnHover={false}
+            theme="dark"
+            transition="slide"
+        />
     </React.StrictMode>
 );
