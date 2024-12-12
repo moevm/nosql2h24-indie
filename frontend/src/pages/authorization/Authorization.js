@@ -126,7 +126,6 @@ export default function Authorization(props) {
     };
 
     return <>
-        <ToastContainer></ToastContainer>
         <div className='flex-column width-full height-full flex-center align-center'>
             <div
                 style={{

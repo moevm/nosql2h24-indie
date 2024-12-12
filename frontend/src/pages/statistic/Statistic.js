@@ -32,7 +32,6 @@ export default function Statistic(props) {
     } 
 
     return <>
-        <ToastContainer></ToastContainer>
         <div
             className='width-full height-full'
             style={{

@@ -63,14 +63,12 @@ root.render(
             position="bottom-left"
             autoClose={5000}
             hideProgressBar
-            newestOnTop
             closeOnClick
             rtl={false}
             pauseOnFocusLoss={false}
             draggable={false}
             pauseOnHover={false}
             theme="dark"
-            transition="slide"
         />
     </React.StrictMode>
 );

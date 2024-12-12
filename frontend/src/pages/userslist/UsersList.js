@@ -86,7 +86,6 @@ export default function UsersList(props) {
     }
 
     return <>
-        <ToastContainer></ToastContainer>
         <div className='flex-row width-full' style={{gap: '20px'}}>
             <Pagination
                 pageNumber={currentPage}

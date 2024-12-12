@@ -74,7 +74,6 @@ export default function UserProfile(props) {
     }, []);
 
     return <>
-        <ToastContainer />
         <div className='border-box flex-column width-full height-full' style={{boxSizing: 'border-box', paddingTop: '70px', gap: '40px'}}>
             <div className='flex-row flex-space width-full' style={{height: '230px', gap: '30px'}}>
                 <div className='visible-layout height-full width-full' style={{minWidth: '0px'}}>

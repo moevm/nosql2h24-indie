@@ -97,7 +97,6 @@ export default function PlacesList(props) {
     }
 
     return <>
-        <ToastContainer></ToastContainer>
         <div className='flex-row width-full' style={{gap: '20px'}}>
             <Pagination
                 pageNumber={currentPage}
