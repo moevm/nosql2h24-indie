@@ -11,13 +11,19 @@ import { CustomButton, VisuallyHiddenInput } from '../../pages/components/Custom
 
 export default function Statistic(props) {
 
+    const [overlayVisible, setOverlayVisible] = useState(false);
+
     const handleFileUpload = (event) => {
         const file = event.target.files[0];
-        console.log(file);
         const formData = new FormData();
         formData.append('file', file);
         importData(formData).then((response) => {
-            console.log(response);
+            setOverlayVisible(true);
+            toast.success(`Ура, данные импортированы! Записей: ${response.number_of_records}! 🎉\n Приложение будет перезагружено через 5 секунд..`);
+            setTimeout(() => {
+                localStorage.removeItem('userId');
+                window.location.href = '/';
+            }, 5000);
         });
     }
 
@@ -26,6 +32,18 @@ export default function Statistic(props) {
     } 
 
     return <>
+        <ToastContainer></ToastContainer>
+        <div
+            className='width-full height-full'
+            style={{
+                display: overlayVisible ? 'flex' : 'none',
+                position: 'fixed',
+                top: '0',
+                left: '0',
+                zIndex: '1000',
+            }}
+        >
+        </div>
         <div
             className='width-full height-full flex-column border-box'
             style={{

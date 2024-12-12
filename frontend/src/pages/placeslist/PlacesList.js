@@ -3,7 +3,7 @@ import './PlacesList.css';
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from "react-router-dom";
 import Pagination from '../components/pagination/Pagination.js';
-import { CustomButton, CustomTextField } from '../components/CustomMuiComponents.js';
+import { CustomTextField, CustomButton, CustomDatePicker } from '../components/CustomMuiComponents.js';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -14,7 +14,9 @@ export default function PlacesList(props) {
     const navigate = useNavigate();
     const [searchParams, setSearchParams] = useSearchParams();
 
-    const pageSize = 3; const [currentPage, setCurrentPage] = useState(1);
+    const pageSize = 3;
+    const [totalPages, setTotalPages] = useState(1);
+    const [currentPage, setCurrentPage] = useState(1);
     const [places, setPlaces] = useState([]);
 
     const [newPlaceName , setNewPlaceName] = useState('');
@@ -27,6 +29,10 @@ export default function PlacesList(props) {
     const [filterPlaceAddress, setFilterPlaceAddress] = useState('');
     const [filterPlaceNumber, setFilterPlaceNumber] = useState('');
     const [filterPlaceEquipment, setFilterPlaceEquipment] = useState('');
+    const [filterChangeDateFrom, setFilterChangeDateFrom] = useState('');
+    const [filterChangeDateTo, setFilterChangeDateTo] = useState('');
+    const [filterCreateDateFrom, setFilterCreateDateFrom] = useState('');
+    const [filterCreateDateTo, setFilterCreateDateTo] = useState('');
 
     const handleCreateGroup = (event) => {
         createPlace(newPlaceName, newPlaceType, newPlaceAddress, newPlaceNumber)
@@ -44,10 +50,14 @@ export default function PlacesList(props) {
             type: filterPlaceType,
             address: filterPlaceAddress,
             number: filterPlaceNumber,
-            equipment: filterPlaceEquipment
+            equipment: filterPlaceEquipment,
+            from_date: filterChangeDateFrom,
+            to_date: filterChangeDateTo,
+            from_creation: filterCreateDateFrom,
+            to_creation: filterCreateDateTo
         }
         getPlaces(currentPage, pageSize, filter).then((response) => {
-            setPlaces(response);
+            setPlaces(response.places_list);
         });
     }
 
@@ -58,10 +68,15 @@ export default function PlacesList(props) {
             type: filterPlaceType,
             address: filterPlaceAddress,
             number: filterPlaceNumber,
-            equipment: filterPlaceEquipment
+            equipment: filterPlaceEquipment,
+            from_date: filterChangeDateFrom,
+            to_date: filterChangeDateTo,
+            from_creation: filterCreateDateFrom,
+            to_creation: filterCreateDateTo
         }
         getPlaces(currentPage, pageSize, filter).then((response) => {
-            setPlaces(response);
+            setPlaces(response.places_list);
+            setTotalPages(Math.ceil(response.count / pageSize));
         });
     }, [currentPage]);
 
@@ -74,6 +89,10 @@ export default function PlacesList(props) {
     }
 
     const handleNextClick = (event) => {
+        if (currentPage === totalPages) {
+            toast('Ты уже на последней странице!'); 
+            return;
+        }
         setCurrentPage(currentPage + 1);
     }
 
@@ -82,6 +101,7 @@ export default function PlacesList(props) {
         <div className='flex-row width-full' style={{gap: '20px'}}>
             <Pagination
                 pageNumber={currentPage}
+                totalPages={totalPages}
                 onPreviousClick={handlePreviousClick}
                 onNextClick={handleNextClick}
             >
@@ -134,11 +154,32 @@ export default function PlacesList(props) {
                 </div>
                 <div className='visible-layout flex-column flex-center align-start' style={{padding: '20px', gap: '12px', width: '340px'}}>
                     <div className='caption'>Фильтрация</div>
+                    <div className='caption' style={{fontSize: '15px', fontWeight: 'normal'}}>Название</div>
                     <CustomTextField sx={{width: '100%'}} label="Название" value={filterPlaceName} onChange={(event) => setFilterPlaceName(event.target.value)}/>
+                    <div className='caption' style={{fontSize: '15px', fontWeight: 'normal'}}>Тип</div>
                     <CustomTextField sx={{width: '100%'}} label="Тип" value={filterPlaceType} onChange={(event) => setFilterPlaceType(event.target.value)}/>
+                    <div className='caption' style={{fontSize: '15px', fontWeight: 'normal'}}>Адрес</div>
                     <CustomTextField sx={{width: '100%'}} label="Адрес" value={filterPlaceAddress} onChange={(event) => setFilterPlaceAddress(event.target.value)}/>
+                    <div className='caption' style={{fontSize: '15px', fontWeight: 'normal'}}>Контактный номер</div>
                     <CustomTextField sx={{width: '100%'}} label="Контактный номер" value={filterPlaceNumber} onChange={(event) => setFilterPlaceNumber(event.target.value)}/>
+                    <div className='caption' style={{fontSize: '15px', fontWeight: 'normal'}}>Оборудование</div>
                     <CustomTextField sx={{width: '100%'}} label="Оборудование" value={filterPlaceEquipment} onChange={(event) => setFilterPlaceEquipment(event.target.value)}/>
+                    <div className='caption' style={{fontSize: '15px', fontWeight: 'normal'}}>Дата изменения</div>
+                    <div
+                        className='flex-column width-full flex-space'
+                        style={{gap: '5px'}}
+                    >
+                        <CustomDatePicker label="От" onChange={(event) => setFilterChangeDateFrom(event)}></CustomDatePicker>
+                        <CustomDatePicker label="До" onChange={(event) => setFilterChangeDateTo(event)}></CustomDatePicker>
+                    </div>
+                    <div className='caption' style={{fontSize: '15px', fontWeight: 'normal'}}>Дата создания</div>
+                    <div
+                        className='flex-column width-full flex-space'
+                        style={{gap: '5px'}}
+                    >
+                        <CustomDatePicker label="От" onChange={(event) => setFilterCreateDateFrom(event)}></CustomDatePicker>
+                        <CustomDatePicker label="До" onChange={(event) => setFilterCreateDateTo(event)}></CustomDatePicker>
+                    </div>
                     <CustomButton variant="contained" sx={{alignSelf: 'end'}} onClick={handleFilter}>Примерить</CustomButton>
                 </div>
             </div>

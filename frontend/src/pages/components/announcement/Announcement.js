@@ -53,8 +53,8 @@ export default function Announcement(props) {
     }
 
     return <>
-        <div>
             <ToastContainer></ToastContainer>
+        <div>
             <div className='visible-layout flex-column width-full' style={{height: 'fit-content', padding: '10px 0 10px 0', gap: '10px'}}>
                 <div className='border-box flex-row width-full flex-space' style={{padding: '0 20px 0 20px'}}>
                     <div className='flex-row' style={{gap: '20px'}}>

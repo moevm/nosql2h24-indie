@@ -16,21 +16,36 @@ export default function AnnouncementsList(props) {
     const [searchParams, setSearchParams] = useSearchParams();
 
     const pageSize = 5;
+    const [totalPages, setTotalPages] = useState(1);
     const [currentPage, setCurrentPage] = useState(1);
     const [announcements, setAnnouncements] = useState([]);
 
     const [filterAuthor, setFilterAuthor] = useState('');
-    const [filterDate, setFilterDate] = useState('');
+    const [filterDateFrom, setFilterDateFrom] = useState('');
+    const [filterDateTo, setFilterDateTo] = useState('');
+    const [filterStarsFrom, setFilterStarsFrom] = useState('');
+    const [filterStarsTo, setFilterStarsTo] = useState('');
     const [filterTag, setFilterTag] = useState('');
 
+    // TODO: remove
+    const filterDate = '';
+
     const handleFilter = (event) => {
-        const filter = {
+        const oldFilter = {
             producer: filterAuthor,
             date: filterDate,
             tag: filterTag
         }
+        const filter = {
+            producer: filterAuthor,
+            from_date: filterDateFrom,
+            to_date: filterDateTo,
+            from_stars: filterStarsFrom,
+            to_stars: filterStarsTo,
+            tag: filterTag
+        };
         getAnnouncements(currentPage, pageSize, filter).then((response) => {
-            setAnnouncements(response);
+            setAnnouncements(response.announcement_list);
         });
     }
 
@@ -38,11 +53,15 @@ export default function AnnouncementsList(props) {
         setSearchParams({page: currentPage, page_size: pageSize});
         const filter = {
             producer: filterAuthor,
-            date: filterDate,
+            from_date: filterDateFrom,
+            to_date: filterDateTo,
+            from_stars: filterStarsFrom,
+            to_stars: filterStarsTo,
             tag: filterTag
-        }
+        };
         getAnnouncements(currentPage, pageSize, filter).then((response) => {
-            setAnnouncements(response);
+            setAnnouncements(response.announcement_list);
+            setTotalPages(Math.ceil(response.count / pageSize));
         });
     }, [currentPage]);
 
@@ -55,6 +74,10 @@ export default function AnnouncementsList(props) {
     }
 
     const handleNextClick = (event) => {
+        if (currentPage === totalPages) {
+            toast('Ты уже на последней странице!'); 
+            return;
+        }
         setCurrentPage(currentPage + 1);
     }
 
@@ -62,6 +85,7 @@ export default function AnnouncementsList(props) {
         <div className='flex-row width-full' style={{gap: '20px'}}>
             <Pagination
                 pageNumber={currentPage}
+                totalPages={totalPages}
                 onPreviousClick={handlePreviousClick}
                 onNextClick={handleNextClick}
             >
@@ -89,16 +113,16 @@ export default function AnnouncementsList(props) {
                         className='flex-column width-full flex-space'
                         style={{gap: '5px'}}
                     >
-                        <CustomDatePicker label="От"></CustomDatePicker>
-                        <CustomDatePicker label="До"></CustomDatePicker>
+                        <CustomDatePicker label="От" onChange={(event) => {setFilterDateFrom(event)}}></CustomDatePicker>
+                        <CustomDatePicker label="До" onChange={(event) => {setFilterDateTo(event)}}></CustomDatePicker>
                     </div>
                     <div className='caption' style={{fontSize: '15px', fontWeight: 'normal'}}>Число звезд</div>
                     <div
                         className='flex-row width-full flex-space'
                         style={{gap: '5px'}}
                     >
-                        <CustomTextField type="number" label="От"/>
-                        <CustomTextField type="number" label="До"/>
+                        <CustomTextField type="number" label="От" value={filterStarsFrom} onChange={(event) => {setFilterStarsFrom(event.target.value)}}/>
+                        <CustomTextField type="number" label="До" value={filterStarsTo} onChange={(event) => {setFilterStarsTo(event.target.value)}}/>
 
                     </div>
                     <div className='caption' style={{fontSize: '15px', fontWeight: 'normal'}}>Тег</div>

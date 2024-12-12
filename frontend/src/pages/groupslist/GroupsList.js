@@ -18,6 +18,7 @@ export default function GroupsList(props) {
     const [searchParams, setSearchParams] = useSearchParams();
 
     const pageSize = 3;
+    const [totalPages, setTotalPages] = useState(1);
     const [currentPage, setCurrentPage] = useState(1);
     const [groups, setGroups] = useState([]);
 
@@ -25,18 +26,29 @@ export default function GroupsList(props) {
 
     const [filterGroupName, setFilterGroupName] = useState('');
     const [filterGroupGenre, setFilterGroupGenre] = useState('');
-    const [filterGroupStars, setFilterGroupStars] = useState('');
+    const [filterStarsFrom, setFilterStarsFrom] = useState('');
+    const [filterStarsTo, setFilterStarsTo] = useState('');
+    const [filterChangeDateFrom, setFilterChangeDateFrom] = useState('');
+    const [filterChangeDateTo, setFilterChangeDateTo] = useState('');
+    const [filterCreateDateFrom, setFilterCreateDateFrom] = useState('');
+    const [filterCreateDateTo, setFilterCreateDateTo] = useState('');
     const [filterGroupMembers, setFilterGroupMembers] = useState('');
 
     const handleFilter = (event) => {
         const filter = {
             name: filterGroupName,
             genre: filterGroupGenre,
-            stars: filterGroupStars,
+            from_stars: filterStarsFrom,
+            to_stars: filterStarsTo,
+            from_date: filterChangeDateFrom,
+            to_date: filterChangeDateTo,
+            from_creation: filterCreateDateFrom,
+            to_creation: filterCreateDateTo,
             participant: filterGroupMembers
-        }
+        };
+
         getGroups(currentPage, pageSize, filter).then((response) => {
-            setGroups(response);
+            setGroups(response.group_list);
         });
     }
 
@@ -52,14 +64,22 @@ export default function GroupsList(props) {
 
     useEffect(() => {
         setSearchParams({page: currentPage, page_size: pageSize});
+
         const filter = {
             name: filterGroupName,
             genre: filterGroupGenre,
-            stars: filterGroupStars,
+            from_stars: filterStarsFrom,
+            to_stars: filterStarsTo,
+            from_date: filterChangeDateFrom,
+            to_date: filterChangeDateTo,
+            from_creation: filterCreateDateFrom,
+            to_creation: filterCreateDateTo,
             participant: filterGroupMembers
-        }
+        };
+
         getGroups(currentPage, pageSize, filter).then((response) => {
-            setGroups(response);
+            setGroups(response.group_list);
+            setTotalPages(Math.ceil(response.count / pageSize));
         });
     }, [currentPage]);
 
@@ -72,6 +92,10 @@ export default function GroupsList(props) {
     }
 
     const handleNextClick = (event) => {
+        if (currentPage === totalPages) {
+            toast('Ты уже на последней странице!'); 
+            return;
+        }
         setCurrentPage(currentPage + 1);
     }
 
@@ -80,6 +104,7 @@ export default function GroupsList(props) {
         <div className='flex-row width-full' style={{gap: '20px'}}>
             <Pagination
                 pageNumber={currentPage}
+                totalPages={totalPages}
                 onPreviousClick={handlePreviousClick}
                 onNextClick={handleNextClick}
             >
@@ -135,13 +160,15 @@ export default function GroupsList(props) {
                     <CustomTextField sx={{width: '100%'}} label="Название" value={filterGroupName} onChange={(event) => setFilterGroupName(event.target.value)}/>
                     <div className='caption' style={{fontSize: '15px', fontWeight: 'normal'}}>Жанр</div>
                     <CustomTextField sx={{width: '100%'}} label="Жанр" value={filterGroupGenre} onChange={(event) => setFilterGroupGenre(event.target.value)}/>
+                    <div className='caption' style={{fontSize: '15px', fontWeight: 'normal'}}>Участник</div>
+                    <CustomTextField sx={{width: '100%'}} label="Участник" value={filterGroupMembers} onChange={(event) => setFilterGroupMembers(event.target.value)}/>
                     <div className='caption' style={{fontSize: '15px', fontWeight: 'normal'}}>Число звезд</div>
                     <div
                         className='flex-row width-full flex-space'
                         style={{gap: '5px'}}
                     >
-                        <CustomTextField type="number" label="От"/>
-                        <CustomTextField type="number" label="До"/>
+                        <CustomTextField type="number" label="От" value={filterStarsFrom} onChange={(event) => setFilterStarsFrom(event.target.value)}/>
+                        <CustomTextField type="number" label="До" value={filterStarsTo} onChange={(event) => setFilterStarsTo(event.target.value)}/>
 
                     </div>
                     <div className='caption' style={{fontSize: '15px', fontWeight: 'normal'}}>Дата изменения</div>
@@ -149,19 +176,17 @@ export default function GroupsList(props) {
                         className='flex-column width-full flex-space'
                         style={{gap: '5px'}}
                     >
-                        <CustomDatePicker label="От"></CustomDatePicker>
-                        <CustomDatePicker label="До"></CustomDatePicker>
+                        <CustomDatePicker label="От" onChange={(event) => setFilterChangeDateFrom(event)}></CustomDatePicker>
+                        <CustomDatePicker label="До" onChange={(event) => setFilterChangeDateTo(event)}></CustomDatePicker>
                     </div>
                     <div className='caption' style={{fontSize: '15px', fontWeight: 'normal'}}>Дата создания</div>
                     <div
                         className='flex-column width-full flex-space'
                         style={{gap: '5px'}}
                     >
-                        <CustomDatePicker label="От"></CustomDatePicker>
-                        <CustomDatePicker label="До"></CustomDatePicker>
+                        <CustomDatePicker label="От" onChange={(event) => setFilterCreateDateFrom(event)}></CustomDatePicker>
+                        <CustomDatePicker label="До" onChange={(event) => setFilterCreateDateTo(event)}></CustomDatePicker>
                     </div>
-                    <div className='caption' style={{fontSize: '15px', fontWeight: 'normal'}}>Участник</div>
-                    <CustomTextField sx={{width: '100%'}} label="Участник" value={filterGroupMembers} onChange={(event) => setFilterGroupMembers(event.target.value)}/>
                     <CustomButton variant="contained" sx={{alignSelf: 'end'}} onClick={handleFilter}>Примерить</CustomButton>
                 </div>
             </div>

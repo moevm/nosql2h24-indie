@@ -11,7 +11,7 @@ export default function Pagination(props) {
                 <CustomButton variant='contained'
                     onClick={props.onPreviousClick}
                 >Назад</CustomButton>
-                <div style={{padding: '10px 10px 10px 10px', backgroundColor: 'var(--primary-color', color: 'var(--secondary-color)', borderRadius: '10px'}}>Страница {props.pageNumber}</div>
+                <div style={{padding: '10px 10px 10px 10px', backgroundColor: 'var(--primary-color', color: 'var(--secondary-color)', borderRadius: '10px'}}>Страница {props.pageNumber}/{props.totalPages}</div>
                 <CustomButton variant='contained'
                     onClick={props.onNextClick}
                 >Далее</CustomButton>
