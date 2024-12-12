@@ -5,6 +5,7 @@ import { NavLink, Outlet, useNavigate, useLocation } from 'react-router-dom';
 
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3'
+import ru from "date-fns/locale/ru";
 import { TagsContext } from '../../../contexts/TagsContext.js';
 import { UserContext } from '../../../contexts/UserContext.js';
 
@@ -51,7 +52,7 @@ export default function Footer(props) {
                     className='width-full height-full border-box'
                     style={{overflowX: 'visible', overflowY: 'auto'}}
                 >
-                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                    <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={ru}>
                         <UserContext.Provider value={[userId, setUserId]}>
                             <TagsContext.Provider value={tags}>
                                 <Outlet></Outlet>
