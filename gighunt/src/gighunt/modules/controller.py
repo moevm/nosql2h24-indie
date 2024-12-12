@@ -226,6 +226,43 @@ class Controller:
 
         return graph_data
 
+    def _count_imported_records(self, graph_data) -> int:
+        static = graph_data.get("static", [])
+        vertices = graph_data.get("vertices", [])
+        edges = graph_data.get("edges", [])
+
+        # Vertices
+        users = vertices["users"]
+        groups = vertices["groups"]
+        announcements = vertices["announcements"]
+        places = vertices["places"]
+
+        # Edges
+        user_groups = edges["users"]["groups"]
+        stars_to_users = edges["stars"]["users"]
+        stars_to_groups = edges["stars"]["groups"]
+        stars_to_announcements = edges["stars"]["announcements"]
+        comments_to_announcements = edges["comments"]["announcements"]
+        producer_announcements_from_users = edges["producer_announcements"]["users"]
+        producer_announcements_from_groups = edges["producer_announcements"][
+            "groups"
+        ]
+
+        amount = (
+            len(static)
+            + len(users)
+            + len(groups)
+            + len(announcements)
+            + len(places)
+            + len(user_groups)
+            + len(stars_to_users)
+            + len(stars_to_groups)
+            + len(stars_to_announcements)
+            + len(comments_to_announcements)
+            + len(producer_announcements_from_users)
+            + len(producer_announcements_from_groups)
+        )
+        return amount
 
     async def _import_data(self, file: UploadFile) -> Response:
         """
@@ -243,8 +280,11 @@ class Controller:
             file_content = await file.read()
             data = json.loads(file_content)
             self._set_dump(data)
-
-            return {"message": "Graph imported successful!"}
+            number_of_records = self._count_imported_records(data)
+            return {
+                "message": "Данные успешно импортированы!",
+                "number_of_records": number_of_records
+            }
 
         except json.JSONDecodeError:
             raise HTTPException(status_code=400, detail="Invalid JSON format")
