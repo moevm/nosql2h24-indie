@@ -66,6 +66,12 @@ class FilterUser(BaseModel):
     last_name: str|None
     talents: str|None
     groups: str|None
+    from_date: str | None
+    to_date: str | None
+    from_creation: str | None
+    to_creation: str | None
+    from_stars: str | int | None
+    to_stars: str | int | None
 
 class FilterGroup(BaseModel):
     name: str|None
