@@ -1,4 +1,4 @@
-import './GroupItem.css';
+import './UserItem.css';
 
 import React, { useState, useEffect, useContext } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
@@ -6,31 +6,32 @@ import MenuItem from '@mui/material/MenuItem';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import { Dropdown } from '../CustomMuiComponents.js';
+import { NavLink } from 'react-router-dom';
 
 import { UserContext } from '../../../contexts/UserContext.js';
 import { ReactComponent as StarIcon } from './assets/star.svg';
-import { getGroupStarred, addStarToGroup } from '../../../requests/Requests.js';
+import { getUserStarred, addStarToUser } from '../../../requests/Requests.js';
 
-export default function GroupItem(props) {
+export default function UserItem(props) {
 
     const [authentifiedUserId, setAuthentifiedUserId] = useContext(UserContext);
     const [starred, setStarred] = useState(false);
     const [starsAmount, setStarsAmount] = useState(props.stars);
 
     useEffect(() => {
-        getGroupStarred(authentifiedUserId, props.groupId).then((response) => {
+        getUserStarred(authentifiedUserId, props.userId).then((response) => {
             setStarred(response);
         });
     }, []);
 
     const handleStarClick = (event) => {
         if (starred) {
-            addStarToGroup(authentifiedUserId, props.groupId).then((response) => {
+            addStarToUser(authentifiedUserId, props.userId).then((response) => {
                 setStarred(false);
                 setStarsAmount(Number(starsAmount) - 1);
             });
         } else {
-            addStarToGroup(authentifiedUserId, props.groupId).then((response) => {
+            addStarToUser(authentifiedUserId, props.userId).then((response) => {
                 setStarred(true);
                 setStarsAmount(Number(starsAmount) + 1);
             });
@@ -57,21 +58,16 @@ export default function GroupItem(props) {
                     gap: '10px'
                 }}
             >
-                <div className='important-text'>
-                    {props.name}
-                </div>
+                <NavLink to={`/users/${props.userId}`} style={{textDecoration: 'none'}}>
+                    <div className='important-text'>
+                        {props.firstName} {props.lastName}
+                    </div>
+                </NavLink>
                 <Dropdown
-                    label="Жанры"
+                    label="Таланты"
                 >
-                    {props.genres.map((gener) => {
-                        return <div>{gener}</div>;
-                    })}
-                </Dropdown>
-                <Dropdown
-                    label="Участники"
-                >
-                    {props.members.map((member) => {
-                        return <div>{member.user.first_name} {member.user.last_name}</div>;
+                    {props.talents.map((talent) => {
+                        return <div>{talent}</div>;
                     })}
                 </Dropdown>
             </div>

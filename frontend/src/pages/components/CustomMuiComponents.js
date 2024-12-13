@@ -124,7 +124,7 @@ export const CustomSelect = styled(Select)(() => ({
         padding: '0 10px',
         backgroundColor: 'var(--text-color)',
         color: 'var(--base-color)',
-        borderRadius: '10px',
+        borderRadius: '10px !important',
     },
     "&.Mui-focused": {
         borderRadius: '10px',

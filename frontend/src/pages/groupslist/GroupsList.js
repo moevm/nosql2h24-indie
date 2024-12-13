@@ -7,6 +7,7 @@ import { CustomTextField, CustomButton, CustomDatePicker } from '../components/C
 import Button from '@mui/material/Button';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { format } from 'date-fns';
 
 import { getGroups, createGroup } from '../../requests/Requests.js';
 import GroupItem from '../components/groupitem/GroupItem.js';
@@ -112,12 +113,14 @@ export default function GroupsList(props) {
                     groups.map((group) => {
                         return <GroupItem
                             key={group.group._key}
+                            groupId={group.group._key}
                             name={group.group.name}
-                            creationDate={group.group.creation_date}
-                            lastEditDate={group.group.last_edit_date}
+                            creationDate={format(new Date(group.group.creation_date), 'HH:mm dd.MM.yyyy')}
+                            lastEditDate={format(new Date(group.group.last_edit_date), 'HH:mm dd.MM.yyyy')}
                             avatarUri={group.group.avatar_uri}
                             genres={group.group.genres}
                             stars={group.stars.length}
+                            members={group.users}
                         />
                     })
                 }

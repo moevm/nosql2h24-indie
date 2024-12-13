@@ -100,14 +100,8 @@ export default function AnnouncementsList(props) {
                     <div className='caption'>Фильтрация</div>
                     <div className='caption' style={{fontSize: '15px', fontWeight: 'normal'}}>Автор</div>
                     <CustomTextField sx={{width: '100%'}} label="Автор" value={filterAuthor} onChange={(event) => {setFilterAuthor(event.target.value)}}/>
-                    <div className='caption' style={{fontSize: '15px', fontWeight: 'normal'}}>Дата публикации</div>
-                    <div
-                        className='flex-column width-full flex-space'
-                        style={{gap: '5px'}}
-                    >
-                        <CustomDatePicker label="От" onChange={(event) => {setFilterDateFrom(event)}}></CustomDatePicker>
-                        <CustomDatePicker label="До" onChange={(event) => {setFilterDateTo(event)}}></CustomDatePicker>
-                    </div>
+                    <div className='caption' style={{fontSize: '15px', fontWeight: 'normal'}}>Тег</div>
+                    <CustomTextField sx={{width: '100%'}} label="Тег" value={filterTag} onChange={(event) => {setFilterTag(event.target.value)}}/>
                     <div className='caption' style={{fontSize: '15px', fontWeight: 'normal'}}>Число звезд</div>
                     <div
                         className='flex-row width-full flex-space'
@@ -117,8 +111,14 @@ export default function AnnouncementsList(props) {
                         <CustomTextField type="number" label="До" value={filterStarsTo} onChange={(event) => {setFilterStarsTo(event.target.value)}}/>
 
                     </div>
-                    <div className='caption' style={{fontSize: '15px', fontWeight: 'normal'}}>Тег</div>
-                    <CustomTextField sx={{width: '100%'}} label="Тег" value={filterTag} onChange={(event) => {setFilterTag(event.target.value)}}/>
+                    <div className='caption' style={{fontSize: '15px', fontWeight: 'normal'}}>Дата публикации</div>
+                    <div
+                        className='flex-column width-full flex-space'
+                        style={{gap: '5px'}}
+                    >
+                        <CustomDatePicker label="От" onChange={(event) => {setFilterDateFrom(event)}}></CustomDatePicker>
+                        <CustomDatePicker label="До" onChange={(event) => {setFilterDateTo(event)}}></CustomDatePicker>
+                    </div>
                     <CustomButton variant='contained' sx={{alignSelf: 'end'}} onClick={handleFilter}>Применить</CustomButton>
                 </div>
             </div>

@@ -46,6 +46,27 @@ export function addStarToUser(sourceUserId, destinationUserId) {
         .then(response => response.json());
 }
 
+export function addStarToGroup(sourceUserId, destinationGroupId) {
+    return fetch(`${baseUrl}/group_star`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ from: sourceUserId, to: destinationGroupId })
+        })
+        .then(response => response.json());
+}
+
+export function getGroupStarred(sourceUserId, destinationGroupId) {
+    return fetch(`${baseUrl}/get_group_star?source_user_id=${sourceUserId}&dest_group_id=${destinationGroupId}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json());
+}
+
 export function getAnnouncementStarred(sourceUserId, destinationAnnouncementId) {
     return fetch(`${baseUrl}/get_announcement_star?source_user_id=${sourceUserId}&dest_announcement_id=${destinationAnnouncementId}`, {
             method: 'GET',

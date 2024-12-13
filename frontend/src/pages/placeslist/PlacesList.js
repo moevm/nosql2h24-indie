@@ -6,7 +6,9 @@ import Pagination from '../components/pagination/Pagination.js';
 import { CustomTextField, CustomButton, CustomDatePicker } from '../components/CustomMuiComponents.js';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { format } from 'date-fns';
 
+import PlaceItem from '../components/placeitem/PlaceItem.js';
 import { getPlaces, createPlace } from '../../requests/Requests.js';
 
 export default function PlacesList(props) {
@@ -106,39 +108,19 @@ export default function PlacesList(props) {
             >
                 {
                     places.map((place) => {
-                        return <div key={place._id} className='visible-layout width-full' style={{minWidth: '0px', height: '230px'}}>
-                            <div className='border-box height-full width-full' style={{padding: '30px 0 30px 0'}}>
-                                <div className='flex-row flex-space border-box width-full height-full' style={{padding: '0 100px 0 60px', gap: '30px'}}>
-                                    <div className='fit-width'>
-                                        <div className='avatar-container'>
-                                            <img className='width-full height-full' style={{objectFit: 'cover'}} alt='' src={place.avatar_uri}></img>
-                                        </div>
-                                    </div>
-                                    <div className='flex-column flex-center height-full width-full' style={{gap: '5px'}}>
-                                        <div className='flex-row flex-space width-full'>
-                                            <div className='flex-column'>
-                                                <div className='first-name-text'>{place.name}</div>
-                                            </div> 
-                                        </div>
-                                        <div className='flex-row width-full'>
-                                            <div className='tertiary-info' style={{color: 'var(--text-color)'}}>{place.type}</div>
-                                        </div>
-                                        <div className='flex-row flex-space width-full'>
-                                            <div className='tertiary-info'>Адрес</div>
-                                            <div className='tertiary-info'>{place.address}</div>
-                                        </div>
-                                        <div className='flex-row flex-space width-full'>
-                                            <div className='tertiary-info'>Контактный номер</div>
-                                            <div className='tertiary-info'>{place.phone_number}</div>
-                                        </div>
-                                        <div className='flex-row flex-space width-full'>
-                                            <div className='tertiary-info'>Оборудование</div>
-                                            <div className='tertiary-info'>{JSON.stringify(place.equipment)}</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        return <PlaceItem
+                            key={place._key}
+                            placeId={place._key}
+                            name={place.name}
+                            creationDate={format(new Date(place.creation_date), 'HH:mm dd.MM.yyyy')}
+                            lastEditDate={format(new Date(place.last_edit_date), 'HH:mm dd.MM.yyyy')}
+                            avatarUri={place.avatar_uri}
+                            type={place.type}
+                            address={place.address}
+                            number={place.phone_number}
+                            area={place.area}
+                            equipment={place.equipment}
+                        />
                     })
                 }
             </Pagination>
