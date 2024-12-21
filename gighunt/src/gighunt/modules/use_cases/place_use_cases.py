@@ -77,7 +77,7 @@ class PlaceUseCases(BaseVertexUseCases):
 
 
     def get_places(self, page: int, page_size: int, filters: FilterPlace) -> Response:
-        cursor =  self.get_all_entities().all(skip=(page-1)*page_size, limit=page_size)
+        cursor =  self.get_all_entities().all()#skip=(page-1)*page_size, limit=page_size
         deque = cursor.batch()
         places = self.__find_by_filters(deque,filters)[(page - 1) * page_size : (page - 1) * page_size + page_size] if page_size != 0 else self.__find_by_filters(deque, filters)
         places_list = []
