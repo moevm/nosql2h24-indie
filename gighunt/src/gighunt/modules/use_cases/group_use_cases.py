@@ -125,7 +125,7 @@ class GroupUseCases(BaseVertexUseCases):
     def get_groups(self, page: int, page_size: int, filters: FilterGroup) -> Response:
         cursor = self.get_all_entities().all()
         deque = cursor.batch()
-        groups = self.__find_by_filters(deque, filters)[(page - 1) * page_size : (page - 1) * page_size + page_size]
+        groups = self.__find_by_filters(deque, filters)[(page - 1) * page_size : (page - 1) * page_size + page_size] if page_size != 0 else self.__find_by_filters(deque, filters)
         group_list = []
         star_use_cases = self.edge_use_cases.stars_use_cases
         while len(groups):

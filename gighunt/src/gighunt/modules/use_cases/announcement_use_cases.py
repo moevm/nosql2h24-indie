@@ -89,7 +89,7 @@ class AnnouncementUseCases(BaseVertexUseCases):
     def get_announcements(self, page: int, page_size: int, filters: FilterAnnouncement) -> Response:
         cursor = self.get_all_entities().all()
         deque = cursor.batch()
-        announcements = self.__find_by_filters(deque, filters)[(page - 1) * page_size : (page - 1) * page_size + page_size]
+        announcements = self.__find_by_filters(deque, filters)[(page - 1) * page_size : (page - 1) * page_size + page_size] if page_size != 0 else self.__find_by_filters(deque, filters)
         announcement_list = []
         star_use_cases = self.edge_use_cases.stars_use_cases
         while len(announcements):
