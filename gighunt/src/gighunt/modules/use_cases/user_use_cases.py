@@ -149,7 +149,7 @@ class UserUseCases (BaseVertexUseCases):
     def get_users(self, page: int, page_size: int, filters: FilterUser) -> Response:
         query_filters = self.__create_filters(filters)
         deque = self.get_all_entities().all().batch()
-        users = self.__find_by_filters(deque, filters)[(page - 1) * page_size : (page - 1) * page_size + page_size]
+        users = self.__find_by_filters(deque, filters)[(page - 1) * page_size : (page - 1) * page_size + page_size] if page_size != 0 else self.__find_by_filters(deque, filters)
         users_list = []
         star_use_cases = self.edge_use_cases.stars_use_cases
         while len(users):
