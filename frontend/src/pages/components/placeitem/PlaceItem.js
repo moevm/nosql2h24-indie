@@ -50,7 +50,7 @@ export default function PlaceItem(props) {
                     label="Оборудование"
                 >
                     {Object.keys(props.equipment).map((key) => {
-                        return <div>{key} {props.equipment[key]}</div>;
+                        return <div key={key}>{key} {props.equipment[key]}</div>;
                     })}
                 </Dropdown>
             </div>

@@ -145,6 +145,7 @@ export function Dropdown(props) {
             >{props.label}</InputLabel>
             <CustomSelect
                 label={props.label}
+                value={""}
             >
                 {
                     props.children

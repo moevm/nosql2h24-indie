@@ -215,3 +215,13 @@ export function exportData() {
             });
         });
 }
+
+export function getStatistics() {
+    return fetch(`${baseUrl}/get_total_stats`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json());
+}
