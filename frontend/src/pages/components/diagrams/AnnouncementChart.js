@@ -28,6 +28,7 @@ export default function AnnouncementChart(props) {
             case 'amount':
                 return 1;
         }
+        return 0;
     }
 
     useEffect(() => {

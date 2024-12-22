@@ -120,6 +120,16 @@ export function registration(firstName, lastName, email, password) {
         .then(response => response.json());
 }
 
+export function getAnnouncement(announcementId) {
+    return fetch(`${baseUrl}/get_announcement?ann_id=${announcementId}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json());
+}
+
 export function getAnnouncements(page, pageSize, filter) {
     return fetch(`${baseUrl}/announcement?page=${page}&page_size=${pageSize}`, {
             method: 'POST',
@@ -222,6 +232,31 @@ export function getStatistics() {
             headers: {
                 'Content-Type': 'application/json'
             }
+        })
+        .then(response => response.json());
+}
+
+export function getComments(announcementId) {
+    return fetch(`${baseUrl}/comments/${announcementId}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json());
+}
+
+export function postComment(userId, announcenmentId, comment) {
+    return fetch(`${baseUrl}/comment`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                user_id: userId,
+                announcement_id: announcenmentId,
+                comment: comment
+            })
         })
         .then(response => response.json());
 }

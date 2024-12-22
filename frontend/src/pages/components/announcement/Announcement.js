@@ -5,6 +5,7 @@ import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { NavLink } from 'react-router-dom';
 
 import SelectTag from '../selecttag/SelectTag.js';
 import { UserContext } from '../../../contexts/UserContext.js';
@@ -64,6 +65,11 @@ export default function Announcement(props) {
                             value={props.tag}
                             disabled={true}
                         />
+                        <NavLink to={`/announcements/${props.announcementId}`} style={{textDecoration: 'none'}}>
+                            <div className='author-name'>
+                                Просмотр
+                            </div>
+                        </NavLink>
                     </div>
                     <div className='announcement-date'>
                         {props.date}

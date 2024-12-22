@@ -3,7 +3,7 @@
         {
             "_key": "33602",
             "_id": "Static/33602",
-            "_rev": "_i5wW5CO---",
+            "_rev": "_i8vPE4O---",
             "equipment": [],
             "tags": [
                 "Релиз",
@@ -31,7 +31,7 @@
             {
                 "_key": "33590",
                 "_id": "User/33590",
-                "_rev": "_i5wW5CW---",
+                "_rev": "_i8vPE4S---",
                 "email": "test@gmail.com",
                 "password": "qwerty",
                 "first_name": "test",
@@ -46,7 +46,7 @@
             {
                 "_key": "33633",
                 "_id": "User/33633",
-                "_rev": "_i5wW5Ca---",
+                "_rev": "_i8vPE4W---",
                 "email": "gildem10@yandex.ru",
                 "password": "123456",
                 "first_name": "Tim",
@@ -59,7 +59,7 @@
             {
                 "_key": "33648",
                 "_id": "User/33648",
-                "_rev": "_i5wW5Ce---",
+                "_rev": "_i8vPE4W--_",
                 "email": "gildem13@yandex.ru",
                 "password": "123456",
                 "first_name": "Dim",
@@ -72,7 +72,7 @@
             {
                 "_key": "33655",
                 "_id": "User/33655",
-                "_rev": "_i5wW5Ci---",
+                "_rev": "_i8vPE4a---",
                 "email": "gildem15@yandex.ru",
                 "password": "123456",
                 "first_name": "Dan",
@@ -83,28 +83,15 @@
                 "talents": []
             },
             {
-                "_key": "67142",
-                "_id": "User/67142",
-                "_rev": "_i5wW5Cm---",
+                "_key": "211658",
+                "_id": "User/211658",
+                "_rev": "_i8vPfaG---",
                 "email": "asdf",
                 "password": "asdf",
                 "first_name": "asdf",
                 "last_name": "asdf",
-                "creation_date": "2024-12-12",
-                "last_edit_date": "2024-12-12",
-                "avatar_uri": "",
-                "talents": []
-            },
-            {
-                "_key": "104675",
-                "_id": "User/104675",
-                "_rev": "_i5wXG1C---",
-                "email": "asdf",
-                "password": "asdf",
-                "first_name": "asdf",
-                "last_name": "asdf",
-                "creation_date": "2024-12-12",
-                "last_edit_date": "2024-12-12",
+                "creation_date": "2024-12-22",
+                "last_edit_date": "2024-12-22",
                 "avatar_uri": "",
                 "talents": []
             }
@@ -113,7 +100,7 @@
             {
                 "_key": "34227",
                 "_id": "Group/34227",
-                "_rev": "_i5wW5Cq---",
+                "_rev": "_i8vPE4a--_",
                 "name": "Mohnatye Sobaki",
                 "creation_date": "2024-12-08",
                 "last_edit_date": "2024-12-08",
@@ -123,20 +110,10 @@
             {
                 "_key": "34234",
                 "_id": "Group/34234",
-                "_rev": "_i5wW5Cu---",
+                "_rev": "_i8vPE4e---",
                 "name": "Rover",
                 "creation_date": "2024-12-08",
                 "last_edit_date": "2024-12-08",
-                "avatar_uri": "",
-                "genres": []
-            },
-            {
-                "_key": "106685",
-                "_id": "Group/106685",
-                "_rev": "_i5waT72---",
-                "name": "Hello world",
-                "creation_date": "2024-12-12",
-                "last_edit_date": "2024-12-12",
                 "avatar_uri": "",
                 "genres": []
             }
@@ -145,41 +122,41 @@
             {
                 "_key": "34027",
                 "_id": "Announcement/34027",
-                "_rev": "_i5wW5C2---",
+                "_rev": "_i8vPE4i---",
                 "creation_date": "2024-12-08",
                 "content": "Привет! Сегодня я презентую альбом Brat 2! Приходите в Tochka!",
-                "tag": "gold"
+                "tag": "Концерт"
             },
             {
                 "_key": "34057",
                 "_id": "Announcement/34057",
-                "_rev": "_i5wW5C6---",
+                "_rev": "_i8vPE4i--_",
                 "creation_date": "2024-12-08",
                 "content": "Привет! Сегодня я презентую альбом Yahoo but Google! Приходите в 2A!",
-                "tag": "true silver"
+                "tag": "Концерт"
             },
             {
                 "_key": "34341",
                 "_id": "Announcement/34341",
-                "_rev": "_i5wW5D----",
+                "_rev": "_i8vPE4m---",
                 "creation_date": "2024-12-08",
                 "content": "Скоро новый альбом...",
-                "tag": "pink gold"
+                "tag": "Релиз"
             },
             {
                 "_key": "34371",
                 "_id": "Announcement/34371",
-                "_rev": "_i5wW5DC---",
+                "_rev": "_i8vPE4m--_",
                 "creation_date": "2024-12-08",
                 "content": "Вышел новый альбом на всех площадках!",
-                "tag": "new"
+                "tag": "Релиз"
             }
         ],
         "places": [
             {
                 "_key": "33931",
                 "_id": "Place/33931",
-                "_rev": "_i5wW5DG---",
+                "_rev": "_i8vPE4q---",
                 "name": "Tochka",
                 "creation_date": "2024-12-08",
                 "last_edit_date": "2024-12-08",
@@ -195,7 +172,7 @@
             {
                 "_key": "33942",
                 "_id": "Place/33942",
-                "_rev": "_i5wW5DK---",
+                "_rev": "_i8vPE4u---",
                 "name": "2A",
                 "creation_date": "2024-12-08",
                 "last_edit_date": "2024-12-08",
@@ -211,7 +188,7 @@
             {
                 "_key": "33961",
                 "_id": "Place/33961",
-                "_rev": "_i5wW5DO---",
+                "_rev": "_i8vPE4u--_",
                 "name": "Geran",
                 "creation_date": "2024-12-08",
                 "last_edit_date": "2024-12-08",
@@ -234,7 +211,7 @@
                     "_id": "UserGroup/34389",
                     "_from": "User/33590",
                     "_to": "Group/34227",
-                    "_rev": "_i5wW5DS---",
+                    "_rev": "_i8vPE4y---",
                     "join_date": "2024-12-08"
                 },
                 {
@@ -242,7 +219,7 @@
                     "_id": "UserGroup/34404",
                     "_from": "User/33633",
                     "_to": "Group/34227",
-                    "_rev": "_i5wW5DW---",
+                    "_rev": "_i8vPE4y--_",
                     "join_date": "2024-12-08"
                 },
                 {
@@ -250,7 +227,7 @@
                     "_id": "UserGroup/34435",
                     "_from": "User/33648",
                     "_to": "Group/34234",
-                    "_rev": "_i5wW5Da---",
+                    "_rev": "_i8vPE42---",
                     "join_date": "2024-12-08"
                 },
                 {
@@ -258,7 +235,7 @@
                     "_id": "UserGroup/34450",
                     "_from": "User/33655",
                     "_to": "Group/34234",
-                    "_rev": "_i5wW5De---",
+                    "_rev": "_i8vPE46---",
                     "join_date": "2024-12-08"
                 }
             ]
@@ -270,14 +247,14 @@
                     "_id": "StarsToUser/33845",
                     "_from": "User/33655",
                     "_to": "User/33633",
-                    "_rev": "_i5wW5Di---"
+                    "_rev": "_i8vPE46--_"
                 },
                 {
                     "_key": "33888",
                     "_id": "StarsToUser/33888",
                     "_from": "User/33590",
                     "_to": "User/33648",
-                    "_rev": "_i5wW5Dm---"
+                    "_rev": "_i8vPE5----"
                 }
             ],
             "groups": [
@@ -286,21 +263,21 @@
                     "_id": "StarsToGroup/34272",
                     "_from": "User/33633",
                     "_to": "Group/34227",
-                    "_rev": "_i5wW5Dq---"
+                    "_rev": "_i8vPE5---_"
                 },
                 {
                     "_key": "34291",
                     "_id": "StarsToGroup/34291",
                     "_from": "User/33590",
                     "_to": "Group/34227",
-                    "_rev": "_i5wW5Du---"
+                    "_rev": "_i8vPE5C---"
                 },
                 {
                     "_key": "34314",
                     "_id": "StarsToGroup/34314",
                     "_from": "User/33590",
                     "_to": "Group/34234",
-                    "_rev": "_i5wW5Dy---"
+                    "_rev": "_i8vPE5G---"
                 }
             ],
             "announcements": [
@@ -309,14 +286,14 @@
                     "_id": "StarsToAnnouncement/34187",
                     "_from": "User/33655",
                     "_to": "Announcement/34027",
-                    "_rev": "_i5wW5D2---"
+                    "_rev": "_i8vPE5G--_"
                 },
                 {
                     "_key": "34206",
                     "_id": "StarsToAnnouncement/34206",
                     "_from": "User/33633",
                     "_to": "Announcement/34027",
-                    "_rev": "_i5wW5D6---"
+                    "_rev": "_i8vPE5K---"
                 }
             ]
         },
@@ -327,7 +304,7 @@
                     "_id": "CommentToAnnouncement/34145",
                     "_from": "User/33633",
                     "_to": "Announcement/34027",
-                    "_rev": "_i5wW5D6--_",
+                    "_rev": "_i8vPE5K--_",
                     "creation_date": "2024-12-08",
                     "content": {
                         "content": "Крутой альбом, все приходите!"
@@ -338,11 +315,38 @@
                     "_id": "CommentToAnnouncement/34164",
                     "_from": "User/33655",
                     "_to": "Announcement/34027",
-                    "_rev": "_i5wW5E----",
+                    "_rev": "_i8vPE5O---",
                     "creation_date": "2024-12-08",
                     "content": {
                         "content": "Я послушал, мне зашло"
                     }
+                },
+                {
+                    "_key": "211915",
+                    "_id": "CommentToAnnouncement/211915",
+                    "_from": "User/211658",
+                    "_to": "Announcement/34027",
+                    "_rev": "_i8vP4Gu---",
+                    "creation_date": "2024-12-22",
+                    "content": "string"
+                },
+                {
+                    "_key": "211982",
+                    "_id": "CommentToAnnouncement/211982",
+                    "_from": "User/211658",
+                    "_to": "Announcement/34027",
+                    "_rev": "_i8vSO5C---",
+                    "creation_date": "2024-12-22",
+                    "content": "string"
+                },
+                {
+                    "_key": "212911",
+                    "_id": "CommentToAnnouncement/212911",
+                    "_from": "User/211658",
+                    "_to": "Announcement/34027",
+                    "_rev": "_i8ve9y----",
+                    "creation_date": "2024-12-22",
+                    "content": "asdf"
                 }
             ]
         },
@@ -353,14 +357,14 @@
                     "_id": "AnnouncementFromUser/34030",
                     "_from": "User/33648",
                     "_to": "Announcement/34027",
-                    "_rev": "_i5wW5EC---"
+                    "_rev": "_i8vPE5S---"
                 },
                 {
                     "_key": "34060",
                     "_id": "AnnouncementFromUser/34060",
                     "_from": "User/33633",
                     "_to": "Announcement/34057",
-                    "_rev": "_i5wW5EG---"
+                    "_rev": "_i8vPE5S--_"
                 }
             ],
             "groups": [
@@ -369,14 +373,14 @@
                     "_id": "AnnouncementFromGroup/34344",
                     "_from": "Group/34234",
                     "_to": "Announcement/34341",
-                    "_rev": "_i5wW5EK---"
+                    "_rev": "_i8vPE5W---"
                 },
                 {
                     "_key": "34374",
                     "_id": "AnnouncementFromGroup/34374",
                     "_from": "Group/34227",
                     "_to": "Announcement/34371",
-                    "_rev": "_i5wW5EO---"
+                    "_rev": "_i8vPE5W--_"
                 }
             ]
         }
