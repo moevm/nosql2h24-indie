@@ -9,35 +9,72 @@ import GroupFilter from '../filters/GroupFilter.js';
 import PlaceFilter from '../filters/PlaceFilter.js';
 import AnnouncementFilter from '../filters/AnnouncementFilter.js';
 
+import UserChart from './UserChart.js';
+import GroupChart from './GroupChart.js';
+import PlaceChart from './PlaceChart.js';
+import AnnouncementChart from './AnnouncementChart.js';
+
+import { getUsers, getGroups, getPlaces, getAnnouncements } from '../../../requests/Requests.js';
+
 export default function Diagrams(props) {
 
     const [entity, setEntity] = useState('user');
+    const [entities, setEntities] = useState([]);
 
-    const renderFilter = (event) => {
+    const renderFilter = () => {
         switch (entity) {
             case 'user':
                 return <UserFilter
                     onSubmit={(filter) => {
-                        console.log(filter);
+                        getUsers(1, 0, filter).then((response) => {
+                            setEntities(response.users_list);
+                        });
                     }}
                 />
             case 'group':
                 return <GroupFilter 
                     onSubmit={(filter) => {
-                        console.log(filter);
+                        getGroups(1, 0, filter).then((response) => {
+                            setEntities(response.group_list);
+                        });
                     }}
                 />
             case 'place':
                 return <PlaceFilter 
                     onSubmit={(filter) => {
-                        console.log(filter);
+                        getPlaces(1, 0, filter).then((response) => {
+                            setEntities(response.places_list);
+                        });
                     }}
                 />
             case 'announcement':
                 return <AnnouncementFilter 
                     onSubmit={(filter) => {
-                        console.log(filter);
+                        getAnnouncements(1, 0, filter).then((response) => {
+                            setEntities(response.announcement_list);
+                        });
                     }}
+                />
+        }
+    }
+
+    const renderChart = () => {
+        switch (entity) {
+            case 'user':
+                return <UserChart 
+                    entities={entities}
+                />
+            case 'group':
+                return <GroupChart 
+                    entities={entities}
+                />
+            case 'place':
+                return <PlaceChart 
+                    entities={entities}
+                />
+            case 'announcement':
+                return <AnnouncementChart 
+                    entities={entities}
                 />
         }
     }
@@ -55,7 +92,7 @@ export default function Diagrams(props) {
                     height: '400px'
                 }}
             >
-
+                {renderChart()}
             </div>
             <div
                 className='flex-column border-box fit-width'
@@ -67,7 +104,7 @@ export default function Diagrams(props) {
                     className='visible-layout border-box'
                     style={{
                         width: '380px',
-                        padding: '10px',
+                        padding: '20px',
                     }}
                 >
                     <div

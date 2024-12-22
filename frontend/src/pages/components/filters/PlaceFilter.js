@@ -28,6 +28,10 @@ export default function UserFilter(props) {
         props.onSubmit(filter);
     }
 
+    useEffect(() => {
+        handleFilter();
+    }, []);
+
     return <>
         <div className='visible-layout flex-column flex-center align-start' style={{padding: '20px', gap: '12px', width: '340px'}}>
             <div className='caption'>Фильтрация</div>
