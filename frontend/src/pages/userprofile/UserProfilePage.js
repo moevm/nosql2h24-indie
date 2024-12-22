@@ -147,11 +147,13 @@ export default function UserProfile(props) {
                                 </div>
                                 <div className='flex-row' style={{gap: '10px'}}>
                                     { userId === authentifiedUserId ?
-                                        <CustomButton className='actions-button' variant='contained'
-                                            onClick={handleEditClick}
-                                        >
-                                            Редактировать профиль
-                                        </CustomButton>
+                                        <>
+                                            {/* <CustomButton className='actions-button' variant='contained' */}
+                                            {/*     onClick={handleEditClick} */}
+                                            {/* > */}
+                                            {/*     Редактировать профиль */}
+                                            {/* </CustomButton> */}
+                                        </>
                                         :
                                         <CustomButton className='actions-button' variant='contained'
                                             onClick={handleInviteClick}
@@ -164,6 +166,8 @@ export default function UserProfile(props) {
                         </div>
                         { userId === authentifiedUserId ?
                             <PostAnnouncement 
+                                author="user"
+                                authorId={userId}
 
                             />
                             :
@@ -195,20 +199,12 @@ export default function UserProfile(props) {
                                     {
                                         groups.map((group) => {
                                             return <UserGroupInfo
-                                                key={group._key}
-                                                group={group}
+                                                key={group.group._key}
+                                                group={group.group}
                                                 joinDate={format(new Date(group.join_date), 'HH:mm dd.MM.yyyy')}
                                             />
                                         })
                                     }
-                                    {/* <UserGroupInfo */}
-                                    {/*     group={{name: 'Радиолюбители', avatar_uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTVfBzJ3q1OdwAUnScbjEdYUh8psz24q0meDw&s'}} */}
-                                    {/*     joinDate={'01.01.2020'} */}
-                                    {/* /> */}
-                                    {/* <UserGroupInfo */}
-                                    {/*     group={{name: 'Улыбка', avatar_uri: 'https://yt3.googleusercontent.com/aCf8WKRR9eqx0GhLLLoaDCJKRv-udsfJtX0K4xnrBBJeKPIf5jIGbzKE4kZ5lZSRVzvmjZjyCQ=s900-c-k-c0x00ffffff-no-rj'}} */}
-                                    {/*     joinDate={'01.01.2020'} */}
-                                    {/* /> */}
                                 </div>
                             </div>
                         </div>
