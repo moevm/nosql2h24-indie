@@ -210,6 +210,12 @@ class GroupUseCases(BaseVertexUseCases):
         star = cursor.batch()
         return len(star)!=0
 
+    def _is_joined_group(self, group_id: int, user_id: int) -> bool:
+        user_group_use_cases = self.edge_use_cases.user_group_use_cases
+        cursor = user_group_use_cases.get_all_entities(user_group_use_cases.edge_collection_names.USERGROUP.value).find({"_from": str("User/"+str(user_id)), "_to":str("Group/" + str(group_id))})
+        ug = cursor.batch()
+        return len(ug)!=0
+
     def join_to_group(self, group_id: int, user_id: int):
         db_user_group = {
             "_from": "User/" + str(user_id),
@@ -218,13 +224,23 @@ class GroupUseCases(BaseVertexUseCases):
         }
         user_group_use_cases = self.edge_use_cases.user_group_use_cases
         try:
-            user_group_edge = user_group_use_cases.create_new_entity(db_user_group, user_group_use_cases.edge_collection_names.USERGROUP.value)
-            print(user_group_edge)
-            return {
-                "status": 200,
-                "message": "success join to group",
-                "UserGroup": user_group_edge
-            }
+            if(self._is_joined_group(group_id, user_id)):
+                user_group_use_cases
+                ug = user_group_use_cases.get_all_entities(user_group_use_cases.edge_collection_names.USERGROUP.value).find(
+                    {"_from": "User/" + str(user_id), "_to": "Group/" + str(group_id)}).batch().pop()
+                return {
+                    "status": 200,
+                    "message": "user leave group",
+                    "UserGroup": user_group_use_cases.delete_entity(ug["_id"], user_group_use_cases.edge_collection_names.USERGROUP.value)
+                }
+            else:
+                user_group_edge = user_group_use_cases.create_new_entity(db_user_group, user_group_use_cases.edge_collection_names.USERGROUP.value)
+                print(user_group_edge)
+                return {
+                    "status": 200,
+                    "message": "success join to group",
+                    "UserGroup": user_group_edge
+                }
         except Exception as err:
             print(err)
             return {
