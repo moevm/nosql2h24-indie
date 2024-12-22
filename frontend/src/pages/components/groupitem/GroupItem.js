@@ -6,6 +6,7 @@ import MenuItem from '@mui/material/MenuItem';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import { Dropdown } from '../CustomMuiComponents.js';
+import { NavLink } from 'react-router-dom';
 
 import { UserContext } from '../../../contexts/UserContext.js';
 import { ReactComponent as StarIcon } from './assets/star.svg';
@@ -57,9 +58,11 @@ export default function GroupItem(props) {
                     gap: '10px'
                 }}
             >
-                <div className='important-text'>
-                    {props.name}
-                </div>
+                <NavLink to={`/groups/${props.groupId}`} style={{textDecoration: 'none'}}>
+                    <div className='important-text'>
+                        {props.name}
+                    </div>
+                </NavLink>
                 <Dropdown
                     label="Жанры"
                 >

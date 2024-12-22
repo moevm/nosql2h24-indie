@@ -25,6 +25,17 @@ export function postUserAnnouncement(userId, announcement) {
         .then(response => response.json());
 }
 
+export function postGroupAnnouncement(groupId, announcement) {
+    return fetch(`${baseUrl}/group_announcement`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ group_id: groupId, announcement: announcement })
+        })
+        .then(response => response.json());
+}
+
 export function getUserStarred(sourceUserId, destinationUserId) {
     return fetch(`${baseUrl}/get_user_star?source_user_id=${sourceUserId}&dest_user_id=${destinationUserId}`, {
             method: 'GET',
@@ -150,6 +161,27 @@ export function getUsers(page, pageSize, filter) {
             body: JSON.stringify(filter)
         })
         .then(response => response.json());
+}
+
+export function joinGroup(groupId, userId) {
+    return fetch(`${baseUrl}/join_to_group?group_id=${groupId}&user_id=${userId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json());
+}
+
+export function getGroup(groupId) {
+    return fetch(`${baseUrl}/group/${groupId}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json());
+
 }
 
 export function getGroups(page, pageSize, filter) {

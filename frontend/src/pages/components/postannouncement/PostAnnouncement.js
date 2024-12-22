@@ -10,7 +10,7 @@ import { UserContext } from '../../../contexts/UserContext.js';
 
 import SelectTag from '../selecttag/SelectTag.js';
 
-import { postUserAnnouncement } from '../../../requests/Requests.js';
+import { postUserAnnouncement, postGroupAnnouncement } from '../../../requests/Requests.js';
 
 const CustomTextField = styled(TextField)(() => ({
     color: 'var(--text-color)',
@@ -66,13 +66,22 @@ export default function PostAnnouncement(props) {
                     className='actions-button'
                     variant='contained'
                     onClick={(event) => {
-
-                        postUserAnnouncement(authentifiedUserId, {
+                        let method = () => {};
+                        switch (props.author) {
+                            case 'user':
+                                method = postUserAnnouncement;
+                                break;
+                            case 'group':
+                                method = postGroupAnnouncement;
+                                break;
+                        }
+                        method(props.authorId, {
                             tag: selectedTag,
                             content: announcementContent,
                             creation_date: Date.now()
+                        }).then(() => {
+                            navigate(0);
                         });
-                        navigate(0);
                     }}
                 >
                     Опубликовать
