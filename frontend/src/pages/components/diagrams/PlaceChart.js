@@ -10,59 +10,57 @@ export default function PlaceChart(props) {
 
     const [dataset, setDataset] = useState([]);
 
-    const [groupBy, setGroupBy] = useState('first_name');
-    const [valueType, setValueType] = useState('stars');
+    const [groupBy, setGroupBy] = useState('name');
+    const [valueType, setValueType] = useState('amount');
 
-    // const getEntityAttribute = (entity, attribute) => {
-    //     switch (attribute) {
-    //         case 'first_name':
-    //         case 'last_name':
-    //         case 'talents':
-    //             return entity.user[attribute];
-    //         case 'creation_date':
-    //         case 'last_edit_date':
-    //             return format(new Date(entity.user[attribute]), 'dd.MM.yyyy');
-    //         case 'stars':
-    //             return entity.stars.length;
-    //         case 'amount':
-    //             return 1;
-    //     }
-    // }
-    //
-    // useEffect(() => {
-    //     console.log(props.entities);
-    //
-    //     let correlation = new Map();
-    //
-    //     for (let entity of props.entities) {
-    //         let attribute = getEntityAttribute(entity, groupBy);
-    //
-    //         if (Array.isArray(attribute)) {
-    //             for (let item of attribute) {
-    //                 if (correlation.has(item)) {
-    //                     correlation.set(item, correlation.get(item) + getEntityAttribute(entity, valueType));
-    //                 } else {
-    //                     correlation.set(item, getEntityAttribute(entity, valueType));
-    //                 }
-    //             }
-    //             continue;
-    //         }
-    //
-    //         if (correlation.has(attribute)) {
-    //             correlation.set(attribute, correlation.get(attribute) + getEntityAttribute(entity, valueType));
-    //         } else {
-    //             correlation.set(attribute, getEntityAttribute(entity, valueType));
-    //         }
-    //     }
-    //
-    //     setDataset(Array.from(correlation).map((item) => {
-    //         return {
-    //             label: item[0],
-    //             value: item[1]
-    //         }
-    //     }));
-    //
-    // }, [props.entities, groupBy, valueType]);
+    const getEntityAttribute = (entity, attribute) => {
+        switch (attribute) {
+            case 'name':
+            case 'address':
+            case 'type':
+            case 'phone_number':
+                return entity[attribute];
+            case 'creation_date':
+                return format(new Date(entity[attribute]), 'dd.MM.yyyy');
+            case 'amount':
+                return 1;
+        }
+    }
+
+    useEffect(() => {
+        console.log(props.entities);
+
+        let correlation = new Map();
+
+        for (let entity of props.entities) {
+            let attribute = getEntityAttribute(entity, groupBy);
+
+            if (Array.isArray(attribute)) {
+                for (let item of attribute) {
+                    if (correlation.has(item)) {
+                        correlation.set(item, correlation.get(item) + getEntityAttribute(entity, valueType));
+                    } else {
+                        correlation.set(item, getEntityAttribute(entity, valueType));
+                    }
+                }
+                continue;
+            }
+
+            if (correlation.has(attribute)) {
+                correlation.set(attribute, correlation.get(attribute) + getEntityAttribute(entity, valueType));
+            } else {
+                correlation.set(attribute, getEntityAttribute(entity, valueType));
+            }
+        }
+
+        setDataset(Array.from(correlation).map((item) => {
+            return {
+                label: item[0],
+                value: item[1]
+            }
+        }));
+
+    }, [props.entities, groupBy, valueType]);
 
     return <>
         <div
@@ -84,7 +82,6 @@ export default function PlaceChart(props) {
                         setValueType(event.target.value);
                     }}
                 >
-                    <MenuItem value='stars'>Звезды</MenuItem>
                     <MenuItem value='amount'>Количество</MenuItem>
                 </CustomSelect>
                 <div className='text'>
@@ -96,11 +93,11 @@ export default function PlaceChart(props) {
                         setGroupBy(event.target.value);
                     }}
                 >
-                    <MenuItem value='first_name'>Имя</MenuItem>
-                    <MenuItem value='last_name'>Фамилия</MenuItem>
-                    <MenuItem value='talents'>Таланты</MenuItem>
+                    <MenuItem value='name'>Название</MenuItem>
+                    <MenuItem value='address'>Адрес</MenuItem>
+                    <MenuItem value='type'>Тип</MenuItem>
+                    <MenuItem value='phone_number'>Номер телефона</MenuItem>
                     <MenuItem value='creation_date'>Дата создания</MenuItem>
-                    <MenuItem value='last_edit_date'>Дата изменения</MenuItem>
                 </CustomSelect>
             </div>
             <BarChart

@@ -31,7 +31,6 @@ export default function AnnouncementChart(props) {
     }
 
     useEffect(() => {
-        console.log(props.entities);
 
         let correlation = new Map();
 

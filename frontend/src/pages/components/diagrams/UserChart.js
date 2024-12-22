@@ -30,7 +30,6 @@ export default function UserChart(props) {
     }
 
     useEffect(() => {
-        console.log(props.entities);
 
         let correlation = new Map();
 
