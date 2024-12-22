@@ -115,14 +115,16 @@ class AnnouncementUseCases(BaseVertexUseCases):
         return {"announcement_list": announcement_list, "count": self.get_all_entities_count()}
 
     def get_comments(self, announcement_id: int) -> Response:
-        cursor = self.get_all_entities().find({"_to":str("Announcement/"+str(announcement_id))})
+        comment_use_case = self.edge_use_cases.comment_use_cases
+        cursor = comment_use_case.get_all_entities(comment_use_case.edge_collection_names.COMMENTTOANNOUNCEMENT.value).find({"_to": str("Announcement/"+str(announcement_id))})
         deque = cursor.batch()
         comment_list = []
-        comment_use_case = self.edge_use_cases.comment_use_cases
+        print(deque)
         while len(deque):
             comment = deque.pop()
             user = self.get_another_entity(comment["_from"], "User")
             comment_list.append({"comment": comment, "sender": user})
+
         return comment_list
 
     def add_user_announcement(self, user_announcement: UserAnnouncement) -> Response:
