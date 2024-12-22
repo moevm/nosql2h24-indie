@@ -104,7 +104,7 @@ class AnnouncementRouter:
         {
             user_id: String,
             announcement_id: String,
-            comment: Comment
+            comment: String 
         }
         """
         return self._use_cases.add_comment(comment)

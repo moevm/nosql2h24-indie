@@ -7,6 +7,7 @@ import { ToastContainer } from 'react-toastify';
 import Footer from './pages/components/footer/Footer.js';
 import UserProfile from './pages/userprofile/UserProfilePage.js';
 import GroupProfile from './pages/groupprofile/GroupProfilePage.js';
+import AnnouncmentProfile from './pages/announcementprofile/AnnouncmentProfile.js';
 import Autorization from './pages/authorization/Authorization.js';
 import AnnouncementsList from './pages/announcementslist/AnnouncementsList.js';
 import UsersList from './pages/userslist/UsersList.js';
@@ -46,6 +47,10 @@ const router = createBrowserRouter([
             {
                 path: '/announcements',
                 element: <AnnouncementsList></AnnouncementsList> 
+            },
+            {
+                path: '/announcements/:announcementId',
+                element: <AnnouncmentProfile></AnnouncmentProfile> 
             },
             {
                 path: '/statistic',

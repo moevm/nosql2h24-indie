@@ -66,8 +66,8 @@ export default function UserItem(props) {
                 <Dropdown
                     label="Таланты"
                 >
-                    {props.talents.map((talent) => {
-                        return <div>{talent}</div>;
+                    {props.talents.map((talent, index) => {
+                        return <div key={index}>{talent}</div>;
                     })}
                 </Dropdown>
             </div>

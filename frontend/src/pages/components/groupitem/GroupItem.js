@@ -63,15 +63,15 @@ export default function GroupItem(props) {
                 <Dropdown
                     label="Жанры"
                 >
-                    {props.genres.map((gener) => {
-                        return <div>{gener}</div>;
+                    {props.genres.map((gener, index) => {
+                        return <div key={index}>{gener}</div>;
                     })}
                 </Dropdown>
                 <Dropdown
                     label="Участники"
                 >
-                    {props.members.map((member) => {
-                        return <div>{member.user.first_name} {member.user.last_name}</div>;
+                    {props.members.map((member, index) => {
+                        return <div key={index}>{member.user.first_name} {member.user.last_name}</div>;
                     })}
                 </Dropdown>
             </div>
