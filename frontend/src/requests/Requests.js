@@ -255,7 +255,7 @@ export function postComment(userId, announcenmentId, comment) {
             body: JSON.stringify({
                 user_id: userId,
                 announcement_id: announcenmentId,
-                comment: comment
+                comment: {content: comment}
             })
         })
         .then(response => response.json());

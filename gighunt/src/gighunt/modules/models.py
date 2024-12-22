@@ -38,7 +38,7 @@ class UserAnnouncement(BaseModel):
 class Comment(BaseModel):
     user_id: str
     announcement_id: str
-    comment: str
+    comment: Json
 
 
 class Star(BaseModel):

@@ -1,4 +1,5 @@
 
+import { format } from 'date-fns';
 import React, { useState, useEffect, useContext } from 'react';
 
 import { UserContext } from '../../../contexts/UserContext.js';
@@ -17,7 +18,8 @@ export default function Comments(props) {
 
     useEffect(() => {
         getComments(props.announcementId).then((response) => {
-            setComments(response);
+            console.log(response);
+            setComments(response.reverse());
         })
     }, []);
 
@@ -43,37 +45,40 @@ export default function Comments(props) {
                     gap: '5px'
                 }}
             >
-                <div
-                    className='flex-column'
-                >
+                {comments.map((comment) => 
                     <div
-                        className='flex-row flex-space text'
+                        key={comment.comment._key}
+                        className='flex-column'
                     >
                         <div
-                            style={{
-                                fontSize: '24px'
-                            }}
+                            className='flex-row flex-space text'
                         >
-                            Джонни
+                            <div
+                                style={{
+                                    fontSize: '24px'
+                                }}
+                            >
+                                {comment.sender.first_name}
+                            </div>
+                            <div
+                                style={{
+                                    color: 'var(--tertiary-color)',
+                                    fontSize: '12px'
+                                }}
+                            >
+                                {format(new Date(comment.comment.creation_date), 'HH:mm dd.MM.yyyy')}
+                            </div>
                         </div>
                         <div
+                            className='text'
                             style={{
-                                color: 'var(--tertiary-color)',
                                 fontSize: '12px'
                             }}
                         >
-                            01.01.2020
+                            {comment.comment.content.content}
                         </div>
                     </div>
-                    <div
-                        className='text'
-                        style={{
-                            fontSize: '12px'
-                        }}
-                    >
-                        Замечательно!
-                    </div>
-                </div>
+                )}
             </div>
             <div
                 className='flex-row flex-space align-center'
@@ -88,8 +93,9 @@ export default function Comments(props) {
                     onClick={() => {
                         setComment('');
                         postComment(authentifiedUserId, props.announcementId, comment).then((response) => {
-                            console.log(response);
-                            
+                            getComments(props.announcementId).then((response) => {
+                                setComments(response.reverse());
+                            })
                         });
                     }}
                 />
