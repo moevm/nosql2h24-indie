@@ -1,4 +1,3 @@
-
 import { format } from 'date-fns';
 import React, { useState, useEffect, useContext } from 'react';
 
@@ -18,7 +17,6 @@ export default function Comments(props) {
 
     useEffect(() => {
         getComments(props.announcementId).then((response) => {
-            console.log(response);
             setComments(response.reverse());
         })
     }, []);

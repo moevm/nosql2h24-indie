@@ -6,11 +6,13 @@ import Button from '@mui/material/Button';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { NavLink } from 'react-router-dom';
+import Popover from '@mui/material/Popover';
 
 import SelectTag from '../selecttag/SelectTag.js';
 import { UserContext } from '../../../contexts/UserContext.js';
 
 import { getAnnouncementStarred, addStarToAnnouncement } from '../../../requests/Requests.js';
+import Comments from '../comments/Comments.js';
 
 import { ReactComponent as StarIcon } from './assets/star.svg';
 
@@ -32,6 +34,19 @@ export default function Announcement(props) {
     const [authentifiedUserId, setAuthentifiedUserId] = useContext(UserContext);
     const [announcementStarred, setAnnouncementStarred] = useState(false);
     const [starsAmount, setStarsAmount] = useState(props.starsAmount);
+
+    const [anchorEl, setAnchorEl] = useState(null);
+
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
+
+    const handleOpen = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const open = Boolean(anchorEl);
+    const id = open ? 'simple-popover' : undefined;
 
     useEffect(() => {
         getAnnouncementStarred(authentifiedUserId, props.announcementId).then((response) => {
@@ -94,12 +109,36 @@ export default function Announcement(props) {
                     <CustomSmallButton
                         className='actions-button'
                         variant='contained'
-                        onClick={() => {
-                            toast("Комментарии запрещены!");
+                        aria-describedby={id}
+                        onClick={(event) => {
+                            toast("Комментарии теперь доступны!");
+                            handleOpen(event);
                         }}
                     >
                         Комментарии
                     </CustomSmallButton>
+                    <Popover
+                        id={id}
+                        open={open}
+                        anchorEl={anchorEl}
+                        onClose={handleClose}
+                        anchorOrigin={{
+                            vertical: 'bottom',
+                            horizontal: 'left',
+                        }}
+                    >
+                        <div
+                            className='visible-layout border-box'
+                            style={{
+                                width: '300px',
+                                height: '300px'
+                            }}
+                        >
+                            <Comments
+                                announcementId={props.announcementId}
+                            />
+                        </div>
+                    </Popover>
                 </div>
             </div>
         </div>

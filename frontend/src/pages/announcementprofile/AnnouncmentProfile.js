@@ -20,7 +20,6 @@ export default function AnnouncementProfile(props) {
 
     useEffect(() => {
         getAnnouncement(announcementId).then((response) => {
-            console.log(response);
             setAnnouncement(response.announcement);
             setSender(response.sender);
         });
