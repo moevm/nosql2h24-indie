@@ -45,10 +45,9 @@ export default function GroupProfile(props) {
         });
     }
     const handleLeaveClick = (event) => {
-        toast("Вы не можете покинуть группу!");
-        // joinGroup(groupId, authentifiedUserId).then((response) => {
-        //     setUserInGroup(false);
-        // });
+        joinGroup(groupId, authentifiedUserId).then((response) => {
+            setUserInGroup(false);
+        });
     }
 
     useEffect(() => {
