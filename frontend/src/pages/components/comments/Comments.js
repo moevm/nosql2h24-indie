@@ -35,7 +35,7 @@ export default function Comments(props) {
                     color: 'var(--text-color)',
                 }}
             >
-                Комментарии
+                Комментарии ({comments.length})
             </div>
             <div
                 className='scroll-column'

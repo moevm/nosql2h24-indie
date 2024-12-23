@@ -11,7 +11,7 @@ import Popover from '@mui/material/Popover';
 import SelectTag from '../selecttag/SelectTag.js';
 import { UserContext } from '../../../contexts/UserContext.js';
 
-import { getAnnouncementStarred, addStarToAnnouncement } from '../../../requests/Requests.js';
+import { getAnnouncementStarred, addStarToAnnouncement, getComments } from '../../../requests/Requests.js';
 import Comments from '../comments/Comments.js';
 
 import { ReactComponent as StarIcon } from './assets/star.svg';
@@ -22,6 +22,8 @@ const CustomSmallButton = styled(Button)(() => ({
 
     backgroundColor: 'var(--primary-color)',
     borderRadius: '10px',
+
+    whiteSpace: 'nowrap',
 
     color: 'var(--contrast-text-color)',
     fontSize: '10px',
@@ -36,6 +38,7 @@ export default function Announcement(props) {
     const [starsAmount, setStarsAmount] = useState(props.starsAmount);
 
     const [anchorEl, setAnchorEl] = useState(null);
+    const [commentsAmount, setCommentsAmount] = useState(0);
 
     const handleClose = () => {
         setAnchorEl(null);
@@ -52,6 +55,9 @@ export default function Announcement(props) {
         getAnnouncementStarred(authentifiedUserId, props.announcementId).then((response) => {
             setAnnouncementStarred(response);
         });
+        getComments(props.announcementId).then((response) => {
+            setCommentsAmount(response.length);
+        })
     }, []);
 
     const handleStarClick = (event) => {
@@ -115,7 +121,7 @@ export default function Announcement(props) {
                             handleOpen(event);
                         }}
                     >
-                        Комментарии
+                        Комментарии ({commentsAmount})
                     </CustomSmallButton>
                     <Popover
                         id={id}
