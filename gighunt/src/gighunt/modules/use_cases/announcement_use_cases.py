@@ -148,7 +148,7 @@ class AnnouncementUseCases(BaseVertexUseCases):
         db_comment = {
             "_from": "User/" + str(comment.user_id),
             "_to": "Announcement/" + str(comment.announcement_id),
-            "creation_date": str(datetime.datetime.now().date()),
+            "creation_date": str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")),
             "content": comment.comment
         }
         return comment_use_case.create_new_entity(db_comment,comment_use_case.edge_collection_names.COMMENTTOANNOUNCEMENT.value)
